@@ -27,7 +27,9 @@ Cloudflare Pages を利用して高速に配信されています。
 
 ## 📸 Screenshots
 
-![Preview](public/preview.png)
+<p align="center">
+  <img src="public/preview.png" width="900" alt="Preview Screenshot" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+</p>
 
 ---
 
