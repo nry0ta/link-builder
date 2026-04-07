@@ -4,10 +4,10 @@
 
 # 🏨 Travel Link Builder (v3.0)
 
-[![Deploy static content to Pages](https://github.com/nry0ta/link-builder/actions/workflows/deploy.yml/badge.svg)](https://github.com/nry0ta/link-builder/actions/workflows/deploy.yml)
-
 旅行・宿泊ブログ向けのアフィリエイトリンク一括生成ツールです。
 楽天トラベル、じゃらん、一休、Yahoo!トラベルなどの主要サイトのボタンを、洗練されたデザインで簡単に作成できます。
+
+Cloudflare Pages を利用して高速に配信されています。
 
 ### 🚀 Live Demo
 **[builder.nrtlog.com](https://builder.nrtlog.com)**
