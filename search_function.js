@@ -63,25 +63,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // ★★★ ここからがAPI呼び出しの核心部分です ★★★
+        const settings = JSON.parse(localStorage.getItem('linkBuilderSettings')) || {};
+        const appId = settings.rakutenAppId;
+        
+        if (!appId) {
+            resultsContainer.innerHTML = '<p class="message" style="color: #d9534f;">エラー: 楽天アプリケーションID(AppID)が未設定です。<a href="setting.html">設定画面</a>から登録してください。</p>';
+            searchButton.disabled = false;
+            return;
+        }
+
         const params = new URLSearchParams({
+            format: 'json',
             keyword: currentKeyword,
             page: currentPage,
-            hits: MAX_HITS
+            hits: MAX_HITS,
+            applicationId: appId
         });
         
-        // サーバーURLにリクエストを送信
-        const requestUrl = `https://buildastay-system.nrtlog.com/api/v1/search/hotels?${params.toString()}`;
+        const requestUrl = `https://app.rakuten.co.jp/services/api/Travel/KeywordHotelSearch/20170426?${params.toString()}`;
 
         try {
             const response = await fetch(requestUrl);
-            if (!response.ok) {
-                throw new Error(`サーバーエラーが発生しました: ${response.status}`);
-            }
-            const data = await response.json();
+            const data = await response.json().catch(() => null);
             
-            // サーバー側でエラーが発生した場合の処理
-            if (data.error || data.error_description) {
-                throw new Error(data.error_description || data.error || 'APIからエラーが返されました。');
+            if (!response.ok) {
+                if (data && data.error) {
+                    if (data.error === 'not_found') {
+                        if (isLoadMore) appendResults([]); else displayResults([]);
+                        return;
+                    }
+                    if (data.error === 'wrong_parameter' && typeof data.error_description === 'string' && data.error_description.includes('applicationId')) {
+                        throw new Error('楽天アプリケーションID(AppID)が無効です。設定を確認してください。');
+                    }
+                    throw new Error(data.error_description || data.error);
+                }
+                throw new Error(`サーバーエラー: ${response.status}`);
+            }
+            
+            if (data.error) {
+                throw new Error(data.error_description || data.error || 'エラーが発生しました');
             }
             
             if (isLoadMore) {

@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (currentDesignMode === 'modal' && modalButtonText) {
             modalButtonText.value = `「${hotelName}」を各サイトで比較する`;
         } else if (currentDesignMode === 'multiple' && multipleBtnText) {
-            multipleBtnText.value = `で今すぐみる`;
+            multipleBtnText.value = `で見てみる`;
         }
     }
 

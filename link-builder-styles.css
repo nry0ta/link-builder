@@ -127,6 +127,9 @@
         flex-direction: column;
         padding: 15px;
     }
+    .af-image-wrapper, .af-info-wrapper {
+        flex: none;
+    }
     .af-image-wrapper {
         max-width: 100%;
         margin-bottom: 5px;
