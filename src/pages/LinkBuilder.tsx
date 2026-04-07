@@ -19,14 +19,18 @@ function LinkBuilder() {
     const [designMode, setDesignMode] = useState<string | null>(null);
     const [selectedSites, setSelectedSites] = useState<Record<string, boolean>>({
         rakuten: false, jalan: false, ikkyu: false, yahoo: false,
-        booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false
+        booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false
     });
     const [urls, setUrls] = useState<Record<string, string>>({
         rakuten: '', jalan: '', ikkyu: '', yahoo: '',
-        booking: '', hotelscom: '', ihg: '', tripcom: '', agoda: ''
+        booking: '', hotelscom: '', ihg: '', tripcom: '', agoda: '', custom: ''
     });
+    const [siteOrder, setSiteOrder] = useState<string[]>(['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom']);
+    const [customSiteName, setCustomSiteName] = useState('任意サイト');
+    const [emphasizedSites, setEmphasizedSites] = useState<Record<string, boolean>>({});
+    const [emphasizeTexts, setEmphasizeTexts] = useState<Record<string, string>>({});
     const [designTexts, setDesignTexts] = useState<any>({
-        singleJumpText: '', modalButtonText: '', multipleBtnText: 'で見てみる',
+        singleJumpText: '', modalButtonText: '', multipleBtnText: '',
         showImage: true, showAddress: true, customImageUrl: '', customAddress: ''
     });
     const [generatedCode, setGeneratedCode] = useState('');
@@ -45,9 +49,8 @@ function LinkBuilder() {
             setDesignTexts((prev: any) => ({
                 ...prev, customImageUrl: parsed.imageUrl, customAddress: parsed.address || ''
             }));
-        } else {
-            navigate('/');
         }
+        // stored がない場合は手動入力モードとしてそのまま利用可能
         const storedSettings = JSON.parse(localStorage.getItem('linkBuilderSettings') || '{}');
         setSettings({
             rakutenAffiliateId: storedSettings.rakutenAffiliateId || '40dba8c4.a3a6d6ce.40dba8c5.0eaf9b42',
@@ -56,9 +59,35 @@ function LinkBuilder() {
             vcPidIkkyu: storedSettings.vcPidIkkyu || '',
             vcPidYahoo: storedSettings.vcPidYahoo || '',
             atIhgRk: storedSettings.atRkihg || '0100mmq100o520',
-            tripcomLsid: storedSettings.lsid || ''
+            tripcomLsid: storedSettings.lsid || '',
+            a8mat: storedSettings.a8mat || ''
         });
+
+        const defaultOrder = ['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom'];
+        const storedOrder = localStorage.getItem('siteOrder');
+        if (storedOrder) {
+            try {
+                const parsed = JSON.parse(storedOrder);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    const merged = [...parsed, ...defaultOrder.filter((s: string) => !parsed.includes(s))];
+                    setSiteOrder(merged);
+                }
+            } catch (e) {}
+        }
     }, [navigate]);
+
+    const moveSite = (index: number, direction: 'up' | 'down') => {
+        const newOrder = [...siteOrder];
+        if (direction === 'up' && index > 0) {
+            [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+        } else if (direction === 'down' && index < newOrder.length - 1) {
+            [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
+        } else {
+            return;
+        }
+        setSiteOrder(newOrder);
+        localStorage.setItem('siteOrder', JSON.stringify(newOrder));
+    };
 
     const handleSiteToggle = (site: string) => {
         const isCurrentlyChecked = selectedSites[site];
@@ -82,6 +111,14 @@ function LinkBuilder() {
             if (site === 'yahoo') autoUrl = createYahooLink(settings.vcSid, settings.vcPidYahoo, keyword);
             if (site === 'ihg') autoUrl = createIHGLink(settings.atIhgRk, keyword);
             if (site === 'tripcom') autoUrl = createTripcomLink(settings.tripcomLsid);
+            if (site === 'agoda') {
+                const baseAgoda = `https://www.agoda.com/ja-jp/search?textToSearch=${encodeURIComponent(keyword)}`;
+                if (settings.a8mat) {
+                    autoUrl = `https://px.a8.net/svt/ejp?a8mat=${settings.a8mat}&a8ejpredirect=${encodeURIComponent(baseAgoda)}`;
+                } else {
+                    autoUrl = baseAgoda;
+                }
+            }
 
             setUrls(prev => ({ ...prev, [site]: autoUrl || prev[site] }));
         }
@@ -110,8 +147,7 @@ function LinkBuilder() {
         setDesignTexts((prev: any) => ({
             ...prev,
             singleJumpText: singleText || prev.singleJumpText,
-            modalButtonText: `「${hotelName}」を各サイトで比較する`,
-            multipleBtnText: 'で見てみる'
+            modalButtonText: `「${hotelName}」を各サイトで比較する`
         }));
     };
 
@@ -130,19 +166,38 @@ function LinkBuilder() {
     const buildMultipleHtml = (id: string, hotelName: string, links: any[], options: any) => {
         const imageHtml = options.showImage && options.imageUrl ? `<div class="af-image-wrapper"><img src="${options.imageUrl}" alt="${hotelName}"></div>` : ''; 
         const addressHtml = options.showAddress && options.address ? `<p class="af-hotel-address">${options.address}</p>` : ''; 
+        
+        const cqiVal = (95 / Math.max(1, hotelName.length)).toFixed(2);
+        const nameStyle = `font-size: clamp(0.65rem, ${cqiVal}cqi, 1.15rem);`;
+
         const linksHtml = links.map(link => {
-            if (link.site === 'ihg') {
-                return `<div class="af-ihg-wrapper"><div class="af-ihg-badge">＼最安値保証&amp;レイトチェックアウト／</div><a href="${link.url}" target="_blank" rel="nofollow sponsored noopener" class="af-multi-btn btn-${link.site}"><span class="af-btn-text">${link.name}${options.buttonText}</span></a></div>`;
+            const isEmp = options.emphasizedSites && options.emphasizedSites[link.site];
+            const defaultEmpText = link.site === 'ihg' ? '＼最安値保証&レイトチェックアウト／' : '＼期間限定セール／';
+            const empText = options.emphasizeTexts && options.emphasizeTexts[link.site] !== undefined 
+                ? options.emphasizeTexts[link.site] 
+                : defaultEmpText;
+
+            let finalUrl = link.url;
+
+            if (isEmp) {
+                return `<div class="af-emphasize-wrapper"><div class="af-emphasize-badge">${empText}</div><a href="${finalUrl}" target="_blank" rel="nofollow sponsored noopener" class="af-multi-btn btn-${link.site}"><span class="af-btn-text">${link.name}${options.buttonText}</span></a></div>`;
             }
-            return `<a href="${link.url}" target="_blank" rel="nofollow sponsored noopener" class="af-multi-btn btn-${link.site}"><span class="af-btn-text">${link.name}${options.buttonText}</span></a>`;
+            return `<a href="${finalUrl}" target="_blank" rel="nofollow sponsored noopener" class="af-multi-btn btn-${link.site}"><span class="af-btn-text">${link.name}${options.buttonText}</span></a>`;
         }).join(''); 
-        return `<div class="af-multi-container" id="${id}">\n    ${imageHtml}\n    <div class="af-info-wrapper">\n        <div class="af-hotel-name">${hotelName}</div>\n        ${addressHtml}\n        <div class="af-links-wrapper">${linksHtml}</div>\n    </div>\n</div>`; 
+        return `<div class="af-multi-container" id="${id}">\n    ${imageHtml}\n    <div class="af-info-wrapper">\n        <div class="af-name-container" style="container-type: inline-size; width: 100%;"><div class="af-hotel-name" style="${nameStyle}">${hotelName}</div></div>\n        ${addressHtml}\n        <div class="af-links-wrapper">${linksHtml}</div>\n    </div>\n</div>`; 
     };
 
     const generateCode = () => {
-        const links = Object.keys(selectedSites)
+        const links = siteOrder
             .filter(site => selectedSites[site] && urls[site].trim() !== '')
-            .map(site => ({ name: (siteLabels as any)[site], url: urls[site].trim(), site }));
+            .map(site => {
+                let finalUrl = urls[site].trim();
+                // Apply A8.net Agoda Affiliate Tracking if not already applied
+                if (site === 'agoda' && settings.a8mat && !finalUrl.startsWith('https://px.a8.net')) {
+                    finalUrl = `https://px.a8.net/svt/ejp?a8mat=${settings.a8mat}&a8ejpredirect=${encodeURIComponent(finalUrl)}`;
+                }
+                return { name: (siteLabels as any)[site], url: finalUrl, site };
+            });
 
         if (links.length === 0 || !hotelData.name) {
             showNotification('ホテル名と最低1つのURLを入力してください。', 'error', 'generateBtnNotification');
@@ -162,13 +217,15 @@ function LinkBuilder() {
             case 'modal': html = buildModalHtml(uniqueId, hotelData.name, links, designTexts.modalButtonText); break;
             case 'multiple': html = buildMultipleHtml(uniqueId, hotelData.name, links, {
                 buttonText: designTexts.multipleBtnText, showImage: designTexts.showImage, showAddress: designTexts.showAddress,
-                imageUrl: designTexts.customImageUrl, address: designTexts.customAddress
+                imageUrl: designTexts.customImageUrl, address: designTexts.customAddress,
+                emphasizedSites, emphasizeTexts, settings
             }); break;
             default: showNotification('デザインモードを選択してください。', 'error', 'generateBtnNotification'); return;
         }
 
-        setGeneratedCode(html.trim());
-        setPreviewHtml(html.trim());
+        const finalHtml = html.replace(/>\s+</g, '><').replace(/\n\s*/g, ' ').trim();
+        setGeneratedCode(finalHtml);
+        setPreviewHtml(finalHtml);
         showNotification('ブログ用コードの生成に成功しました！', 'success', 'generateBtnNotification');
         
         setTimeout(() => {
@@ -196,9 +253,10 @@ function LinkBuilder() {
         });
     };
 
-    const siteLabels = {
+    const siteLabels: Record<string, string> = {
         rakuten: '楽天トラベル', jalan: 'じゃらんnet', ikkyu: '一休.com', yahoo: 'Yahoo!トラベル',
-        booking: 'Booking.com', hotelscom: 'jp.Hotels.com', ihg: '【最安値】IHG公式', tripcom: 'Trip.com', agoda: 'Agoda'
+        booking: 'Booking.com', hotelscom: 'jp.Hotels.com', ihg: 'IHG公式', tripcom: 'Trip.com', agoda: 'Agoda',
+        custom: customSiteName || '任意サイト'
     };
 
     const isAnySiteChecked = Object.values(selectedSites).some(Boolean);
@@ -247,7 +305,7 @@ function LinkBuilder() {
                     </p>
                     
                     <div className="site-selection">
-                        {Object.keys(siteLabels).map(site => (
+                        {siteOrder.map(site => (
                             <div key={site}>
                                 <input type="checkbox" id={`select-${site}`} checked={selectedSites[site]} onChange={() => handleSiteToggle(site)} />
                                 <label htmlFor={`select-${site}`}>{(siteLabels as any)[site]}</label>
@@ -256,11 +314,51 @@ function LinkBuilder() {
                     </div>
 
                     <div id="link-inputs-container">
-                        {Object.keys(siteLabels).map(site => (
+                        {siteOrder.map((site, index) => (
                             selectedSites[site] && (
-                                <div key={`url-${site}`} className="form-group">
-                                    <label>{(siteLabels as any)[site]} URL</label>
-                                    <input type="text" value={urls[site]} onChange={e => setUrls({...urls, [site]: e.target.value})} placeholder={`アフィリエイトリンクを貼り付け`} />
+                                <div key={`url-${site}`} className="form-group url-sort-wrapper">
+                                    <div className="url-sort-controls">
+                                        <button className="sort-btn" onClick={() => moveSite(index, 'up')} disabled={index === 0}>▲</button>
+                                        <button className="sort-btn" onClick={() => moveSite(index, 'down')} disabled={index === siteOrder.length - 1}>▼</button>
+                                    </div>
+                                    <div className="url-sort-content">
+                                        <label>{site === 'custom' ? (customSiteName || '任意サイト') : siteLabels[site]} URL</label>
+                                        {site === 'custom' && (
+                                            <input
+                                                type="text"
+                                                value={customSiteName}
+                                                onChange={e => setCustomSiteName(e.target.value)}
+                                                placeholder="サイト名を入力"
+                                                style={{ marginBottom: '6px', fontWeight: 'bold' }}
+                                            />
+                                        )}
+                                        <input type="text" value={urls[site]} onChange={e => setUrls({...urls, [site]: e.target.value})} placeholder={`アフィリエイトリンクを貼り付け`} />
+                                        
+                                        {designMode === 'multiple' && (
+                                            <>
+                                                <div className="checkbox-control" style={{ marginTop: '10px' }}>
+                                                    <input 
+                                                        type="checkbox" 
+                                                        id={`emp-cb-${site}`} 
+                                                        checked={!!emphasizedSites[site]} 
+                                                        onChange={e => setEmphasizedSites(prev => ({...prev, [site]: e.target.checked}))} 
+                                                    />
+                                                    <label htmlFor={`emp-cb-${site}`}>このボタンを強調表示する</label>
+                                                </div>
+                                                {emphasizedSites[site] && (
+                                                    <div style={{marginTop: '8px'}}>
+                                                        <label style={{ fontSize: '0.85rem' }}>アンカーテキスト</label>
+                                                        <input 
+                                                            type="text" 
+                                                            value={emphasizeTexts[site] ?? (site === 'ihg' ? '＼最安値保証&レイトチェックアウト／' : '＼期間限定セール／')} 
+                                                            onChange={e => setEmphasizeTexts(prev => ({...prev, [site]: e.target.value}))} 
+                                                            placeholder={site === 'ihg' ? '＼最安値保証&レイトチェックアウト／' : '＼期間限定セール／'}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
                             )
                         ))}
@@ -290,7 +388,7 @@ function LinkBuilder() {
 
                             {designMode === 'multiple' && (
                                 <div className="design-edit-control">
-                                    <label>ボタンテキスト ({designTexts.multipleBtnText})</label>
+                                    <label>ボタンテキスト</label>
                                     <p className="edit-guide">サイト名の後に表示されるテキストです。</p>
                                     <input type="text" value={designTexts.multipleBtnText} onChange={e => setDesignTexts((prev: any) => ({...prev, multipleBtnText: e.target.value}))} />
                                     
@@ -312,12 +410,13 @@ function LinkBuilder() {
                                     </div>
 
                                     {designTexts.showAddress && (
-                                        <div className="form-group">
+                                        <div className="form-group" id="hotelAddressSection">
                                             <label>住所情報</label>
-                                            <textarea rows={3} readOnly value={designTexts.customAddress} />
+                                            <input type="text" value={designTexts.customAddress} onChange={e => setDesignTexts((prev: any) => ({...prev, customAddress: e.target.value}))} />
                                         </div>
                                     )}
-                                    <hr />
+
+
                                 </div>
                             )}
                         </div>

@@ -212,9 +212,9 @@ input[type="text"] {
 #results { display: flex; flex-direction: column; gap: 15px; }
 .result-card { display: flex; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; background-color: #fff; transition: box-shadow 0.2s ease; }
 .result-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.result-image { width: 120px; height: 120px; object-fit: cover; flex-shrink: 0; }
-.result-info { padding: 15px; display: flex; flex-direction: column; }
-.result-info h3 { margin: 0 0 10px 0; font-size: 18px; }
+.result-image { width: 130px; min-height: 130px; align-self: stretch; object-fit: cover; flex-shrink: 0; }
+.result-info { padding: 15px; display: flex; flex-direction: column; justify-content: center; text-align: left; flex-grow: 1; }
+.result-info h3 { margin: 0 0 10px 0; font-size: 18px; text-align: left; }
 .result-info p { margin: 0 0 15px 0; font-size: 14px; color: #666; }
 
 #previewSection { margin-top: 30px; }
@@ -224,6 +224,16 @@ footer {
  text-align: center;
  color: #6c757d; 
  text-decoration: none;
+ margin-top: 50px;
+ padding-bottom: 30px;
+}
+footer a {
+ color: #6c757d;
+ text-decoration: none;
+ transition: color 0.2s;
+}
+footer a:hover {
+ color: #333;
 }
 
 .load-more-link, .load-more-message {
@@ -303,28 +313,28 @@ footer {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
-.design-edit-control .checkbox-control {
+.checkbox-control {
     display: flex;
     align-items: center;
     margin-top: 15px;
     margin-bottom: 5px;
 }
-.design-edit-control .checkbox-control input[type="checkbox"] {
+.checkbox-control input[type="checkbox"] {
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
 }
-.design-edit-control .checkbox-control label {
+.checkbox-control label {
     position: relative;
-    display: flex;
+    display: flex !important;
     align-items: center;
     cursor: pointer;
-    margin: 0;
-    font-weight: normal;
+    margin: 0 !important;
+    font-weight: normal !important;
     color: #495057;
 }
-.design-edit-control .checkbox-control label::before {
+.checkbox-control label::before {
     content: '';
     display: inline-block;
     width: 38px;
@@ -334,7 +344,7 @@ footer {
     margin-right: 12px;
     transition: background-color 0.2s ease;
 }
-.design-edit-control .checkbox-control label::after {
+.checkbox-control label::after {
     content: '';
     position: absolute;
     left: 2px;
@@ -347,10 +357,10 @@ footer {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease, left 0.2s ease;
 }
-.design-edit-control .checkbox-control input[type="checkbox"]:checked + label::before {
+.checkbox-control input[type="checkbox"]:checked + label::before {
     background-color: #007bff;
 }
-.design-edit-control .checkbox-control input[type="checkbox"]:checked + label::after {
+.checkbox-control input[type="checkbox"]:checked + label::after {
     transform: translate(18px, -50%);
 }
 .design-edit-control > .form-group {
@@ -517,8 +527,8 @@ footer {
 }
 .af-info-wrapper {
     flex: 2 1 280px;
-    display: flex;
-    flex-direction: column;
+    display: block;
+    min-width: 0;
 }
 .af-hotel-name {
     font-size: 1.15rem; 
@@ -526,6 +536,11 @@ footer {
     margin-bottom: 8px;
     color: #1e293b;
     line-height: 1.4;
+    display: -webkit-box;
+    line-clamp: 1;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 .af-hotel-address {
     font-size: 0.85rem; 
@@ -535,23 +550,29 @@ footer {
 }
 .af-links-wrapper { 
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
-    margin-top: auto;
+    margin-top: 16px;
 }
-.af-ihg-wrapper {
+.af-links-wrapper > .af-multi-btn:only-child,
+.af-links-wrapper > a:only-child {
+    grid-column: 1 / -1;
+    width: 50%;
+    margin: 0 auto;
+}
+.af-emphasize-wrapper {
     grid-column: span 2;
     display: flex;
     flex-direction: column;
 }
-.af-ihg-badge {
-    font-size: 0.75rem;
-    color: #e54c4c;
-    font-weight: bold;
+.af-emphasize-badge {
     text-align: center;
+    color: #e11d48;
+    font-size: 0.8rem;
+    font-weight: 700;
     margin-bottom: 2px;
 }
-.af-ihg-wrapper .af-multi-btn {
+.af-emphasize-wrapper .af-multi-btn {
     width: 100%;
     margin-bottom: 0;
     box-sizing: border-box;
@@ -586,9 +607,6 @@ footer {
     .af-hotel-name {
         font-size: 1.1rem;
     }
-    .af-links-wrapper {
-        grid-template-columns: 1fr 1fr;
-    }
 }
 
 /* --- ホバーエフェクト --- */
@@ -603,6 +621,49 @@ footer {
 .btn-ikkyu { background-color: #b38d4a; }
 .btn-yahoo { background-color: #FF0033; }
 .btn-booking { background-color: #003580; }
+.btn-hotelscom { background-color: #d32f2f; }
 .btn-ihg { background-color: #005c64; }
 .btn-tripcom { background-color: #3273f6; }
+.btn-agoda { background-color: #1A74E2; }
+.btn-custom { background-color: #6c757d; }
 .btn-single-default { background: linear-gradient(135deg, #007bff, #0056b3); }
+
+/* --- サイト並び替え --- */
+.url-sort-wrapper {
+    display: flex;
+    align-items: stretch;
+    gap: 15px;
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+.url-sort-controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+}
+.sort-btn {
+    padding: 4px 8px;
+    font-size: 0.6rem;
+    background: #cbd5e1;
+    color: #334155;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 0;
+}
+.sort-btn:hover:not(:disabled) {
+    background: #94a3b8;
+    color: white;
+}
+.sort-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+.url-sort-content {
+    flex: 1;
+}
+.url-sort-content label { margin-bottom: 4px; display: block; }

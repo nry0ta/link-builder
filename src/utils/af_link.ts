@@ -22,14 +22,15 @@ export function createJalanLink(sid: string, pid: string, keyword: string): stri
 
     const sjisByteArray = Encoding.convert(keyword, {
         to: 'SJIS',
-        from: 'UNICODE'
+        from: 'UNICODE',
+        type: 'array'
     });
 
     const sjisEncodedKeyword = Encoding.urlEncode(sjisByteArray);
     const jalanSearchUrl = `https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword=${sjisEncodedKeyword}&distCd=01`;
     const encodedJalanUrl = encodeURIComponent(jalanSearchUrl);
     
-    return `//ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodedJalanUrl}`;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodedJalanUrl}`;
 }
 
 export function createIkkyuLink(sid: string, pid: string, keyword: string): string {
@@ -38,7 +39,7 @@ export function createIkkyuLink(sid: string, pid: string, keyword: string): stri
     const ikkyuSearchUrl = `https://www.ikyu.com/search?kwd=${encodeURIComponent(keyword)}`;
     const encodedUrl = encodeURIComponent(ikkyuSearchUrl);
 
-    return `//ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodedUrl}`;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodedUrl}`;
 }
 
 export function createYahooLink(sid: string, pid: string, keyword: string): string {
@@ -47,7 +48,7 @@ export function createYahooLink(sid: string, pid: string, keyword: string): stri
     const yahooSearchUrl = `https://travel.yahoo.co.jp/search?kwd=${encodeURIComponent(keyword)}`;
     const encodedUrl = encodeURIComponent(yahooSearchUrl);
     
-    return `//ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodedUrl}`;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodedUrl}`;
 }
 
 /**

@@ -5,7 +5,7 @@ function Header() {
     <header className="app-header">
       <div className="container">
         <Link to="/" className="header-logo">
-          Link Builder <span className="version-tag">β ver. 2.1 (React)</span>
+          Link Builder
         </Link>
       </div>
       <div className="header-controls">

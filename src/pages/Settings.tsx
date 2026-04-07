@@ -10,6 +10,7 @@ type SettingsState = {
     atRkihg: string;
     atRkjphotels: string;
     lsid: string;
+    a8mat: string;
     [key: string]: string; // Allow dynamic key access
 };
 
@@ -23,7 +24,8 @@ function Settings() {
         vcPidYahoo: '',
         atRkihg: '',
         atRkjphotels: '',
-        lsid: ''
+        lsid: '',
+        a8mat: ''
     });
 
     const [notification, setNotification] = useState('');
@@ -110,6 +112,13 @@ function Settings() {
             <div className="form-group">
                 <label>リンクシェア (ID)</label>
                 <input type="text" name="lsid" value={settings.lsid} onChange={handleChange} placeholder="リンクシェアのID" />
+            </div>
+
+            <hr/> <h3>A8.net</h3>
+            <p>A8.net経由のアゴダ(Agoda)などで使用します。</p>
+            <div className="form-group">
+                <label>a8mat</label>
+                <input type="text" name="a8mat" value={settings.a8mat} onChange={handleChange} placeholder="例: 3ZHPHD+247I7M+4X1W+BWGDT" />
             </div>
 
             <hr/>
