@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const MIN_LENGTH = 3;
@@ -7,7 +7,7 @@ const MAX_DISPLAY = 15;
 
 function Home() {
     const [keyword, setKeyword] = useState('');
-    const [results, setResults] = useState([]);
+    const [results, setResults] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [realTimeMessage, setRealTimeMessage] = useState('');
@@ -17,7 +17,7 @@ function Home() {
     
     const navigate = useNavigate();
 
-    const handleSearch = async (isLoadMore = false) => {
+    const handleSearch = async (isLoadMore: boolean = false) => {
         const query = keyword.trim();
         let targetPage = isLoadMore ? currentPage + 1 : 1;
         
@@ -41,7 +41,7 @@ function Home() {
 
         setLoading(true);
 
-        const settings = JSON.parse(localStorage.getItem('linkBuilderSettings')) || {};
+        const settings = JSON.parse(localStorage.getItem('linkBuilderSettings') || '{}');
         const appId = settings.rakutenAppId;
 
         if (!appId) {
@@ -54,8 +54,8 @@ function Home() {
         const params = new URLSearchParams({
             format: 'json',
             keyword: isLoadMore ? currentKeyword : query,
-            page: targetPage,
-            hits: MAX_HITS,
+            page: targetPage.toString(),
+            hits: MAX_HITS.toString(),
             applicationId: appId
         });
 
@@ -84,7 +84,7 @@ function Home() {
                 throw new Error(data.error_description || data.error || 'エラーが発生しました');
             }
             
-            const newHotels = data.hotels.map(h => h.hotel[0].hotelBasicInfo);
+            const newHotels = data.hotels.map((h: any) => h.hotel[0].hotelBasicInfo);
             const updatedResults = isLoadMore ? [...results, ...newHotels] : newHotels;
             setResults(updatedResults);
             
@@ -98,7 +98,7 @@ function Home() {
                 setHasMore(true);
             }
 
-        } catch (error) {
+        } catch (error: any) {
             console.error('Search failed:', error);
             setMessage(`検索に失敗しました: ${error.message}`);
         } finally {
@@ -106,7 +106,7 @@ function Home() {
         }
     };
 
-    const handleSelectHotel = (hotel) => {
+    const handleSelectHotel = (hotel: any) => {
         const fullAddress = `${hotel.address1 || ''}${hotel.address2 || ''}`;
         const placeholderUrl = 'https://placehold.co/120x120/cccccc/333333?text=No+Image';
         
@@ -121,7 +121,7 @@ function Home() {
         navigate('/builder');
     };
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             handleSearch(false);
         }
@@ -151,7 +151,7 @@ function Home() {
             {message && <p className="message">{message}</p>}
 
             <div id="results">
-                {results.map((hotel, index) => {
+                {results.map((hotel: any, index: number) => {
                     if (index >= MAX_DISPLAY) return null;
                     const fullAddress = `${hotel.address1 || ''}${hotel.address2 || ''}`;
                     const placeholderUrl = 'https://placehold.co/120x120/cccccc/333333?text=No+Image';
@@ -159,7 +159,7 @@ function Home() {
 
                     return (
                         <div key={hotel.hotelNo} className="result-card">
-                            <img src={imageUrl} alt={hotel.hotelName} className="result-image" onError={(e) => { e.target.onerror = null; e.target.src = placeholderUrl; }} />
+                            <img src={imageUrl} alt={hotel.hotelName} className="result-image" onError={(e: any) => { e.target.onerror = null; e.target.src = placeholderUrl; }} />
                             <div className="result-info">
                                 <h3>{hotel.hotelName}</h3>
                                 <p>{fullAddress}</p>

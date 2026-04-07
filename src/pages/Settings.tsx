@@ -1,7 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
+type SettingsState = {
+    rakutenAppId: string;
+    rakutenAffiliateId: string;
+    vcSid: string;
+    vcPidJalan: string;
+    vcPidIkkyu: string;
+    vcPidYahoo: string;
+    atRkihg: string;
+    atRkjphotels: string;
+    lsid: string;
+    [key: string]: string; // Allow dynamic key access
+};
 
 function Settings() {
-    const [settings, setSettings] = useState({
+    const [settings, setSettings] = useState<SettingsState>({
         rakutenAppId: '',
         rakutenAffiliateId: '',
         vcSid: '',
@@ -16,11 +29,11 @@ function Settings() {
     const [notification, setNotification] = useState('');
 
     useEffect(() => {
-        const storedSettings = JSON.parse(localStorage.getItem('linkBuilderSettings')) || {};
+        const storedSettings = JSON.parse(localStorage.getItem('linkBuilderSettings') || '{}');
         setSettings(prev => ({ ...prev, ...storedSettings }));
     }, []);
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setSettings(prev => ({
             ...prev,
@@ -29,10 +42,9 @@ function Settings() {
     };
 
     const saveSettings = () => {
-        // Trim inputs when saving
-        const trimmedSettings = {};
-        for (const key in settings) {
-             trimmedSettings[key] = settings[key].trim ? settings[key].trim() : settings[key];
+        const trimmedSettings: SettingsState = { ...settings };
+        for (const key in trimmedSettings) {
+             trimmedSettings[key] = typeof trimmedSettings[key] === 'string' ? trimmedSettings[key].trim() : trimmedSettings[key];
         }
         localStorage.setItem('linkBuilderSettings', JSON.stringify(trimmedSettings));
         setSettings(trimmedSettings);
