@@ -1,0 +1,458 @@
+/* ==========================================================================
+   Link Builder - Common Stylesheet
+   ========================================================================== */
+
+
+/* --- 1. 全ページ共通スタイル --- */
+body {
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    background-color: #f4f7f9;
+    color: #333;
+    margin: 0;
+    padding-top: 80px; /* 固定ヘッダーの高さ分、コンテンツを下にずらす */
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #1a3e5c;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 30px 0;
+}
+
+
+/* --- 2. ヘッダー --- */
+.app-header {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+}
+.app-header .container {
+    display: block !important; 
+    padding: 10px 0; 
+    margin: 0; 
+    box-shadow: none;
+    margin-left: 20px;
+}
+
+.header-logo {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    position: relative;
+}
+
+.version-tag {
+    position: absolute;
+    bottom: 0px;
+    right: -45px; 
+    font-size: 10px;
+    color: #888;
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+.header-controls {
+    margin-right: 30px; 
+    display: flex;
+    align-items: center; 
+}
+
+.setting-button {
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.header-text-link {
+    color: #6c757d; 
+    text-decoration: none;
+    font-weight: 500;
+    margin-right: 15px; 
+    padding: 8px 0; 
+}
+
+
+/* --- 3. メインコンテンツエリア --- */
+.container {
+    max-width: 80%;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* --- 4. フォーム関連 --- */
+input[type="text"] {
+    height: 45px;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    padding: 0 15px;
+    width: 100%;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.search-form #searchInput {
+    height: 50px;
+    flex-grow: 1;
+}
+.search-form #searchButton {
+    height: 50px;
+    width: auto;
+    flex-shrink: 0;
+}
+
+.page-setting .form-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.page-setting .form-group label {
+    display: block;
+    font-weight: bold;
+    flex-basis: 260px;
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.page-builder .form-group {
+    margin-bottom: 20px;
+}
+.page-builder .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.page-builder .form-group[hidden] {
+    display: none;
+}
+.page-builder .form-group:not([hidden]) {
+    display: block;
+}
+
+.site-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+.site-selection div { display: flex; align-items: center; }
+.site-selection input[type="checkbox"] { margin-right: 8px; }
+
+
+/* --- 5. ボタン類 --- */
+#searchButton, #saveButton, #generateBtn {
+    border: none;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+#searchButton:hover, #saveButton:hover, #generateBtn:hover {
+    background: #0056b3;
+}
+#searchButton { padding: 0 25px; }
+/* ★修正点：margin-bottom: 20px; を削除★ */
+#saveButton, #generateBtn, #copyCssButton { width: 100%; padding: 12px 25px; }
+
+#copyBtn {
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    background: #17a2b8;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 10px;
+}
+#copyBtn:hover {
+    background: #138496;
+}
+
+.select-button {
+    align-self: flex-start;
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+/* --- 6. その他コンポーネント --- */
+#results { display: flex; flex-direction: column; gap: 15px; }
+.result-card { display: flex; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; background-color: #fff; transition: box-shadow 0.2s ease; }
+.result-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.result-image { width: 120px; height: 120px; object-fit: cover; flex-shrink: 0; }
+.result-info { padding: 15px; display: flex; flex-direction: column; }
+.result-info h3 { margin: 0 0 10px 0; font-size: 18px; }
+.result-info p { margin: 0 0 15px 0; font-size: 14px; color: #666; }
+
+#previewSection { margin-top: 30px; }
+#previewArea { border: 2px dashed #ccc; padding: 20px; border-radius: 8px; background-color: #fafafa; min-height: 100px; }
+
+footer {
+ text-align: center;
+ color: #6c757d; 
+ text-decoration: none;
+}
+
+.load-more-link {
+    text-align: center;
+    color: #6c757d;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 10px 0;
+    margin-top: 15px;
+    transition: color 0.2s;
+}
+.load-more-link:hover {
+    color: #333;
+}
+.load-more-message {
+    text-align: center;
+    color: #6c757d;
+    font-size: 14px;
+    padding: 10px 0;
+    margin-top: 15px;
+}
+
+#outputCode {
+    width: 100%; 
+    height: 50%;
+    box-sizing: border-box; 
+    resize: none !important; 
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    font-size: 16px;
+}
+
+#design-selection, #searchButton, #saveButton, #generateBtn {
+    border: none;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding: 12px 25px;
+    width: 100%;
+}
+
+#design-selection, #searchButton:hover, #saveButton:hover, #generateBtn:hover {
+    background: #0056b3;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.design-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.design-btn {
+    font-size: 16px; 
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    box-sizing: border-box;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    color: #495057;
+    padding: 10px 15px;
+    transition: all 0.2s ease;
+    flex-grow: 1; 
+    min-width: 150px;
+    text-align: center;
+}
+
+.design-btn:hover:not(.active) {
+    background-color: #f1f1f1;
+    border-color: #a0aec0;
+}
+
+.design-btn.active {
+    border-color: #007bff; 
+    background-color: #e6f2ff;
+    color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.design-edit-control .checkbox-control {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.design-edit-control .checkbox-control input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.design-edit-control .checkbox-control label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin: 0;
+    font-weight: normal;
+    color: #495057;
+}
+
+.design-edit-control .checkbox-control label::before {
+    content: '';
+    display: inline-block;
+    width: 38px;
+    height: 20px;
+    background-color: #ced4da;
+    border-radius: 10px;
+    margin-right: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.design-edit-control .checkbox-control label::after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, left 0.2s ease;
+}
+
+.design-edit-control .checkbox-control input[type="checkbox"]:checked + label::before {
+    background-color: #007bff;
+}
+
+.design-edit-control .checkbox-control input[type="checkbox"]:checked + label::after {
+    transform: translate(18px, -50%);
+}
+
+.design-edit-control > .form-group {
+    margin-top: 20px; 
+}
+
+.design-edit-control .checkbox-control {
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+#hotelAddressDisplay {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    font-size: 14px;
+    resize: none;
+}
+
+.edit-guide {
+    font-size: 13px;
+    color: #6c757d;
+    text-align: left;
+    margin: 0px 0 5px 0;
+}
+
+.code-display {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 14px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    resize: vertical;
+    min-height: 150px;
+}
+
+.btn-secondary {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    background: #17a2b8;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: #138496;
+}
+
+.btn-notification {
+    padding: 12px 20px;
+    margin-top: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    box-sizing: border-box;
+}
+.notification-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.notification-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}

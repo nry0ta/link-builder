@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設定</title>
+    <link rel="stylesheet" href="common.css">
+</head>
+<biv>
+
+    <header class="app-header">
+        <div class="container">
+            <a href="/home.html" class="header-logo">Link Builder <span class="version-tag">β ver. 2.1</span></a>
+        </div>
+        <div class="header-controls">
+            <a href="/usage.html" class="header-text-link">使い方</a>
+            <a href="/setting.html" class="setting-button">設定</a>
+        </div>
+    </header>
+    <div class="container">
+    <h1>使い方</h1>
+    <hr>
+    <h2>1. CSSコードの設置 (初回のみ)</h2>
+        <p>当ツールで生成したアフィリエイトリンクのデザインをブログで正しく表示するために、以下のCSSコードをあなたのサイトのCSSファイルに一度だけコピー＆ペーストしてください。</p>
+        <p>（WordPressテーマをご利用の場合、「追加CSS」の欄に貼り付けるのが最も簡単です）</p>
+
+        <textarea id="cssCodeDisplay" class="code-display" readonly rows="15"></textarea>
+        <button id="copyCssButton" class="btn-secondary">CSSをコピー</button>
+        <div id="notificationArea"></div>
+        
+        <hr>
+    <h2>初期設定</h2>
+    <p>当サイトは国内ホテルの情報取得において、Rakuten Web ServiceのAPIを利用して各ホテルの情報を取得しています。</p>
+    <p>そのため、ご利用者様ご自身でご登録いただき、アプリケーションIDを設定よりご登録ださい。</p>
+    <hr>
+    <h2>検索結果について</h2>
+    <hr>
+    <h2>プライバシーポリシー</h2>
+    <hr>
+    </biv>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cssCodeDisplay = document.getElementById('cssCodeDisplay');
+            const copyCssButton = document.getElementById('copyCssButton');
+            const notificationArea = document.getElementById('notificationArea');
+    
+            // link-builder-styles.cssの内容を読み込んでtextareaに表示する
+            fetch('link-builder-styles.css')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(cssText => {
+                    cssCodeDisplay.value = cssText.trim();
+                })
+                .catch(error => {
+                    console.error('CSSファイルの読み込みに失敗しました:', error);
+                    cssCodeDisplay.value = 'CSSファイルの読み込みに失敗しました。link-builder-styles.css が同じ階層にあるか確認してください。';
+                });
+    
+            // コピーボタンのクリックイベント
+            copyCssButton.addEventListener('click', () => {
+                if (!cssCodeDisplay.value || cssCodeDisplay.value.startsWith('CSSファイルの読み込みに失敗')) return;
+                
+                navigator.clipboard.writeText(cssCodeDisplay.value).then(() => {
+                    showNotification('CSSコードをコピーしました！', 'success');
+                }).catch(() => {
+                    showNotification('コピーに失敗しました。', 'error');
+                });
+            });
+    
+            // 通知表示用の関数
+            function showNotification(message, type = 'success') {
+                if (!notificationArea) return;
+                notificationArea.textContent = message;
+                notificationArea.className = `notification ${type === 'success' ? 'notification-success' : 'notification-error'}`;
+                notificationArea.style.display = 'block';
+                setTimeout(() => { notificationArea.style.opacity = '1'; }, 10);
+                setTimeout(() => {
+                    notificationArea.style.opacity = '0';
+                    setTimeout(() => { notificationArea.style.display = 'none'; }, 500);
+                }, 3000);
+            }
+        });
+    </script>
+    
+</body>    
+</html>

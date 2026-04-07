@@ -1,0 +1,164 @@
+/* ==========================================================================
+   Link Builder - Distributable Stylesheet
+   ========================================================================== */
+
+/* --- 中央揃え用のラッパー --- */
+.link-builder-wrapper {
+    text-align: center;
+}
+
+/* --- 単一ジャンプモード --- */
+.af-single-jump-btn { 
+    display: inline-block; 
+    padding: 12px 24px; 
+    color: white !important; 
+    text-decoration: none; 
+    border-radius: 50px; 
+    font-weight: bold; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* --- モーダルモード --- */
+.af-hotel-button { 
+    display: block; 
+    width: 100%; 
+    max-width: 500px; 
+    margin: 20px auto; 
+    padding: 15px; 
+    background: linear-gradient(135deg, #FF6B6B, #FFC107); 
+    color: white !important; 
+    text-align: center; 
+    font-size: 18px; 
+    font-weight: bold; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+    transition: all 0.3s ease; 
+    text-decoration:none; 
+}
+.af-modal-backdrop { 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0,0,0,0.6); 
+    z-index: 1000; 
+    display: none; 
+    justify-content: center; 
+    align-items: center; 
+}
+.af-modal-content { background-color: #fff; padding: 20px 30px; border-radius: 8px; width: 90%; max-width: 500px; }
+.af-modal-header { font-size: 20px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.af-link-list { list-style: none; padding: 0; margin: 0; }
+.af-link-item a { display: block; padding: 12px 10px; text-decoration: none; color: #333; border-radius: 5px; transition: background-color 0.2s; margin-bottom: 8px; border: 1px solid #ddd; font-weight: bold; }
+
+/* --- 複数ボタンモード --- */
+.af-multi-container {
+    border: 1px solid #e1e7ec; 
+    border-radius: 12px; 
+    max-width: 600px; 
+    margin: 20px auto; 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06); 
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #fff;
+    padding: 20px;
+    gap: 20px;
+}
+.af-image-wrapper {
+    flex: 1 1 200px;
+    max-width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+.af-multi-container img { 
+    width: 100%; 
+    height: auto; 
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.af-info-wrapper {
+    flex: 2 1 280px;
+    display: flex;
+    flex-direction: column;
+}
+.af-hotel-name {
+    font-size: 1.15rem; 
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #1e293b;
+    line-height: 1.4;
+}
+.af-hotel-address {
+    font-size: 0.85rem; 
+    color: #64748b; 
+    margin: 0 0 16px; 
+    line-height: 1.4;
+}
+.af-links-wrapper { 
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 8px;
+    margin-top: auto;
+}
+.af-multi-btn { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 8px; 
+    color: white !important; 
+    text-decoration: none; 
+    border-radius: 6px; 
+    text-align: center; 
+    font-size: 0.85rem;
+    font-weight: bold; 
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 520px) {
+    .af-multi-container {
+        flex-direction: column;
+        padding: 15px;
+    }
+    .af-image-wrapper {
+        max-width: 100%;
+        margin-bottom: 5px;
+    }
+    .af-hotel-name {
+        font-size: 1.1rem;
+    }
+    .af-links-wrapper {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* --- ホバーエフェクト --- */
+.af-single-jump-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+.af-hotel-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+.af-link-item a:hover { background-color: #f5f5f5; }
+.af-multi-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.15); filter: brightness(105%); }
+
+/* --- ブランドカラー定義 --- */
+/* 楽天トラベル */
+.btn-rakuten { background-color: #BF0000; }
+/* じゃらんnet */
+.btn-jalan { background-color: #ff9900; }
+/* 一休.com */
+.btn-ikkyu { background-color: #b38d4a; }
+/* Yahoo!トラベル */
+.btn-yahoo { background-color: #FF0033; }
+/* Booking.com */
+.btn-booking { background-color: #003580; }
+/* IHG */
+.btn-ihg { background-color: #005c64; }
+/* Trip.com */
+.btn-tripcom { background-color: #3273f6; }
+/* デフォルトの単一ボタンカラー */
+.btn-single-default { background: linear-gradient(135deg, #007bff, #0056b3); }
