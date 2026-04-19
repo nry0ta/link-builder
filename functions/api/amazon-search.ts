@@ -24,7 +24,7 @@ export async function onRequestPost(context: any) {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: `grant_type=client_credentials&client_id=${clientId}&client_secret=${clientSecret}`
+            body: `grant_type=client_credentials&client_id=${encodeURIComponent(clientId)}&client_secret=${encodeURIComponent(clientSecret)}`
         });
 
         const tokenData = await tokenResponse.json() as any;
