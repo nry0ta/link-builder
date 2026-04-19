@@ -493,7 +493,12 @@ footer a:hover {
 .af-modal-content { background-color: #fff; padding: 20px 30px; border-radius: 8px; width: 90%; max-width: 500px; }
 .af-modal-header { font-size: 20px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 .af-link-list { list-style: none; padding: 0; margin: 0; }
+/* テキストリンクスタイル（デフォルト） */
 .af-link-item a { display: block; padding: 12px 10px; text-decoration: none; color: #333; border-radius: 5px; transition: background-color 0.2s; margin-bottom: 8px; border: 1px solid #ddd; font-weight: bold; }
+/* ボタンスタイル */
+.af-link-list-btn { display: flex; flex-direction: column; gap: 8px; }
+.af-link-btn a { display: block; padding: 12px 16px; text-decoration: none; color: white !important; border: none; font-weight: bold; border-radius: 6px; text-align: center; transition: filter 0.2s; }
+.af-link-btn a:hover { filter: brightness(110%); }
 
 /* --- 複数ボタンモード --- */
 .af-multi-container {

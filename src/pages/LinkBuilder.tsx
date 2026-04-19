@@ -57,7 +57,8 @@ function LinkBuilder() {
     });
     const [designTexts, setDesignTexts] = useState<any>({
         singleJumpText: '', modalButtonText: '', multipleBtnText: '',
-        showImage: true, showAddress: true, customImageUrl: '', customAddress: ''
+        showImage: true, showAddress: true, customImageUrl: '', customAddress: '',
+        modalLinkStyle: 'button'
     });
     const [generatedCode, setGeneratedCode] = useState('');
     const [previewHtml, setPreviewHtml] = useState('');
@@ -269,8 +270,13 @@ function LinkBuilder() {
                 html = `<div class="af-single-wrapper"><a href="${links[0].url}" id="${uniqueId}" target="_blank" rel="nofollow sponsored noopener" class="af-single-jump-btn btn-${links[0].styleSite}">${designTexts.singleJumpText}</a></div>`;
                 break;
             case 'modal': 
-                const linksHtml = links.map(l => `<li class="af-link-item"><a href="${l.url}" target="_blank" rel="nofollow sponsored noopener">${l.name}で見る</a></li>`).join(''); 
-                html = `<div class="af-link-builder-wrapper af-item-container" id="${uniqueId}">\n    <div class="af-item-button af-hotel-button">${designTexts.modalButtonText}</div>\n    <div class="af-modal-backdrop"><div class="af-modal-content"><div class="af-modal-header">${hotelData.name}</div><ul class="af-link-list">${linksHtml}</ul></div></div>\n    <script>(function(){var c=document.getElementById('${uniqueId}');if(c.dataset.initialized)return;var o=c.querySelector('.af-item-button');var m=c.querySelector('.af-modal-backdrop');var l=${links.length};if(l===1){o.outerHTML=o.outerHTML.replace(/^<div/,'<a').replace(/div>$/,'a>');var btn=c.querySelector('.af-item-button');btn.href=c.querySelector('a').href;btn.target='_blank';btn.rel='nofollow sponsored noopener';}else{o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});}m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});c.dataset.initialized='true';}())<\/script>\n</div>`;
+                const linksHtml = links.map(l => {
+                    if (designTexts.modalLinkStyle === 'text') {
+                        return `<li class="af-link-item af-link-text"><a href="${l.url}" target="_blank" rel="nofollow sponsored noopener">${l.name}で見る</a></li>`;
+                    }
+                    return `<li class="af-link-item af-link-btn"><a href="${l.url}" target="_blank" rel="nofollow sponsored noopener" class="af-multi-btn btn-${l.styleSite}">${l.name}で見る</a></li>`;
+                }).join(''); 
+                html = `<div class="af-link-builder-wrapper af-item-container" id="${uniqueId}">\n    <div class="af-item-button af-hotel-button">${designTexts.modalButtonText}</div>\n    <div class="af-modal-backdrop"><div class="af-modal-content"><div class="af-modal-header">${hotelData.name}</div><ul class="af-link-list${designTexts.modalLinkStyle === 'button' ? ' af-link-list-btn' : ''}">${linksHtml}</ul></div></div>\n    <script>(function(){var c=document.getElementById('${uniqueId}');if(c.dataset.initialized)return;var o=c.querySelector('.af-item-button');var m=c.querySelector('.af-modal-backdrop');var l=${links.length};if(l===1){o.outerHTML=o.outerHTML.replace(/^<div/,'<a').replace(/div>$/,'a>');var btn=c.querySelector('.af-item-button');btn.href=c.querySelector('a').href;btn.target='_blank';btn.rel='nofollow sponsored noopener';}else{o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});}m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});c.dataset.initialized='true';}())<\/script>\n</div>`;
                 break;
             case 'multiple': 
                 const img = designTexts.showImage && designTexts.customImageUrl ? `<div class="af-image-wrapper"><img src="${designTexts.customImageUrl}" alt="${hotelData.name}"></div>` : ''; 
@@ -402,6 +408,27 @@ function LinkBuilder() {
                                 <div className="checkbox-control"><input type="checkbox" id="shAd" checked={designTexts.showAddress} onChange={e => setDesignTexts({...designTexts, showAddress: e.target.checked})} /><label htmlFor="shAd">価格/備考を表示</label></div>
                                 {designTexts.showAddress && <input type="text" value={designTexts.customAddress} onChange={e => setDesignTexts({...designTexts, customAddress: e.target.value})} placeholder="価格情報など" />}
                             </>
+                        )}
+                        {designMode === 'modal' && (
+                            <div className="checkbox-control" style={{ marginTop: '12px', gap: '16px' }}>
+                                <span style={{ fontWeight: 'bold', fontSize: '0.9rem', marginRight: '8px' }}>モーダル内リンク:</span>
+                                <label style={{ cursor: 'pointer', fontWeight: 'normal' }}>
+                                    <input type="radio" name="modalLinkStyle" value="button"
+                                        checked={designTexts.modalLinkStyle === 'button'}
+                                        onChange={() => setDesignTexts({...designTexts, modalLinkStyle: 'button'})}
+                                        style={{ marginRight: '4px' }}
+                                    />
+                                    ボタン
+                                </label>
+                                <label style={{ cursor: 'pointer', fontWeight: 'normal' }}>
+                                    <input type="radio" name="modalLinkStyle" value="text"
+                                        checked={designTexts.modalLinkStyle === 'text'}
+                                        onChange={() => setDesignTexts({...designTexts, modalLinkStyle: 'text'})}
+                                        style={{ marginRight: '4px' }}
+                                    />
+                                    テキストリンク
+                                </label>
+                            </div>
                         )}
                     </div>
                 </div>
