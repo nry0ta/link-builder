@@ -407,13 +407,13 @@ function LinkBuilder() {
             )}
 
             <hr />
-            <button id="generateBtn" onClick={generateCode} style={{ background: '#007bff', color: '#fff', padding: '15px 30px', fontSize: '1.2rem' }}>コードを生成</button>
+            <button id="generateBtn" onClick={generateCode}>コードを生成</button>
             
             {generatedCode && (
                 <div style={{ marginTop: '30px' }}>
                     <h2>ブログ用コード</h2>
                     <textarea rows={8} className="code-display" readOnly value={generatedCode} />
-                    <button onClick={copyCode} style={{ marginTop: '10px' }}>コピーする</button>
+                    <button id="copyBtn" onClick={copyCode}>コピーする</button>
                 </div>
             )}
 
