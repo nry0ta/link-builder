@@ -495,10 +495,22 @@ footer a:hover {
 .af-link-list { list-style: none; padding: 0; margin: 0; }
 /* テキストリンクスタイル（デフォルト） */
 .af-link-item a { display: block; padding: 12px 10px; text-decoration: none; color: #333; border-radius: 5px; transition: background-color 0.2s; margin-bottom: 8px; border: 1px solid #ddd; font-weight: bold; }
-/* ボタンスタイル */
-.af-link-list-btn { display: flex; flex-direction: column; gap: 8px; }
-.af-link-btn a { display: block; padding: 12px 16px; text-decoration: none; color: white !important; border: none; font-weight: bold; border-radius: 6px; text-align: center; transition: filter 0.2s; }
-.af-link-btn a:hover { filter: brightness(110%); }
+
+/* モーダルを開くためのテキストリンク */
+.af-text-trigger {
+    display: inline-block;
+    color: #0066cc;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
+.af-text-trigger:hover {
+    color: #004499;
+}
 
 /* --- 複数ボタンモード --- */
 .af-multi-container {
