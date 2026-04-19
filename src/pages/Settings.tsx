@@ -123,7 +123,7 @@ function Settings() {
             <hr/> <h3>Amazon・Yahoo!ショッピング 詳細設定</h3>
             <div className="form-group">
                 <label>Amazonリンク優先度</label>
-                <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px' }}>
                     <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
                         <input type="radio" name="amazonPriority" value="associate" checked={settings.amazonPriority === 'associate'} onChange={handleChange} />
                         Amazonアソシエイト
