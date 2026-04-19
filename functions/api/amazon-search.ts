@@ -1,5 +1,5 @@
 // Cloudflare Pages Function for Amazon Creators API Search Proxy
-// Uses OAuth 2.0 (Client Credentials Grant) with scope: creatorsapi::default
+// Uses Amazon Cognito OAuth 2.0 (Client Credentials Grant)
 
 export async function onRequestPost(context: any) {
     try {
@@ -18,15 +18,19 @@ export async function onRequestPost(context: any) {
         clientSecret = clientSecret.trim();
         partnerTag = partnerTag.trim();
 
-        // Step 1: Obtain Access Token using OAuth 2.0
+        // Step 1: Obtain Access Token using OAuth 2.0 (Cognito Basic Auth)
+        // Japan (FE) region uses ap-northeast-1
+        const basicAuth = btoa(`${clientId}:${clientSecret}`);
+
         let tokenResponse: Response;
         try {
-            tokenResponse = await fetch('https://api.amazon.co.jp/auth/o2/token', {
+            tokenResponse = await fetch('https://creatorsapi.auth.ap-northeast-1.amazoncognito.com/oauth2/token', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Basic ${basicAuth}`
                 },
-                body: `grant_type=client_credentials&client_id=${encodeURIComponent(clientId)}&client_secret=${encodeURIComponent(clientSecret)}&scope=creatorsapi%3A%3Adefault`
+                body: `grant_type=client_credentials&scope=creatorsapi/default`
             });
         } catch (fetchErr: any) {
             return new Response(JSON.stringify({ error: 'Token fetch failed', details: fetchErr.message }), {
@@ -36,10 +40,12 @@ export async function onRequestPost(context: any) {
         }
 
         let tokenData: any;
+        let rawTokenText = '';
         try {
-            tokenData = await tokenResponse.json();
+            rawTokenText = await tokenResponse.text();
+            tokenData = JSON.parse(rawTokenText);
         } catch {
-            return new Response(JSON.stringify({ error: 'Token parse failed', status: tokenResponse.status }), {
+            return new Response(JSON.stringify({ error: 'Token parse failed', status: tokenResponse.status, rawBody: rawTokenText }), {
                 status: 502,
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -48,7 +54,8 @@ export async function onRequestPost(context: any) {
         if (!tokenResponse.ok || !tokenData.access_token) {
             return new Response(JSON.stringify({
                 error: 'Authentication Failed',
-                details: tokenData.error_description || tokenData.error || 'Invalid Client ID or Secret'
+                details: tokenData.error_description || tokenData.error || 'Invalid Client ID or Secret',
+                rawBody: rawTokenText
             }), {
                 status: 401,
                 headers: { 'Content-Type': 'application/json' }
@@ -56,6 +63,7 @@ export async function onRequestPost(context: any) {
         }
 
         const accessToken = tokenData.access_token;
+        const credentialVersion = '2.3'; // FE Region version
 
         // Step 2: Call Creators API SearchItems
         const payload = {
@@ -71,10 +79,10 @@ export async function onRequestPost(context: any) {
 
         let searchResponse: Response;
         try {
-            searchResponse = await fetch('https://creatorsapi.amazon.com/catalog/v1/searchItems', {
+            searchResponse = await fetch('https://creatorsapi.amazon/catalog/v1/searchItems', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`,
+                    'Authorization': `Bearer ${accessToken}, Version ${credentialVersion}`,
                     'Content-Type': 'application/json',
                     'x-marketplace': 'www.amazon.co.jp'
                 },
@@ -88,10 +96,17 @@ export async function onRequestPost(context: any) {
         }
 
         let searchData: any;
+        let rawText = '';
         try {
-            searchData = await searchResponse.json();
-        } catch {
-            return new Response(JSON.stringify({ error: 'Search parse failed', status: searchResponse.status }), {
+            rawText = await searchResponse.text();
+            searchData = JSON.parse(rawText);
+        } catch (parseErr: any) {
+            return new Response(JSON.stringify({ 
+                error: 'Search parse failed', 
+                status: searchResponse.status, 
+                rawBody: rawText,
+                parseError: parseErr.message
+            }), {
                 status: 502,
                 headers: { 'Content-Type': 'application/json' }
             });
