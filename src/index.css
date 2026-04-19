@@ -584,13 +584,14 @@ footer a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 8px; 
+    padding: 10px 12px; 
     color: white !important; 
     text-decoration: none; 
     border-radius: 6px; 
     text-align: center; 
     font-size: 0.85rem;
-    font-weight: bold; 
+    font-weight: bold;
+    white-space: nowrap; /* テキストの折り返しを禁止 */
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -598,8 +599,7 @@ footer a:hover {
 @media (max-width: 600px) {
     .af-multi-container {
         flex-direction: column !important;
-        align-items: center !important;
-        text-align: center !important;
+        align-items: flex-start !important;
         padding: 20px 15px !important;
         gap: 15px !important;
     }
@@ -607,7 +607,7 @@ footer a:hover {
         flex: 0 0 160px !important;
         width: 160px !important;
         height: 160px !important;
-        margin: 0 auto !important;
+        margin: 0 auto !important; /* 画像のみセンター */
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
@@ -615,28 +615,31 @@ footer a:hover {
     .af-info-wrapper {
         flex: none !important;
         width: 100% !important;
-        text-align: center !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
+        text-align: left !important; /* 商品名・価格は左寄せ */
+        display: block !important;
     }
     .af-hotel-name, .af-item-name {
         font-size: 1.15rem !important;
-        text-align: center !important;
-        width: 100% !important;
-        display: block !important; /* Switch to block to ensure text-align works */
-        margin: 0 auto 8px auto !important;
+        text-align: left !important;
+        display: block !important;
     }
     .af-hotel-address, .af-item-address {
-        text-align: center !important;
+        text-align: left !important;
         width: 100% !important;
-        margin: 0 auto 16px auto !important;
     }
     .af-links-wrapper {
-        grid-template-columns: 1fr 1fr !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
         gap: 8px !important;
         width: 100% !important;
-        justify-items: center !important;
+    }
+    .af-links-wrapper > .af-multi-btn {
+        flex: 0 0 auto !important; /* ボタン幅は内容に合わせ、縮小しない */
+        min-width: 45% !important;
+    }
+    .af-links-wrapper > .af-emphasize-wrapper {
+        flex: 0 0 100% !important;
+        width: 100% !important;
     }
 }
 
