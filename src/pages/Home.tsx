@@ -123,7 +123,8 @@ function Home() {
             if (!response.ok) {
                 if (data?.error) {
                     if (data.error === 'not_found' || data.error === 'NotFound') { if (!isLoadMore) setMessage('該当する結果は見つかりませんでした。'); setHasMore(false); return; }
-                    throw new Error(data.error_description || data.error || data.details || data.message || 'エラーが発生しました');
+                    const errMsg = data.rawBody ? `[${data.error}] ${data.rawBody}` : (data.error_description || data.error || data.details || data.message || 'エラーが発生しました');
+                    throw new Error(errMsg);
                 }
                 if (data?.Errors) {
                     throw new Error(data.Errors[0]?.Message || 'Amazon API Error');
