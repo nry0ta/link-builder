@@ -7,6 +7,8 @@ type SettingsState = {
     vcPidJalan: string;
     vcPidIkkyu: string;
     vcPidYahoo: string;
+    vcPidAmazon: string;
+    vcPidAnker: string;
     atRkihg: string;
     atRkjphotels: string;
     lsid: string;
@@ -14,6 +16,7 @@ type SettingsState = {
     amazonClientId: string;
     amazonClientSecret: string;
     amazonTrackingId: string;
+    amazonPriority: string;
     yahooSid: string;
     yahooPid: string;
     [key: string]: string; // Allow dynamic key access
@@ -27,6 +30,8 @@ function Settings() {
         vcPidJalan: '',
         vcPidIkkyu: '',
         vcPidYahoo: '',
+        vcPidAmazon: '',
+        vcPidAnker: '',
         atRkihg: '',
         atRkjphotels: '',
         lsid: '',
@@ -34,6 +39,7 @@ function Settings() {
         amazonClientId: '',
         amazonClientSecret: '',
         amazonTrackingId: '',
+        amazonPriority: 'associate',
         yahooSid: '',
         yahooPid: ''
     });
@@ -45,7 +51,7 @@ function Settings() {
         setSettings(prev => ({ ...prev, ...storedSettings }));
     }, []);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setSettings(prev => ({
             ...prev,
@@ -56,7 +62,9 @@ function Settings() {
     const saveSettings = () => {
         const trimmedSettings: SettingsState = { ...settings };
         for (const key in trimmedSettings) {
-             trimmedSettings[key] = typeof trimmedSettings[key] === 'string' ? trimmedSettings[key].trim() : trimmedSettings[key];
+             if (typeof trimmedSettings[key] === 'string') {
+                 trimmedSettings[key] = (trimmedSettings[key] as string).trim();
+             }
         }
         localStorage.setItem('linkBuilderSettings', JSON.stringify(trimmedSettings));
         setSettings(trimmedSettings);
@@ -68,99 +76,96 @@ function Settings() {
     return (
         <div className="container page-setting">
             <h1>設定</h1>
-            <p>APIキーやアフィリエイトIDを保存します。この情報はあなたのブラウザ内にのみ保存されます。<br/>各プラットフォームのIDの取得方法などはこちらをご覧ください。</p>
+            <p>APIキーやアフィリエイトIDを保存します。この情報はあなたのブラウザ内にのみ保存されます。</p>
 
             <hr/> <h3>楽天アフィリエイト</h3>
-            
             <div className="form-group">
                 <label>楽天アプリケーションID (AppID)</label>
                 <input type="text" name="rakutenAppId" value={settings.rakutenAppId} onChange={handleChange} placeholder="楽天ウェブサービスから取得したID" />
             </div>
-
             <div className="form-group">
                 <label>楽天アフィリエイトID</label>
                 <input type="text" name="rakutenAffiliateId" value={settings.rakutenAffiliateId} onChange={handleChange} placeholder="楽天アフィリエイトのID" />
             </div>
 
-            <hr/> <h3>バリューコマース</h3>
-
+            <hr/> <h3>バリューコマース (共通・旅行)</h3>
             <div className="form-group">
                 <label>SID (サイトID)</label>
                 <input type="text" name="vcSid" value={settings.vcSid} onChange={handleChange} placeholder="バリューコマースのサイトID" />
             </div>
-
             <div className="form-group">
-                <label>じゃらんnet PID (広告ID)</label>
-                <input type="text" name="vcPidJalan" value={settings.vcPidJalan} onChange={handleChange} placeholder="じゃらんnetの広告ID (PID)" />
+                <label>じゃらんnet PID</label>
+                <input type="text" name="vcPidJalan" value={settings.vcPidJalan} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+                <label>一休.com PID</label>
+                <input type="text" name="vcPidIkkyu" value={settings.vcPidIkkyu} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+                <label>Yahoo!トラベル PID</label>
+                <input type="text" name="vcPidYahoo" value={settings.vcPidYahoo} onChange={handleChange} />
             </div>
 
+            <hr/> <h3>バリューコマース (ショッピング・Anker)</h3>
             <div className="form-group">
-                <label>一休.com PID (広告ID)</label>
-                <input type="text" name="vcPidIkkyu" value={settings.vcPidIkkyu} onChange={handleChange} placeholder="一休.comの広告ID (PID)" />
+                <label>Yahoo!ショッピング PID</label>
+                <input type="text" name="yahooPid" value={settings.yahooPid} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+                <label>Amazon PID</label>
+                <input type="text" name="vcPidAmazon" value={settings.vcPidAmazon || ''} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+                <label>Anker PID</label>
+                <input type="text" name="vcPidAnker" value={settings.vcPidAnker || ''} onChange={handleChange} />
             </div>
 
+            <hr/> <h3>Amazon・Yahoo!ショッピング 詳細設定</h3>
             <div className="form-group">
-                <label>Yahoo!トラベル PID (広告ID)</label>
-                <input type="text" name="vcPidYahoo" value={settings.vcPidYahoo} onChange={handleChange} placeholder="Yahoo!トラベルの広告ID (PID)" />
+                <label>Amazonリンク優先度</label>
+                <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input type="radio" name="amazonPriority" value="associate" checked={settings.amazonPriority === 'associate'} onChange={handleChange} />
+                        Amazonアソシエイト
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input type="radio" name="amazonPriority" value="valuecommerce" checked={settings.amazonPriority === 'valuecommerce'} onChange={handleChange} />
+                        バリューコマース
+                    </label>
+                </div>
             </div>
-
-            <hr/> <h3>アクセストレード</h3>
-            
-            <div className="form-group">
-                <label>IHG (rk)</label>
-                <input type="text" name="atRkihg" value={settings.atRkihg} onChange={handleChange} placeholder="商品リンクのcc?rk=〇〇の部分" />
-            </div>
-
-            <div className="form-group">
-                <label>jp.hotels.com (rk)</label>
-                <input type="text" name="atRkjphotels" value={settings.atRkjphotels} onChange={handleChange} placeholder="商品リンクのcc?rk=〇〇の部分" />
-            </div>
-
-            <hr/> <h3>リンクシェア</h3>
-            <p>リンクシェアのIDは楽天トラベル、Trip.com、トリバゴ共通です。</p>
-            
-            <div className="form-group">
-                <label>リンクシェア (ID)</label>
-                <input type="text" name="lsid" value={settings.lsid} onChange={handleChange} placeholder="リンクシェアのID" />
-            </div>
-
-            <hr/> <h3>A8.net</h3>
-            <p>A8.net経由のアゴダ(Agoda)などで使用します。</p>
-            <div className="form-group">
-                <label>a8mat</label>
-                <input type="text" name="a8mat" value={settings.a8mat} onChange={handleChange} placeholder="例: 3ZHPHD+247I7M+4X1W+BWGDT" />
-            </div>
-            
-            <hr/> <h3>Amazon・Yahoo!ショッピング</h3>
-            <p>商品紹介モードで使用します。</p>
 
             <div className="form-group">
                 <label>Amazon アソシエイト (トラッキングID)</label>
-                <input type="text" name="amazonTrackingId" value={settings.amazonTrackingId} onChange={handleChange} placeholder="例: your-id-22" />
+                <p className="edit-guide" style={{ fontSize: '0.85rem', color: '#666' }}>カンマ(,)区切りで複数登録できます。Link Builderで選択可能です。</p>
+                <input type="text" name="amazonTrackingId" value={settings.amazonTrackingId} onChange={handleChange} placeholder="your-1-22, your-2-22" />
             </div>
             
-            <p style={{ marginTop: '15px' }}>Amazon Creators API 認証情報 (商品検索用)</p>
+            <p style={{ marginTop: '20px', fontWeight: 'bold' }}>Amazon Creators API (商品検索用)</p>
             <div className="form-group">
-                <label>クライアントID (Client ID)</label>
-                <input type="text" name="amazonClientId" value={settings.amazonClientId} onChange={handleChange} placeholder="amzn1.application-oa2-client..." />
+                <label>Client ID</label>
+                <input type="text" name="amazonClientId" value={settings.amazonClientId} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label>クライアントシークレット (Client Secret)</label>
-                <input type="text" name="amazonClientSecret" value={settings.amazonClientSecret} onChange={handleChange} placeholder="シークレットを入力" />
+                <label>Client Secret</label>
+                <input type="text" name="amazonClientSecret" value={settings.amazonClientSecret} onChange={handleChange} />
             </div>
 
-            <p style={{ marginTop: '15px' }}>Yahoo!ショッピング (バリューコマース)</p>
+            <hr/> <h3>その他アフィリエイト</h3>
             <div className="form-group">
-                <label>SID (サイトID)</label>
-                <input type="text" name="yahooSid" value={settings.yahooSid} onChange={handleChange} placeholder="バリューコマースのサイトID" />
+                <label>アクセストレード (rk)</label>
+                <input type="text" name="atRkihg" value={settings.atRkihg} onChange={handleChange} placeholder="IHGなど" />
             </div>
             <div className="form-group">
-                <label>PID (広告ID)</label>
-                <input type="text" name="yahooPid" value={settings.yahooPid} onChange={handleChange} placeholder="Yahoo!ショッピングの広告ID (PID)" />
+                <label>リンクシェア ID</label>
+                <input type="text" name="lsid" value={settings.lsid} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+                <label>A8.net (a8mat)</label>
+                <input type="text" name="a8mat" value={settings.a8mat} onChange={handleChange} />
             </div>
 
             <hr/>
-
             <button id="saveButton" onClick={saveSettings}>設定を保存</button>
 
             {notification && (

@@ -69,11 +69,41 @@ export function createTripcomLink(lsid: string): string {
 }
 
 /**
- * Amazonの検索リンクを生成します。
+ * Amazonのリンクを生成します。
  */
-export function createAmazonLink(tag: string, keyword: string): string {
-    const base = `https://www.amazon.co.jp/s?k=${encodeURIComponent(keyword)}&linkCode=ll2&tag=${tag || 'default-22'}`;
-    return base;
+export function createAmazonLink(tag: string, keyword: string, asin?: string): string {
+    if (asin) {
+        return `https://www.amazon.co.jp/dp/${asin}?tag=${tag || 'default-22'}&linkCode=ll1`;
+    }
+    return `https://www.amazon.co.jp/s?k=${encodeURIComponent(keyword)}&linkCode=ll2&tag=${tag || 'default-22'}`;
+}
+
+/**
+ * Amazonの検索リンクを生成します（バリューコマース経由）。
+ */
+export function createValueCommerceAmazonLink(sid: string, pid: string, keyword: string): string {
+    if (!sid || !pid || !keyword) return '';
+    const searchUrl = `https://www.amazon.co.jp/s?k=${encodeURIComponent(keyword)}`;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodeURIComponent(searchUrl)}`;
+}
+
+/**
+ * Ankerの検索リンクを生成します（バリューコマース経由）。
+ */
+export function createAnkerLink(sid: string, pid: string, keyword: string): string {
+    if (!sid || !pid || !keyword) return '';
+    const searchUrl = `https://www.ankerjapan.com/search?type=product&filter.v.availability=1&q=${encodeURIComponent(keyword)}`;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodeURIComponent(searchUrl)}`;
+}
+
+/**
+ * 楽天市場の検索リンクを生成します。
+ */
+export function createRakutenSearchLink(affiliateId: string, keyword: string): string {
+    if (!affiliateId || !keyword) return '';
+    const searchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(keyword)}/`;
+    const encodedUrl = encodeURIComponent(searchUrl);
+    return `https://hb.afl.rakuten.co.jp/hgc/${affiliateId}/?pc=${encodedUrl}&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9`;
 }
 
 /**
@@ -81,6 +111,6 @@ export function createAmazonLink(tag: string, keyword: string): string {
  */
 export function createYahooShoppingLink(sid: string, pid: string, keyword: string): string {
     if (!sid || !pid || !keyword) { return ''; }
-    const searchUrl = `https://shopping.yahoo.co.jp/search?p=${encodeURIComponent(keyword)}`;
+    const searchUrl = `https://shopping.yahoo.co.jp/search/${encodeURIComponent(keyword)}/0/`;
     return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodeURIComponent(searchUrl)}`;
 }
