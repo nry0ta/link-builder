@@ -127,7 +127,7 @@ input[type="text"] {
     gap: 15px;
     margin-bottom: 20px;
 }
-.page-setting .form-group label {
+.page-setting .form-group > label {
     display: block;
     font-weight: bold;
     flex-basis: 260px;
