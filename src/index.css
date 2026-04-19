@@ -634,8 +634,7 @@ footer a:hover {
         width: 100% !important;
     }
     .af-links-wrapper > .af-multi-btn {
-        flex: 0 0 auto !important; /* ボタン幅は内容に合わせ、縮小しない */
-        min-width: 45% !important;
+        flex: 0 0 auto !important; /* ボタン幅はテキストに合わせ、常に横並び */
     }
     .af-links-wrapper > .af-emphasize-wrapper {
         flex: 0 0 100% !important;
