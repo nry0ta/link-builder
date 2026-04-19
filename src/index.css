@@ -606,11 +606,14 @@ footer a:hover {
     .af-image-wrapper {
         flex: 0 0 160px !important;
         width: 160px !important;
+        max-width: 160px !important;
         height: 160px !important;
+        max-height: 160px !important;
         margin: 0 auto !important; /* 画像のみセンター */
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
+        overflow: hidden !important;
     }
     .af-info-wrapper {
         flex: none !important;
