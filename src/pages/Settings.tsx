@@ -11,6 +11,11 @@ type SettingsState = {
     atRkjphotels: string;
     lsid: string;
     a8mat: string;
+    amazonAccessKey: string;
+    amazonSecretKey: string;
+    amazonTrackingId: string;
+    yahooSid: string;
+    yahooPid: string;
     [key: string]: string; // Allow dynamic key access
 };
 
@@ -25,7 +30,12 @@ function Settings() {
         atRkihg: '',
         atRkjphotels: '',
         lsid: '',
-        a8mat: ''
+        a8mat: '',
+        amazonAccessKey: '',
+        amazonSecretKey: '',
+        amazonTrackingId: '',
+        yahooSid: '',
+        yahooPid: ''
     });
 
     const [notification, setNotification] = useState('');
@@ -119,6 +129,34 @@ function Settings() {
             <div className="form-group">
                 <label>a8mat</label>
                 <input type="text" name="a8mat" value={settings.a8mat} onChange={handleChange} placeholder="例: 3ZHPHD+247I7M+4X1W+BWGDT" />
+            </div>
+            
+            <hr/> <h3>Amazon・Yahoo!ショッピング</h3>
+            <p>商品紹介モードで使用します。</p>
+
+            <div className="form-group">
+                <label>Amazon アソシエイト (トラッキングID)</label>
+                <input type="text" name="amazonTrackingId" value={settings.amazonTrackingId} onChange={handleChange} placeholder="例: your-id-22" />
+            </div>
+            
+            <p style={{ marginTop: '15px' }}>Amazon Product Advertising API 認証情報 (商品検索用)</p>
+            <div className="form-group">
+                <label>アクセスキー (Access Key)</label>
+                <input type="text" name="amazonAccessKey" value={settings.amazonAccessKey} onChange={handleChange} placeholder="AKIA..." />
+            </div>
+            <div className="form-group">
+                <label>シークレットキー (Secret Key)</label>
+                <input type="text" name="amazonSecretKey" value={settings.amazonSecretKey} onChange={handleChange} placeholder="シークレットキーを入力" />
+            </div>
+
+            <p style={{ marginTop: '15px' }}>Yahoo!ショッピング (バリューコマース)</p>
+            <div className="form-group">
+                <label>SID (サイトID)</label>
+                <input type="text" name="yahooSid" value={settings.yahooSid} onChange={handleChange} placeholder="バリューコマースのサイトID" />
+            </div>
+            <div className="form-group">
+                <label>PID (広告ID)</label>
+                <input type="text" name="yahooPid" value={settings.yahooPid} onChange={handleChange} placeholder="Yahoo!ショッピングの広告ID (PID)" />
             </div>
 
             <hr/>

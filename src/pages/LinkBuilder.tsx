@@ -6,7 +6,9 @@ import {
     createIkkyuLink, 
     createYahooLink, 
     createIHGLink, 
-    createTripcomLink 
+    createTripcomLink,
+    createAmazonLink,
+    createYahooShoppingLink
 } from '../utils/af_link';
 
 function LinkBuilder() {
@@ -19,11 +21,13 @@ function LinkBuilder() {
     const [designMode, setDesignMode] = useState<string | null>(null);
     const [selectedSites, setSelectedSites] = useState<Record<string, boolean>>({
         rakuten: false, jalan: false, ikkyu: false, yahoo: false,
-        booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false
+        booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false,
+        amazon: false, rakuten_ichiba: false, yahoo_shopping: false
     });
     const [urls, setUrls] = useState<Record<string, string>>({
         rakuten: '', jalan: '', ikkyu: '', yahoo: '',
-        booking: '', hotelscom: '', ihg: '', tripcom: '', agoda: '', custom: ''
+        booking: '', hotelscom: '', ihg: '', tripcom: '', agoda: '', custom: '',
+        amazon: '', rakuten_ichiba: '', yahoo_shopping: ''
     });
     const [siteOrder, setSiteOrder] = useState<string[]>(['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom']);
     const [customSiteName, setCustomSiteName] = useState('任意サイト');
@@ -42,17 +46,22 @@ function LinkBuilder() {
 
     useEffect(() => {
         const stored = sessionStorage.getItem('selectedHotel');
+        let initialData: any = { name: '', url: '', imageUrl: '', address: '', type: 'hotel' };
+        
         if (stored) {
-            const parsed = JSON.parse(stored);
-            setHotelData(parsed);
-            setUrls(prev => ({ ...prev, rakuten: parsed.url }));
-            setDesignTexts((prev: any) => ({
-                ...prev, customImageUrl: parsed.imageUrl, customAddress: parsed.address || ''
-            }));
+            try {
+                const parsed = JSON.parse(stored);
+                initialData = parsed;
+                setHotelData(parsed);
+                setUrls(prev => ({ ...prev, rakuten: parsed.url }));
+                setDesignTexts((prev: any) => ({
+                    ...prev, customImageUrl: parsed.imageUrl, customAddress: parsed.address || ''
+                }));
+            } catch (e) {}
         }
-        // stored がない場合は手動入力モードとしてそのまま利用可能
+        
         const storedSettings = JSON.parse(localStorage.getItem('linkBuilderSettings') || '{}');
-        setSettings({
+        const currentSettings = {
             rakutenAffiliateId: storedSettings.rakutenAffiliateId || '40dba8c4.a3a6d6ce.40dba8c5.0eaf9b42',
             vcSid: storedSettings.vcSid || '',
             vcPidJalan: storedSettings.vcPidJalan || '',
@@ -60,19 +69,50 @@ function LinkBuilder() {
             vcPidYahoo: storedSettings.vcPidYahoo || '',
             atIhgRk: storedSettings.atRkihg || '0100mmq100o520',
             tripcomLsid: storedSettings.lsid || '',
-            a8mat: storedSettings.a8mat || ''
-        });
+            a8mat: storedSettings.a8mat || '',
+            amazonTag: storedSettings.amazonTrackingId || '',
+            yahooSid: storedSettings.yahooSid || '',
+            yahooPid: storedSettings.yahooPid || ''
+        };
+        setSettings(currentSettings);
 
-        const defaultOrder = ['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom'];
-        const storedOrder = localStorage.getItem('siteOrder');
-        if (storedOrder) {
-            try {
-                const parsed = JSON.parse(storedOrder);
-                if (Array.isArray(parsed) && parsed.length > 0) {
-                    const merged = [...parsed, ...defaultOrder.filter((s: string) => !parsed.includes(s))];
-                    setSiteOrder(merged);
+        const isProduct = initialData.type === 'product';
+        const defaultOrder = isProduct 
+            ? ['amazon', 'rakuten_ichiba', 'yahoo_shopping', 'custom']
+            : ['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom'];
+
+        if (isProduct) {
+            setSelectedSites({
+                rakuten: false, jalan: false, ikkyu: false, yahoo: false,
+                booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false,
+                amazon: true, rakuten_ichiba: true, yahoo_shopping: true
+            });
+            // Auto generate product links
+            // If initialData.url exists for Amazon, it means it came from PA-API and already has the Tag embedded.
+            setUrls(prev => ({
+                ...prev,
+                amazon: initialData.url || createAmazonLink(currentSettings.amazonTag, initialData.name),
+                rakuten_ichiba: createRakutenLink(currentSettings.rakutenAffiliateId, initialData.url),
+                yahoo_shopping: createYahooShoppingLink(currentSettings.yahooSid, currentSettings.yahooPid, initialData.name)
+            }));
+            setSiteOrder(defaultOrder);
+        } else {
+            const storedOrder = localStorage.getItem('siteOrder');
+            if (storedOrder) {
+                try {
+                    const parsedOrder = JSON.parse(storedOrder);
+                    if (Array.isArray(parsedOrder) && parsedOrder.length > 0) {
+                        const merged = [...parsedOrder, ...defaultOrder.filter((s: string) => !parsedOrder.includes(s))];
+                        setSiteOrder(merged);
+                    } else {
+                        setSiteOrder(defaultOrder);
+                    }
+                } catch (e) {
+                    setSiteOrder(defaultOrder);
                 }
-            } catch (e) {}
+            } else {
+                setSiteOrder(defaultOrder);
+            }
         }
     }, [navigate]);
 
@@ -119,6 +159,9 @@ function LinkBuilder() {
                     autoUrl = baseAgoda;
                 }
             }
+            if (site === 'amazon') autoUrl = createAmazonLink(settings.amazonTag, hotelData.name);
+            if (site === 'rakuten_ichiba') autoUrl = createRakutenLink(settings.rakutenAffiliateId, hotelData.url);
+            if (site === 'yahoo_shopping') autoUrl = createYahooShoppingLink(settings.yahooSid, settings.yahooPid, hotelData.name);
 
             setUrls(prev => ({ ...prev, [site]: autoUrl || prev[site] }));
         }
@@ -147,7 +190,7 @@ function LinkBuilder() {
         setDesignTexts((prev: any) => ({
             ...prev,
             singleJumpText: singleText || prev.singleJumpText,
-            modalButtonText: `「${hotelName}」を各サイトで比較する`
+            modalButtonText: hotelData.type === 'product' ? `「${hotelName}」を各サイトで比較する` : `「${hotelName}」を各サイトで比較する`
         }));
     };
 
@@ -256,6 +299,7 @@ function LinkBuilder() {
     const siteLabels: Record<string, string> = {
         rakuten: '楽天トラベル', jalan: 'じゃらんnet', ikkyu: '一休.com', yahoo: 'Yahoo!トラベル',
         booking: 'Booking.com', hotelscom: 'jp.Hotels.com', ihg: 'IHG公式', tripcom: 'Trip.com', agoda: 'Agoda',
+        amazon: 'Amazon', rakuten_ichiba: '楽天市場', yahoo_shopping: 'Yahoo!ショッピング',
         custom: customSiteName || '任意サイト'
     };
 
@@ -267,7 +311,7 @@ function LinkBuilder() {
             <p>選択したホテルの情報をもとに、ブログに貼り付けるリンクを作成します。</p>
 
             <div className="form-group">
-                <label>ホテル名</label>
+                <label>{hotelData.type === 'product' ? '商品名' : 'ホテル名'}</label>
                 <input type="text" value={hotelData.name} onChange={e => setHotelData({...hotelData, name: e.target.value})} />
             </div>
 
@@ -411,7 +455,7 @@ function LinkBuilder() {
 
                                     {designTexts.showAddress && (
                                         <div className="form-group" id="hotelAddressSection">
-                                            <label>住所情報</label>
+                                            <label>{hotelData.type === 'product' ? '備考 / 価格情報' : '住所情報'}</label>
                                             <input type="text" value={designTexts.customAddress} onChange={e => setDesignTexts((prev: any) => ({...prev, customAddress: e.target.value}))} />
                                         </div>
                                     )}

@@ -67,3 +67,20 @@ export function createTripcomLink(lsid: string): string {
     if (!lsid) { return 'nothing'; }
     return `https://click.linksynergy.com/fs-bin/click?id=${lsid}&offerid=1664685.2&type=3&subid=0`;
 }
+
+/**
+ * Amazonの検索リンクを生成します。
+ */
+export function createAmazonLink(tag: string, keyword: string): string {
+    const base = `https://www.amazon.co.jp/s?k=${encodeURIComponent(keyword)}&linkCode=ll2&tag=${tag || 'default-22'}`;
+    return base;
+}
+
+/**
+ * Yahoo!ショッピングの検索リンクを生成します（バリューコマース経由）。
+ */
+export function createYahooShoppingLink(sid: string, pid: string, keyword: string): string {
+    if (!sid || !pid || !keyword) { return ''; }
+    const searchUrl = `https://shopping.yahoo.co.jp/search?p=${encodeURIComponent(keyword)}`;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodeURIComponent(searchUrl)}`;
+}
