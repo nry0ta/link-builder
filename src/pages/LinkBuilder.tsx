@@ -52,7 +52,7 @@ function LinkBuilder() {
     const [customSiteName, setCustomSiteName] = useState('任意サイト');
     const [emphasizedSites, setEmphasizedSites] = useState<Record<string, boolean>>({});
     const [emphasizeTexts, setEmphasizeTexts] = useState<Record<string, string>>({
-        rakuten: '', jalan: '', ikkyu: '', yahoo: '', booking: '', hotelscom: '', ihg: '', tripcom: '', agoda: '', 
+        rakuten: '', jalan: '', ikkyu: '', yahoo: '', booking: '', hotelscom: '', ihg: '＼最安値保証&レイトチェックアウト／', tripcom: '', agoda: '', 
         amazon: '', rakuten_ichiba: '', yahoo_shopping: '', anker: '', custom: ''
     });
     const [designTexts, setDesignTexts] = useState<any>({
@@ -376,7 +376,7 @@ function LinkBuilder() {
                                             {emphasizedSites[site] && (
                                                 <input 
                                                     type="text" 
-                                                    placeholder="例: ＼期間限定セール／" 
+                                                    placeholder={site === 'ihg' ? "＼最安値保証&レイトチェックアウト／" : "例: ＼期間限定セール／"} 
                                                     value={emphasizeTexts[site] || ''} 
                                                     onChange={e => setEmphasizeTexts({...emphasizeTexts, [site]: e.target.value})}
                                                     style={{ marginLeft: '10px', flex: 1, padding: '4px 8px', fontSize: '0.85rem' }}
