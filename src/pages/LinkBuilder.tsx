@@ -76,7 +76,7 @@ function LinkBuilder() {
                 const parsed = JSON.parse(stored);
                 initialData = parsed;
                 setHotelData(parsed);
-                const presetPrice = (parsed.type === 'product' && !parsed.price) ? '1000円 (記事執筆時 楽天or Amazon)' : (parsed.price || parsed.address || '');
+                const presetPrice = (parsed.type === 'product' && !parsed.price) ? '1,000円 (Amazon / 記事執筆時)' : (parsed.price || parsed.address || '');
                 setDesignTexts((prev: any) => ({
                     ...prev, customImageUrl: parsed.imageUrl, customAddress: presetPrice
                 }));
