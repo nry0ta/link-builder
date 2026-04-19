@@ -189,7 +189,7 @@ const compressCss = (css: string) => {
         .replace(/\s+/g, ' ') 
         .replace(/\s*([{:;,>])\s*/g, '$1') 
         .trim();
-    return `/* ========================================\n   Link Builder - Hotel Affiliate Buttons\n   https://github.com/nry0ta/link-builder\n   ======================================== */\n${minified}\n/* --- Powered by Link Builder --- */`;
+    return `/* ========================================\n   Link Builder - Affiliate Buttons\n   https://github.com/nry0ta/link-builder\n   ======================================== */\n${minified}\n/* --- Powered by Link Builder --- */`;
 };
 
 function Usage() {

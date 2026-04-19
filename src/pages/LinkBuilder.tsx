@@ -76,7 +76,12 @@ function LinkBuilder() {
                 const parsed = JSON.parse(stored);
                 initialData = parsed;
                 setHotelData(parsed);
-                const presetPrice = (parsed.type === 'product' && !parsed.price) ? '1,000円 (Amazon / 記事執筆時)' : (parsed.price || parsed.address || '');
+                let presetPrice = parsed.price || parsed.address || '';
+                if (parsed.type === 'product') {
+                    const priceBase = (parsed.price && parsed.price !== '価格情報なし') ? parsed.price : '1,000円';
+                    const engineName = parsed.engine === 'rakuten' ? '楽天' : 'Amazon';
+                    presetPrice = `${priceBase} (${engineName} / 記事執筆時)`;
+                }
                 setDesignTexts((prev: any) => ({
                     ...prev, customImageUrl: parsed.imageUrl, customAddress: presetPrice
                 }));
