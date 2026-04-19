@@ -18,16 +18,32 @@ export async function onRequestPost(context: any) {
         clientSecret = clientSecret.trim();
         partnerTag = partnerTag.trim();
 
-        // Step 1: Obtain Access Token using OAuth 2.0 (Japanese marketplace endpoint)
-        const tokenResponse = await fetch('https://api.amazon.co.jp/auth/o2/token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `grant_type=client_credentials&client_id=${encodeURIComponent(clientId)}&client_secret=${encodeURIComponent(clientSecret)}&scope=creatorsapi%3A%3Adefault`
-        });
+        // Step 1: Obtain Access Token using OAuth 2.0
+        let tokenResponse: Response;
+        try {
+            tokenResponse = await fetch('https://api.amazon.co.jp/auth/o2/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `grant_type=client_credentials&client_id=${encodeURIComponent(clientId)}&client_secret=${encodeURIComponent(clientSecret)}&scope=creatorsapi%3A%3Adefault`
+            });
+        } catch (fetchErr: any) {
+            return new Response(JSON.stringify({ error: 'Token fetch failed', details: fetchErr.message }), {
+                status: 502,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
 
-        const tokenData = await tokenResponse.json() as any;
+        let tokenData: any;
+        try {
+            tokenData = await tokenResponse.json();
+        } catch {
+            return new Response(JSON.stringify({ error: 'Token parse failed', status: tokenResponse.status }), {
+                status: 502,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
 
         if (!tokenResponse.ok || !tokenData.access_token) {
             return new Response(JSON.stringify({
@@ -53,17 +69,33 @@ export async function onRequestPost(context: any) {
             ]
         };
 
-        const searchResponse = await fetch('https://creatorsapi.amazon.com/catalog/v1/searchItems', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-                'x-marketplace': 'www.amazon.co.jp'
-            },
-            body: JSON.stringify(payload)
-        });
+        let searchResponse: Response;
+        try {
+            searchResponse = await fetch('https://creatorsapi.amazon.com/catalog/v1/searchItems', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    'x-marketplace': 'www.amazon.co.jp'
+                },
+                body: JSON.stringify(payload)
+            });
+        } catch (fetchErr: any) {
+            return new Response(JSON.stringify({ error: 'Search fetch failed', details: fetchErr.message }), {
+                status: 502,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
 
-        const searchData = await searchResponse.json();
+        let searchData: any;
+        try {
+            searchData = await searchResponse.json();
+        } catch {
+            return new Response(JSON.stringify({ error: 'Search parse failed', status: searchResponse.status }), {
+                status: 502,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
 
         return new Response(JSON.stringify(searchData), {
             status: searchResponse.status,
@@ -71,7 +103,7 @@ export async function onRequestPost(context: any) {
         });
 
     } catch (e: any) {
-        return new Response(JSON.stringify({ error: 'Internal Server Error', details: e.message }), {
+        return new Response(JSON.stringify({ error: 'Internal Server Error', details: e.message, stack: e.stack }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
         });
