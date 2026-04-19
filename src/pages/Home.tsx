@@ -133,20 +133,32 @@ function Home() {
 
             let newResults = [];
             if (category === 'product') {
-                if (!data.SearchResult || !data.SearchResult.Items || data.SearchResult.Items.length === 0) {
+                const items = data.searchResult?.items || data.SearchResult?.Items;
+                if (!items || items.length === 0) {
                      if (!isLoadMore) setMessage('該当する商品が見つかりませんでした。');
                      setHasMore(false);
                      return;
                 }
-                // Map Amazon PA-API response to our common format
-                newResults = data.SearchResult.Items.map((item: any) => {
-                    const price = item.Offers?.Listings?.[0]?.Price?.Amount || null;
+                // Map Creators API response to our common format
+                newResults = items.map((item: any) => {
+                    // Support both Creators API (camelCase) and PA-API (PascalCase)
+                    const price = item.offersV2?.listings?.[0]?.price?.amount 
+                        || item.Offers?.Listings?.[0]?.Price?.Amount 
+                        || null;
+                    const imageUrl = item.images?.primary?.medium?.url 
+                        || item.Images?.Primary?.Medium?.URL 
+                        || null;
+                    const title = item.itemInfo?.title?.displayValue 
+                        || item.ItemInfo?.Title?.DisplayValue 
+                        || 'No Title';
+                    const detailUrl = item.detailPageURL || item.DetailPageURL;
+                    const asin = item.asin || item.ASIN;
                     return {
-                        itemCode: item.ASIN,
-                        itemName: item.ItemInfo?.Title?.DisplayValue || 'No Title',
-                        itemUrl: item.DetailPageURL,
+                        itemCode: asin,
+                        itemName: title,
+                        itemUrl: detailUrl,
                         itemPrice: price,
-                        mediumImageUrls: [{ imageUrl: item.Images?.Primary?.Medium?.URL }]
+                        mediumImageUrls: [{ imageUrl }]
                     };
                 });
             } else {
