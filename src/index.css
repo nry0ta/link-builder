@@ -631,16 +631,13 @@ footer a:hover {
         width: 100% !important;
     }
     .af-links-wrapper {
-        display: flex !important;
-        flex-wrap: wrap !important;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
         gap: 8px !important;
         width: 100% !important;
     }
-    .af-links-wrapper > .af-multi-btn {
-        flex: 0 0 auto !important; /* ボタン幅はテキストに合わせ、常に横並び */
-    }
     .af-links-wrapper > .af-emphasize-wrapper {
-        flex: 0 0 100% !important;
+        grid-column: 1 / -1 !important;
         width: 100% !important;
     }
 }
