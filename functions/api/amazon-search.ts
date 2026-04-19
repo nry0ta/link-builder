@@ -18,7 +18,7 @@ export async function onRequestPost(context: any) {
         partnerTag = partnerTag.trim();
 
         let accessToken = '';
-        let credentialVersion = '2.3'; // Default to FE (Japan) v2.x version
+        let credentialVersion = '3.3'; // User dashboard explicitly says Version 3.3
         let authError = null;
 
         // Step 1: Try Cognito Endpoint (v2.x) as explicitly requested by user
@@ -59,7 +59,7 @@ export async function onRequestPost(context: any) {
                 const lwaData = await lwaResp.json() as any;
                 if (lwaResp.ok && lwaData.access_token) {
                     accessToken = lwaData.access_token;
-                    credentialVersion = ''; // v3.x doesn't use version header usually
+                    credentialVersion = '3.3'; 
                 } else {
                     // If both fail, return the last error (likely the one from Cognito)
                     const details = lwaData.error_description || lwaData.error || authError?.error_description || authError?.error || 'Authentication Failed';
