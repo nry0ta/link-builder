@@ -118,7 +118,7 @@ function Home() {
                 } else {
                     // Rakuten Search
                     if (!settings.rakutenAppId) throw new Error('楽天AppIDが設定されていません。');
-                    const url = `https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170426?format=json&keyword=${encodeURIComponent(query)}&applicationId=${settings.rakutenAppId}&hits=${MAX_HITS}&page=${targetPage}`;
+                    const url = `https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?format=json&keyword=${encodeURIComponent(query)}&applicationId=${settings.rakutenAppId}&hits=${MAX_HITS}&page=${targetPage}`;
                     const response = await fetch(url);
                     const data = await response.json();
                     if (data.error) throw new Error(data.error_description || '楽天APIエラー');
