@@ -1,10 +1,10 @@
 // Cloudflare Pages Function for Amazon PA-API Search Proxy
 // Uses Web Crypto API for AWS Signature V4
 
-export const onRequestPost = async (context: any) => {
+export async function onRequestPost(context: any) {
     try {
         const body = await context.request.json() as any;
-        const { keyword, accessKey, secretKey, partnerTag } = body;
+        let { keyword, accessKey, secretKey, partnerTag } = body;
 
         if (!keyword || !accessKey || !secretKey || !partnerTag) {
             return new Response(JSON.stringify({ error: 'Missing required parameters' }), {
@@ -12,6 +12,11 @@ export const onRequestPost = async (context: any) => {
                 headers: { 'Content-Type': 'application/json' }
             });
         }
+
+        // Remove accidental whitespaces
+        accessKey = accessKey.trim();
+        secretKey = secretKey.trim();
+        partnerTag = partnerTag.trim();
 
         const host = 'webservices.amazon.co.jp';
         const region = 'us-west-2'; // Amazon PA-API uses us-west-2 regardless of the marketplace

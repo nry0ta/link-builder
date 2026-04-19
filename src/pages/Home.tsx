@@ -216,6 +216,12 @@ function Home() {
                         </div>
                     )}
 
+                    <div style={{ textAlign: 'center', marginTop: '12px', marginBottom: '20px' }}>
+                        <a href="#" style={{ color: '#0066cc', textDecoration: 'underline', fontSize: '0.95rem' }} onClick={(e) => { e.preventDefault(); sessionStorage.removeItem('selectedHotel'); navigate('/builder'); }}>
+                            検索できない場合・手動で直接作成したい場合はこちら
+                        </a>
+                    </div>
+
                     <div id="results">
                         {results.map((item: any, index: number) => {
                             if (index >= MAX_DISPLAY) return null;
