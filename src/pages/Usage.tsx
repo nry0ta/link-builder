@@ -53,7 +53,24 @@ const affiliateCss = `/* =======================================================
 .af-modal-content { background-color: #fff; padding: 20px 30px; border-radius: 8px; width: 90%; max-width: 500px; }
 .af-modal-header { font-size: 20px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 .af-link-list { list-style: none; padding: 0; margin: 0; }
+/* テキストリンクスタイル（デフォルト） */
 .af-link-item a { display: block; padding: 12px 10px; text-decoration: none; color: #333; border-radius: 5px; transition: background-color 0.2s; margin-bottom: 8px; border: 1px solid #ddd; font-weight: bold; }
+
+/* モーダルを開くためのテキストリンク */
+.af-text-trigger {
+    display: inline-block;
+    color: #0066cc;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
+.af-text-trigger:hover {
+    color: #004499;
+}
 
 /* --- 複数ボタンモード --- */
 .af-multi-container {
@@ -66,23 +83,27 @@ const affiliateCss = `/* =======================================================
     overflow: hidden;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center; /* 縦並びになった瞬間に画像を中央化する */
     background-color: #fff;
     padding: 20px;
     gap: 20px;
 }
 .af-image-wrapper {
-    flex: 1 1 200px;
-    max-width: 250px;
+    flex: 0 0 160px; /* Force fixed width like hotel */
+    max-width: 160px;
+    height: 160px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
+    margin: 0; 
 }
 .af-multi-container img { 
-    width: 100%; 
+    max-width: 100%; 
+    max-height: 100%; 
+    width: auto;
     height: auto; 
     border-radius: 8px;
-    object-fit: cover;
+    object-fit: contain;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 .af-info-wrapper {
@@ -90,8 +111,8 @@ const affiliateCss = `/* =======================================================
     display: block;
     min-width: 0;
 }
-.af-hotel-name {
-    font-size: 1.15rem; 
+.af-hotel-name, .af-item-name {
+    font-size: 1.25rem; 
     font-weight: 700;
     margin-bottom: 8px;
     color: #1e293b;
@@ -102,8 +123,8 @@ const affiliateCss = `/* =======================================================
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-.af-hotel-address {
-    font-size: 0.85rem; 
+.af-hotel-address, .af-item-address {
+    font-size: 1.0rem; 
     color: #64748b; 
     margin: 0 0 16px; 
     line-height: 1.4;
@@ -113,6 +134,12 @@ const affiliateCss = `/* =======================================================
     grid-template-columns: 1fr 1fr;
     gap: 8px;
     margin-top: 16px;
+}
+.af-links-wrapper > .af-multi-btn:only-child,
+.af-links-wrapper > a:only-child {
+    grid-column: 1 / -1;
+    width: 50%;
+    margin: 0 auto;
 }
 .af-emphasize-wrapper {
     grid-column: span 2;
@@ -135,31 +162,61 @@ const affiliateCss = `/* =======================================================
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 8px; 
+    padding: 10px 12px; 
     color: white !important; 
     text-decoration: none; 
     border-radius: 6px; 
     text-align: center; 
     font-size: 0.85rem;
-    font-weight: bold; 
+    font-weight: bold;
+    white-space: nowrap; /* テキストの折り返しを禁止 */
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-@media (max-width: 520px) {
+@media (max-width: 600px) {
     .af-multi-container {
-        flex-direction: column;
-        padding: 15px;
-    }
-    .af-image-wrapper, .af-info-wrapper {
-        flex: none;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 20px 15px !important;
+        gap: 15px !important;
     }
     .af-image-wrapper {
-        max-width: 100%;
-        margin-bottom: 5px;
+        flex: 0 0 160px !important;
+        width: 160px !important;
+        max-width: 160px !important;
+        height: 160px !important;
+        max-height: 160px !important;
+        margin: 0 auto !important; /* 画像のみセンター */
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        overflow: hidden !important;
     }
-    .af-hotel-name {
-        font-size: 1.1rem;
+    .af-info-wrapper {
+        flex: none !important;
+        width: 100% !important;
+        text-align: left !important; /* 商品名・価格は左寄せ */
+        display: block !important;
+    }
+    .af-hotel-name, .af-item-name {
+        font-size: 1.15rem !important;
+        text-align: left !important;
+        display: block !important;
+    }
+    .af-hotel-address, .af-item-address {
+        text-align: left !important;
+        width: 100% !important;
+    }
+    .af-links-wrapper {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+    .af-links-wrapper > .af-emphasize-wrapper {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
     }
 }
 
@@ -180,6 +237,8 @@ const affiliateCss = `/* =======================================================
 .btn-tripcom { background-color: #3273f6; }
 .btn-agoda { background-color: #1A74E2; }
 .btn-custom { background-color: #6c757d; }
+.btn-amazon { background-color: #FF9900; }
+.btn-anker { background-color: #00B1B0; }
 .btn-single-default { background: linear-gradient(135deg, #007bff, #0056b3); }
 `;
 
