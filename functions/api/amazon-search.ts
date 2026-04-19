@@ -1,5 +1,5 @@
 // Cloudflare Pages Function for Amazon Creators API Search Proxy
-// Uses Amazon v3.x Credentials (LwA) OAuth 2.0
+// Uses Amazon Cognito OAuth 2.0 (Client Credentials Grant) as per user instructions
 
 export async function onRequestPost(context: any) {
     try {
@@ -18,21 +18,19 @@ export async function onRequestPost(context: any) {
         clientSecret = clientSecret.trim();
         partnerTag = partnerTag.trim();
 
-        // Step 1: Obtain Access Token using OAuth 2.0 (v3.x LwA)
-        // Use global api.amazon.com as per the official documentation example
+        // Step 1: Obtain Access Token using OAuth 2.0 (Cognito Basic Auth)
+        // User insisted endpoint: creatorsapi.auth.us-west-2.amazoncognito.com
+        const basicAuth = btoa(`${clientId}:${clientSecret}`);
+
         let tokenResponse: Response;
         try {
-            tokenResponse = await fetch('https://api.amazon.com/auth/o2/token', {
+            tokenResponse = await fetch('https://creatorsapi.auth.us-west-2.amazoncognito.com/oauth2/token', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Authorization': `Basic ${basicAuth}`
                 },
-                body: JSON.stringify({
-                    grant_type: "client_credentials",
-                    client_id: clientId,
-                    client_secret: clientSecret,
-                    scope: "creatorsapi::default"
-                })
+                body: 'grant_type=client_credentials&scope=creatorsapi/default'
             });
         } catch (fetchErr: any) {
             return new Response(JSON.stringify({ error: 'Token fetch failed', details: fetchErr.message }), {
@@ -65,6 +63,7 @@ export async function onRequestPost(context: any) {
         }
 
         const accessToken = tokenData.access_token;
+        const credentialVersion = '2.3'; // FE Region version
 
         // Step 2: Call Creators API SearchItems
         const payload = {
@@ -83,7 +82,8 @@ export async function onRequestPost(context: any) {
             searchResponse = await fetch('https://creatorsapi.amazon/catalog/v1/searchItems', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`,
+                    // v2.x requires Version header
+                    'Authorization': `Bearer ${accessToken}, Version ${credentialVersion}`,
                     'Content-Type': 'application/json',
                     'x-marketplace': 'www.amazon.co.jp'
                 },
