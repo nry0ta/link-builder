@@ -19,10 +19,10 @@ export async function onRequestPost(context: any) {
         partnerTag = partnerTag.trim();
 
         // Step 1: Obtain Access Token using OAuth 2.0 (v3.x LwA)
-        // Japan uses api.amazon.co.jp
+        // Use global api.amazon.com as per the official documentation example
         let tokenResponse: Response;
         try {
-            tokenResponse = await fetch('https://api.amazon.co.jp/auth/o2/token', {
+            tokenResponse = await fetch('https://api.amazon.com/auth/o2/token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -83,7 +83,6 @@ export async function onRequestPost(context: any) {
             searchResponse = await fetch('https://creatorsapi.amazon/catalog/v1/searchItems', {
                 method: 'POST',
                 headers: {
-                    // v3.x does NOT use the Version header
                     'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json',
                     'x-marketplace': 'www.amazon.co.jp'
@@ -110,6 +109,18 @@ export async function onRequestPost(context: any) {
                 parseError: parseErr.message
             }), {
                 status: 502,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        if (!searchResponse.ok) {
+            return new Response(JSON.stringify({
+                error: 'Search API Error',
+                status: searchResponse.status,
+                details: searchData.message || searchData.error || 'Forbidden/Error',
+                rawBody: JSON.stringify(searchData)
+            }), {
+                status: searchResponse.status,
                 headers: { 'Content-Type': 'application/json' }
             });
         }
