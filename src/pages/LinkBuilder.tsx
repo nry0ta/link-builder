@@ -420,12 +420,22 @@ function LinkBuilder() {
 
             <hr />
             <button id="generateBtn" onClick={generateCode}>コードを生成</button>
+            {_notification.message && _notification.id === 'generateBtnNotification' && (
+                <div className={`btn-notification notification-${_notification.type}`} style={{ display: 'block', opacity: 1 }}>
+                    {_notification.message}
+                </div>
+            )}
             
             {generatedCode && (
                 <div style={{ marginTop: '30px' }}>
                     <h2>ブログ用コード</h2>
                     <textarea rows={8} className="code-display" readOnly value={generatedCode} />
                     <button id="copyBtn" onClick={copyCode}>コピーする</button>
+                    {_notification.message && _notification.id === 'copyBtnNotification' && (
+                        <div className={`btn-notification notification-${_notification.type}`} style={{ display: 'block', opacity: 1 }}>
+                            {_notification.message}
+                        </div>
+                    )}
                 </div>
             )}
 
