@@ -5,12 +5,6 @@ const MIN_LENGTH = 3;
 const MAX_HITS = 5;       
 const MAX_DISPLAY = 15;   
 
-const OVERSEAS_SITES = [
-    { name: 'Agoda', key: 'agoda', color: '#1A74E2', getUrl: (kw: string) => `https://www.agoda.com/ja-jp/search?textToSearch=${encodeURIComponent(kw)}` },
-    { name: 'Booking.com', key: 'booking', color: '#003580', getUrl: (kw: string) => `https://www.booking.com/search.html?lang=ja&ss=${encodeURIComponent(kw)}` },
-    { name: 'Hotels.com', key: 'hotelscom', color: '#d32f2f', getUrl: (kw: string) => `https://jp.hotels.com/search.do?q-destination=${encodeURIComponent(kw)}` },
-    { name: 'Expedia', key: 'expedia', color: '#ffcc00', getUrl: (kw: string) => `https://www.expedia.co.jp/Hotel-Search?destination=${encodeURIComponent(kw)}` },
-];
 
 function Home() {
     const [category, setCategory] = useState<'domestic' | 'overseas' | 'activity' | 'product'>('domestic');
@@ -226,7 +220,11 @@ function Home() {
                         <div style={{ marginTop: '12px' }}>
                             <button
                                 style={{ padding: '10px 24px', background: '#28a745', color: 'white', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(40,167,69,0.3)' }}
-                                onClick={() => { sessionStorage.removeItem('selectedHotel'); navigate('/builder'); }}
+                                onClick={() => { 
+                                    const placeholder = { name: '', url: '', imageUrl: '', type: category === 'product' ? 'product' : 'hotel' };
+                                    sessionStorage.setItem('selectedHotel', JSON.stringify(placeholder)); 
+                                    navigate('/builder'); 
+                                }}
                             >
                                 手動作成画面へ進む
                             </button>
@@ -234,7 +232,12 @@ function Home() {
                     )}
 
                     <div style={{ textAlign: 'center', marginTop: '12px', marginBottom: '20px' }}>
-                        <a href="#" style={{ color: '#0066cc', textDecoration: 'underline', fontSize: '0.95rem' }} onClick={(e) => { e.preventDefault(); sessionStorage.removeItem('selectedHotel'); navigate('/builder'); }}>
+                        <a href="#" style={{ color: '#0066cc', textDecoration: 'underline', fontSize: '0.95rem' }} onClick={(e) => { 
+                            e.preventDefault(); 
+                            const placeholder = { name: '', url: '', imageUrl: '', type: category === 'product' ? 'product' : 'hotel' };
+                            sessionStorage.setItem('selectedHotel', JSON.stringify(placeholder)); 
+                            navigate('/builder'); 
+                        }}>
                             検索できない場合・手動で直接作成したい場合はこちら
                         </a>
                     </div>
