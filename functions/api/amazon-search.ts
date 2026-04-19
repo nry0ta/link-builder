@@ -24,7 +24,7 @@ export async function onRequestPost(context: any) {
 
         let tokenResponse: Response;
         try {
-            tokenResponse = await fetch('https://creatorsapi.auth.ap-northeast-1.amazoncognito.com/oauth2/token', {
+            tokenResponse = await fetch('https://creatorsapi.auth.us-west-2.amazoncognito.com/oauth2/token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
