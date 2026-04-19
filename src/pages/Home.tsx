@@ -83,9 +83,9 @@ function Home() {
             return;
         }
 
-        if (category === 'product' && (!settings.amazonAccessKey || !settings.amazonSecretKey || !settings.amazonTrackingId)) {
+        if (category === 'product' && (!settings.amazonClientId || !settings.amazonClientSecret || !settings.amazonTrackingId)) {
             setMessage('');
-            setRealTimeMessage('エラー: Amazon PA-API アクセスキー・シークレットキー・トラッキングIDが未設定です。設定画面から登録してください。');
+            setRealTimeMessage('エラー: Amazon Creators API の Client ID・Secret・トラッキングIDが未設定です。設定画面から登録してください。');
             setLoading(false);
             return;
         }
@@ -109,8 +109,8 @@ function Home() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         keyword: isLoadMore ? currentKeyword : query,
-                        accessKey: settings.amazonAccessKey,
-                        secretKey: settings.amazonSecretKey,
+                        clientId: settings.amazonClientId,
+                        clientSecret: settings.amazonClientSecret,
                         partnerTag: settings.amazonTrackingId
                     })
                 });
@@ -123,7 +123,7 @@ function Home() {
             if (!response.ok) {
                 if (data?.error) {
                     if (data.error === 'not_found' || data.error === 'NotFound') { if (!isLoadMore) setMessage('該当する結果は見つかりませんでした。'); setHasMore(false); return; }
-                    throw new Error(data.error_description || data.error || data.message || 'エラーが発生しました');
+                    throw new Error(data.error_description || data.error || data.details || data.message || 'エラーが発生しました');
                 }
                 if (data?.Errors) {
                     throw new Error(data.Errors[0]?.Message || 'Amazon API Error');

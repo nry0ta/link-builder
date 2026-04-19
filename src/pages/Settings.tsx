@@ -11,8 +11,8 @@ type SettingsState = {
     atRkjphotels: string;
     lsid: string;
     a8mat: string;
-    amazonAccessKey: string;
-    amazonSecretKey: string;
+    amazonClientId: string;
+    amazonClientSecret: string;
     amazonTrackingId: string;
     yahooSid: string;
     yahooPid: string;
@@ -31,8 +31,8 @@ function Settings() {
         atRkjphotels: '',
         lsid: '',
         a8mat: '',
-        amazonAccessKey: '',
-        amazonSecretKey: '',
+        amazonClientId: '',
+        amazonClientSecret: '',
         amazonTrackingId: '',
         yahooSid: '',
         yahooPid: ''
@@ -139,14 +139,14 @@ function Settings() {
                 <input type="text" name="amazonTrackingId" value={settings.amazonTrackingId} onChange={handleChange} placeholder="例: your-id-22" />
             </div>
             
-            <p style={{ marginTop: '15px' }}>Amazon Product Advertising API 認証情報 (商品検索用)</p>
+            <p style={{ marginTop: '15px' }}>Amazon Creators API 認証情報 (商品検索用)</p>
             <div className="form-group">
-                <label>アクセスキー (Access Key)</label>
-                <input type="text" name="amazonAccessKey" value={settings.amazonAccessKey} onChange={handleChange} placeholder="AKIA..." />
+                <label>クライアントID (Client ID)</label>
+                <input type="text" name="amazonClientId" value={settings.amazonClientId} onChange={handleChange} placeholder="amzn1.application-oa2-client..." />
             </div>
             <div className="form-group">
-                <label>シークレットキー (Secret Key)</label>
-                <input type="text" name="amazonSecretKey" value={settings.amazonSecretKey} onChange={handleChange} placeholder="シークレットキーを入力" />
+                <label>クライアントシークレット (Client Secret)</label>
+                <input type="text" name="amazonClientSecret" value={settings.amazonClientSecret} onChange={handleChange} placeholder="シークレットを入力" />
             </div>
 
             <p style={{ marginTop: '15px' }}>Yahoo!ショッピング (バリューコマース)</p>
