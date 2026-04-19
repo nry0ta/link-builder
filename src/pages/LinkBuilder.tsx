@@ -406,24 +406,12 @@ function LinkBuilder() {
                             </>
                         )}
                         {designMode === 'modal' && (
-                            <div className="checkbox-control" style={{ marginTop: '12px', gap: '16px' }}>
-                                <span style={{ fontWeight: 'bold', fontSize: '0.9rem', marginRight: '8px' }}>モーダルを開くリンク:</span>
-                                <label style={{ cursor: 'pointer', fontWeight: 'normal' }}>
-                                    <input type="radio" name="modalLinkStyle" value="button"
-                                        checked={designTexts.modalLinkStyle === 'button'}
-                                        onChange={() => setDesignTexts({...designTexts, modalLinkStyle: 'button'})}
-                                        style={{ marginRight: '4px' }}
-                                    />
-                                    ボタン
-                                </label>
-                                <label style={{ cursor: 'pointer', fontWeight: 'normal' }}>
-                                    <input type="radio" name="modalLinkStyle" value="text"
-                                        checked={designTexts.modalLinkStyle === 'text'}
-                                        onChange={() => setDesignTexts({...designTexts, modalLinkStyle: 'text'})}
-                                        style={{ marginRight: '4px' }}
-                                    />
-                                    テキストリンク
-                                </label>
+                            <div className="checkbox-control" style={{ marginTop: '12px' }}>
+                                <input type="checkbox" id="modalLinkToggle" 
+                                    checked={designTexts.modalLinkStyle === 'button'} 
+                                    onChange={e => setDesignTexts({...designTexts, modalLinkStyle: e.target.checked ? 'button' : 'text'})} 
+                                />
+                                <label htmlFor="modalLinkToggle">モーダルを開くリンクをボタンスタイルにする</label>
                             </div>
                         )}
                     </div>
