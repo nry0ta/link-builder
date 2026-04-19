@@ -143,15 +143,19 @@ function Home() {
                 // Map Creators API response to our common format
                 newResults = items.map((item: any) => {
                     // Support both Creators API (camelCase) and PA-API (PascalCase)
-                    const price = item.offersV2?.listings?.[0]?.price?.amount 
-                        || item.Offers?.Listings?.[0]?.Price?.Amount 
+                    const priceObj = item.offersV2?.listings?.[0]?.price 
+                        || item.Offers?.Listings?.[0]?.Price 
                         || null;
+                    const price = priceObj?.money?.displayAmount 
+                        || priceObj?.DisplayAmount 
+                        || priceObj?.amount 
+                        || '価格情報なし';
                     const imageUrl = item.images?.primary?.medium?.url 
                         || item.Images?.Primary?.Medium?.URL 
                         || null;
                     const title = item.itemInfo?.title?.displayValue 
                         || item.ItemInfo?.Title?.DisplayValue 
-                        || 'No Title';
+                        || '名称未設定';
                     const detailUrl = item.detailPageURL || item.DetailPageURL;
                     const asin = item.asin || item.ASIN;
                     return {
