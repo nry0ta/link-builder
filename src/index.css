@@ -511,18 +511,21 @@ footer a:hover {
     gap: 20px;
 }
 .af-image-wrapper {
-    flex: 1 1 200px;
-    max-width: 250px;
+    flex: 0 0 160px; /* Force fixed width like hotel */
+    max-width: 160px;
+    height: 160px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto;
+    margin: 0; 
 }
 .af-multi-container img { 
-    width: 100%; 
+    max-width: 100%; 
+    max-height: 100%; 
+    width: auto;
     height: auto; 
     border-radius: 8px;
-    object-fit: cover;
+    object-fit: contain;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 .af-info-wrapper {
@@ -530,8 +533,8 @@ footer a:hover {
     display: block;
     min-width: 0;
 }
-.af-hotel-name {
-    font-size: 1.15rem; 
+.af-hotel-name, .af-item-name {
+    font-size: 1.25rem; 
     font-weight: 700;
     margin-bottom: 8px;
     color: #1e293b;
@@ -542,8 +545,8 @@ footer a:hover {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-.af-hotel-address {
-    font-size: 0.85rem; 
+.af-hotel-address, .af-item-address {
+    font-size: 1.0rem; 
     color: #64748b; 
     margin: 0 0 16px; 
     line-height: 1.4;

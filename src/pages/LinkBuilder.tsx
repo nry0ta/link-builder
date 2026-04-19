@@ -75,8 +75,9 @@ function LinkBuilder() {
                 const parsed = JSON.parse(stored);
                 initialData = parsed;
                 setHotelData(parsed);
+                const presetPrice = (parsed.type === 'product' && !parsed.price) ? '1000円 (記事執筆時 楽天or Amazon)' : (parsed.price || parsed.address || '');
                 setDesignTexts((prev: any) => ({
-                    ...prev, customImageUrl: parsed.imageUrl, customAddress: parsed.price || parsed.address || ''
+                    ...prev, customImageUrl: parsed.imageUrl, customAddress: presetPrice
                 }));
             } catch (e) {}
         }
@@ -272,7 +273,7 @@ function LinkBuilder() {
                 html = `<div class="af-link-builder-wrapper af-item-container" id="${uniqueId}">\n    <div class="af-item-button af-hotel-button">${designTexts.modalButtonText}</div>\n    <div class="af-modal-backdrop"><div class="af-modal-content"><div class="af-modal-header">${hotelData.name}</div><ul class="af-link-list">${linksHtml}</ul></div></div>\n    <script>(function(){var c=document.getElementById('${uniqueId}');if(c.dataset.initialized)return;var o=c.querySelector('.af-item-button');var m=c.querySelector('.af-modal-backdrop');var l=${links.length};if(l===1){o.outerHTML=o.outerHTML.replace(/^<div/,'<a').replace(/div>$/,'a>');var btn=c.querySelector('.af-item-button');btn.href=c.querySelector('a').href;btn.target='_blank';btn.rel='nofollow sponsored noopener';}else{o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});}m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});c.dataset.initialized='true';}())<\/script>\n</div>`;
                 break;
             case 'multiple': 
-                const img = designTexts.showImage && designTexts.customImageUrl ? `<div class="af-image-wrapper"><img src="${designTexts.customImageUrl}" alt="${hotelData.name}" style="max-width: 100%; height: auto;"></div>` : ''; 
+                const img = designTexts.showImage && designTexts.customImageUrl ? `<div class="af-image-wrapper"><img src="${designTexts.customImageUrl}" alt="${hotelData.name}"></div>` : ''; 
                 const addr = designTexts.showAddress && designTexts.customAddress ? `<p class="af-hotel-address af-item-address">${designTexts.customAddress}</p>` : ''; 
                 const btnHtml = links.map(l => {
                     const isEmp = emphasizedSites[l.originalSite];
@@ -282,7 +283,7 @@ function LinkBuilder() {
                     return btn;
                 }).join(''); 
                 const cqiVal = (95 / Math.max(1, hotelData.name.length)).toFixed(2);
-                html = `<div class="af-multi-container" id="${uniqueId}">\n    ${img}\n    <div class="af-info-wrapper">\n        <div class="af-name-container" style="container-type: inline-size; width: 100%;"><div class="af-hotel-name af-item-name" style="font-size: clamp(0.65rem, ${cqiVal}cqi, 1.15rem);">${hotelData.name}</div></div>\n        ${addr}\n        <div class="af-links-wrapper">${btnHtml}</div>\n    </div>\n</div>`; 
+                html = `<div class="af-multi-container" id="${uniqueId}">\n    ${img}\n    <div class="af-info-wrapper">\n        <div class="af-name-container" style="container-type: inline-size; width: 100%;"><div class="af-hotel-name af-item-name" style="font-size: clamp(0.65rem, ${cqiVal}cqi, 1.25rem);">${hotelData.name}</div></div>\n        ${addr}\n        <div class="af-links-wrapper">${btnHtml}</div>\n    </div>\n</div>`; 
                 break;
             default: showNotification('デザインモードを選択してください。', 'error', 'generateBtnNotification'); return;
         }
