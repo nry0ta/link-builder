@@ -7,7 +7,7 @@ const MAX_DISPLAY = 15;
 
 
 function Home() {
-    const [category, setCategory] = useState<'domestic' | 'overseas' | 'activity' | 'product'>('domestic');
+    const [category, setCategory] = useState<'domestic' | 'overseas' | 'activity' | 'product' | 'app'>('domestic');
     const [searchEngine, setSearchEngine] = useState<'amazon' | 'rakuten'>('amazon');
     const [keyword, setKeyword] = useState('');
     const [results, setResults] = useState<any[]>([]);
@@ -191,6 +191,7 @@ function Home() {
                 <button style={tabStyle(category === 'product')} onClick={() => { setCategory('product'); setResults([]); setMessage(''); setKeyword(''); }}>商品紹介 (Amazon・楽天・Yahoo)</button>
                 <button style={tabStyle(category === 'overseas')} onClick={() => { setCategory('overseas'); setResults([]); setMessage(''); setKeyword(''); }}>海外のホテル</button>
                 <button style={tabStyle(category === 'activity')} onClick={() => { setCategory('activity'); setResults([]); setMessage(''); setKeyword(''); }}>アクティビティ</button>
+                <button style={tabStyle(category === 'app')} onClick={() => { setCategory('app'); setResults([]); setMessage(''); setKeyword(''); }}>アプリ紹介</button>
             </div>
 
             {/* ===== 国内ホテル or 商品検索 ===== */}
@@ -296,11 +297,14 @@ function Home() {
                 </>
             )}
 
-            {/* ===== 海外ホテル / アクティビティ ===== */}
-            {(category === 'overseas' || category === 'activity') && (
+            {/* ===== 海外ホテル / アクティビティ / アプリ ===== */}
+            {(category === 'overseas' || category === 'activity' || category === 'app') && (
                 <div style={{ textAlign: 'center', padding: '50px 20px', background: '#f8f9fa', borderRadius: '12px', border: '1px dashed #ced4da' }}>
                     <p style={{ color: '#6c757d', marginBottom: '20px', fontWeight: '500' }}>
-                        現在、直接リンク作成画面から画像URLや任意のアフィリエイトURLを入力して作成可能です！
+                        {category === 'app' 
+                            ? 'App StoreやGoogle Playのリンクを手動で入力して、綺麗な紹介パーツを作成できます！'
+                            : '現在、直接リンク作成画面から画像URLや任意のアフィリエイトURLを入力して作成可能です！'
+                        }
                     </p>
                     <button
                         style={{ padding: '12px 30px', background: '#28a745', color: 'white', border: 'none', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 4px 10px rgba(40, 167, 69, 0.3)' }}

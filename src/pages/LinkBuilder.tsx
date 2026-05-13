@@ -17,13 +17,15 @@ import {
 const siteLabelsBase: Record<string, string> = {
     rakuten: '楽天トラベル', jalan: 'じゃらんnet', ikkyu: '一休.com', yahoo: 'Yahoo!トラベル',
     booking: 'Booking.com', hotelscom: 'Hotels.com', ihg: 'IHG公式', tripcom: 'Trip.com', agoda: 'Agoda',
-    amazon: 'Amazon', rakuten_ichiba: '楽天市場', yahoo_shopping: 'Yahoo!ショッピング', anker: 'Anker公式'
+    amazon: 'Amazon', rakuten_ichiba: '楽天市場', yahoo_shopping: 'Yahoo!ショッピング', anker: 'Anker公式',
+    appstore: 'App Store', googleplay: 'Google Play'
 };
 
 const siteStyleClasses: Record<string, string> = {
     rakuten: 'rakuten', jalan: 'jalan', ikkyu: 'ikkyu', yahoo: 'yahoo',
     booking: 'booking', hotelscom: 'hotelscom', ihg: 'ihg', tripcom: 'tripcom', agoda: 'agoda', custom: 'custom',
-    amazon: 'amazon', rakuten_ichiba: 'rakuten', yahoo_shopping: 'yahoo', anker: 'anker'
+    amazon: 'amazon', rakuten_ichiba: 'rakuten', yahoo_shopping: 'yahoo', anker: 'anker',
+    appstore: 'appstore', googleplay: 'googleplay'
 };
 
 function LinkBuilder() {
@@ -41,19 +43,22 @@ function LinkBuilder() {
     const [selectedSites, setSelectedSites] = useState<Record<string, boolean>>({
         rakuten: false, jalan: false, ikkyu: false, yahoo: false,
         booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false,
-        amazon: false, rakuten_ichiba: false, yahoo_shopping: false, anker: false
+        amazon: false, rakuten_ichiba: false, yahoo_shopping: false, anker: false,
+        appstore: false, googleplay: false
     });
     const [urls, setUrls] = useState<Record<string, string>>({
         rakuten: '', jalan: '', ikkyu: '', yahoo: '',
         booking: '', hotelscom: '', ihg: '', tripcom: '', agoda: '', custom: '',
-        amazon: '', rakuten_ichiba: '', yahoo_shopping: '', anker: ''
+        amazon: '', rakuten_ichiba: '', yahoo_shopping: '', anker: '',
+        appstore: '', googleplay: ''
     });
     const [siteOrder, setSiteOrder] = useState<string[]>(['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom']);
     const [customSiteName, setCustomSiteName] = useState('任意サイト');
     const [emphasizedSites, setEmphasizedSites] = useState<Record<string, boolean>>({});
     const [emphasizeTexts, setEmphasizeTexts] = useState<Record<string, string>>({
         rakuten: '', jalan: '', ikkyu: '', yahoo: '', booking: '', hotelscom: '', ihg: '＼最安値保証&レイトチェックアウト／', tripcom: '', agoda: '', 
-        amazon: '', rakuten_ichiba: '', yahoo_shopping: '', anker: '', custom: ''
+        amazon: '', rakuten_ichiba: '', yahoo_shopping: '', anker: '', 
+        appstore: '', googleplay: '', custom: ''
     });
     const [designTexts, setDesignTexts] = useState<any>({
         singleJumpText: '', modalButtonText: '', multipleBtnText: '',
@@ -113,9 +118,11 @@ function LinkBuilder() {
         setSettings(currentSettings);
 
         const isProduct = initialData.type === 'product';
-        const defaultOrder = isProduct 
-            ? ['amazon', 'rakuten_ichiba', 'yahoo_shopping', 'anker', 'custom']
-            : ['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom'];
+        const isApp = initialData.type === 'app';
+        
+        let defaultOrder = ['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom'];
+        if (isProduct) defaultOrder = ['amazon', 'rakuten_ichiba', 'yahoo_shopping', 'anker', 'custom'];
+        if (isApp) defaultOrder = ['appstore', 'googleplay', 'custom'];
 
         if (isProduct) {
             setSelectedSites({
@@ -138,6 +145,15 @@ function LinkBuilder() {
                 anker: ankerUrl
             }));
             setSiteOrder(defaultOrder);
+        } else if (isApp) {
+            setSelectedSites({
+                rakuten: false, jalan: false, ikkyu: false, yahoo: false,
+                booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false,
+                amazon: false, rakuten_ichiba: false, yahoo_shopping: false, anker: false,
+                appstore: true, googleplay: true
+            });
+            setSiteOrder(defaultOrder);
+            setDesignMode('multiple'); // Apps usually use multiple buttons
         } else {
             const storedOrder = localStorage.getItem('siteOrder');
             setUrls(prev => ({ ...prev, rakuten: initialData.url }));
@@ -321,7 +337,8 @@ function LinkBuilder() {
     const siteLabels: any = {
         rakuten: '楽天トラベル', jalan: 'じゃらんnet', ikkyu: '一休.com', yahoo: 'Yahoo!トラベル',
         booking: 'Booking.com', hotelscom: 'Hotels.com', ihg: 'IHG公式', tripcom: 'Trip.com', agoda: 'Agoda',
-        amazon: 'Amazon', rakuten_ichiba: '楽天市場', yahoo_shopping: 'Yahoo!ショッピング', anker: 'Anker公式', custom: customSiteName
+        amazon: 'Amazon', rakuten_ichiba: '楽天市場', yahoo_shopping: 'Yahoo!ショッピング', anker: 'Anker公式', 
+        appstore: 'App Store', googleplay: 'Google Play', custom: customSiteName
     };
 
     return (
@@ -329,7 +346,7 @@ function LinkBuilder() {
             <h1>リンクを作成</h1>
             
             <div className="form-group">
-                <label>名称 ({hotelData.type === 'product' ? '商品名' : 'ホテル名'})</label>
+                <label>名称 ({hotelData.type === 'product' ? '商品名' : (hotelData.type === 'app' ? 'アプリ名' : 'ホテル名')})</label>
                 <input type="text" value={hotelData.name || ''} onChange={e => setHotelData({...hotelData, name: e.target.value})} />
             </div>
 

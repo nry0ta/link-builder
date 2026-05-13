@@ -679,6 +679,8 @@ footer a:hover {
 .btn-custom { background-color: #6c757d; }
 .btn-amazon { background-color: #FF9900; }
 .btn-anker { background-color: #00B1B0; }
+.btn-appstore { background-color: #007AFF; }
+.btn-googleplay { background-color: #34A853; }
 .btn-single-default { background: linear-gradient(135deg, #007bff, #0056b3); }
 
 /* --- サイト並び替え --- */
