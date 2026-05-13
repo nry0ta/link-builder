@@ -245,7 +245,7 @@ const affiliateCss = `/* =======================================================
 .af-app-badge-link:hover { transform: scale(1.05); }
 .af-app-badge-link img { width: auto !important; display: block; border-radius: 0 !important; box-shadow: none !important; }
 .af-appstore-img { height: 40px !important; }
-.af-googleplay-img { height: 40px !important; }
+.af-googleplay-img { height: 33px !important; }
 
 @media (max-width: 600px) {
     .af-app-container .af-info-wrapper { text-align: center !important; }
