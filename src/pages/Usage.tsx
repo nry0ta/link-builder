@@ -249,7 +249,7 @@ const affiliateCss = `/* =======================================================
 .af-app-badge-link:hover { transform: scale(1.05); }
 .af-app-badge-link img { width: auto !important; display: block; border-radius: 0 !important; box-shadow: none !important; }
 .af-appstore-img { height: 50px !important; }
-.af-googleplay-img { height: 41px !important; }
+.af-googleplay-img { height: 50px !important; }
 
 @media (max-width: 600px) {
     .af-app-container { align-items: center !important; }
@@ -257,7 +257,7 @@ const affiliateCss = `/* =======================================================
     .af-app-container .af-item-name, .af-app-container .af-item-address { text-align: center !important; }
     .af-app-container .af-app-links { justify-content: center !important; margin-top: 0 !important; padding-top: 0 !important; gap: 12px !important; }
     .af-appstore-img { height: 50px !important; width: auto !important; }
-    .af-googleplay-img { height: 41px !important; width: auto !important; }
+    .af-googleplay-img { height: 50px !important; width: auto !important; }
 }
 
 .btn-single-default { background: linear-gradient(135deg, #007bff, #0056b3); }
