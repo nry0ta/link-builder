@@ -239,9 +239,12 @@ const affiliateCss = `/* =======================================================
 .btn-custom { background-color: #6c757d; }
 .btn-amazon { background-color: #FF9900; }
 .btn-anker { background-color: #00B1B0; }
-.af-app-badge-link { display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease; }
+.af-app-links { display: flex !important; flex-wrap: wrap; justify-content: flex-start !important; align-items: center !important; gap: 12px !important; grid-template-columns: none !important; }
+.af-app-badge-link { display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease; flex: 0 0 auto !important; }
 .af-app-badge-link:hover { transform: scale(1.05); }
-.af-app-badge-link img { height: 40px; width: auto; display: block; border-radius: 0 !important; box-shadow: none !important; }
+.af-app-badge-link img { width: auto !important; display: block; border-radius: 0 !important; box-shadow: none !important; }
+.af-appstore-img { height: 40px !important; }
+.af-googleplay-img { height: 40px !important; }
 .btn-single-default { background: linear-gradient(135deg, #007bff, #0056b3); }
 `;
 
