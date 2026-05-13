@@ -247,17 +247,17 @@ const affiliateCss = `/* =======================================================
 .af-app-links { display: flex !important; flex-wrap: wrap; justify-content: center !important; align-items: center !important; gap: 12px !important; grid-template-columns: none !important; margin-top: 0 !important; padding-top: 0 !important; }
 .af-app-badge-link { display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease; flex: 0 0 auto !important; margin: 0 !important; }
 .af-app-badge-link:hover { transform: scale(1.05); }
-.af-app-badge-link img { width: auto !important; display: block; border-radius: 0 !important; box-shadow: none !important; }
-.af-appstore-img { height: 50px !important; }
-.af-googleplay-img { height: 50px !important; }
+.af-app-badge-link img { display: block; border-radius: 0 !important; box-shadow: none !important; }
+.af-appstore-img { height: 50px !important; width: 168px !important; }
+.af-googleplay-img { height: 50px !important; width: 168px !important; }
 
 @media (max-width: 600px) {
     .af-app-container { align-items: center !important; }
     .af-app-container .af-info-wrapper { text-align: center !important; align-items: center !important; gap: 16px !important; }
     .af-app-container .af-item-name, .af-app-container .af-item-address { text-align: center !important; }
     .af-app-container .af-app-links { justify-content: center !important; margin-top: 0 !important; padding-top: 0 !important; gap: 12px !important; }
-    .af-appstore-img { height: 50px !important; width: auto !important; }
-    .af-googleplay-img { height: 50px !important; width: auto !important; }
+    .af-appstore-img { height: 50px !important; width: 168px !important; }
+    .af-googleplay-img { height: 50px !important; width: 168px !important; }
 }
 
 .btn-single-default { background: linear-gradient(135deg, #007bff, #0056b3); }
