@@ -679,8 +679,9 @@ footer a:hover {
 .btn-custom { background-color: #6c757d; }
 .btn-amazon { background-color: #FF9900; }
 .btn-anker { background-color: #00B1B0; }
-.btn-appstore { background-color: #007AFF; }
-.btn-googleplay { background-color: #34A853; }
+.af-app-badge-link { display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease; }
+.af-app-badge-link:hover { transform: scale(1.05); }
+.af-app-badge-link img { height: 40px; width: auto; display: block; border-radius: 0 !important; box-shadow: none !important; }
 .btn-single-default { background: linear-gradient(135deg, #007bff, #0056b3); }
 
 /* --- サイト並び替え --- */

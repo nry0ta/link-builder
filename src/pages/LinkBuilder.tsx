@@ -301,7 +301,16 @@ function LinkBuilder() {
                 const btnHtml = links.map(l => {
                     const isEmp = emphasizedSites[l.originalSite];
                     const empText = emphasizeTexts[l.originalSite] || (l.styleSite === 'ihg' ? '＼最安値保証&レイトチェックアウト／' : '＼期間限定セール／');
-                    const btn = `<a href="${l.url}" target="_blank" rel="nofollow sponsored noopener" class="af-multi-btn btn-${l.styleSite}"><span class="af-btn-text">${l.name}${designTexts.multipleBtnText}</span></a>`;
+                    
+                    let btn = '';
+                    if (l.originalSite === 'appstore') {
+                        btn = `<a href="${l.url}" target="_blank" rel="nofollow sponsored noopener" class="af-app-badge-link"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/f/flynrt/20260513/20260513215107.webp" alt="App Store"></a>`;
+                    } else if (l.originalSite === 'googleplay') {
+                        btn = `<a href="${l.url}" target="_blank" rel="nofollow sponsored noopener" class="af-app-badge-link"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/f/flynrt/20260513/20260513215031.webp" alt="Google Play"></a>`;
+                    } else {
+                        btn = `<a href="${l.url}" target="_blank" rel="nofollow sponsored noopener" class="af-multi-btn btn-${l.styleSite}"><span class="af-btn-text">${l.name}${designTexts.multipleBtnText}</span></a>`;
+                    }
+                    
                     if (isEmp) return `<div class="af-emphasize-wrapper"><div class="af-emphasize-badge">${empText}</div>${btn}</div>`;
                     return btn;
                 }).join(''); 
