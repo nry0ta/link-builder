@@ -87,6 +87,7 @@ const affiliateCss = `/* =======================================================
     background-color: #fff;
     padding: 20px;
     gap: 20px;
+    align-items: flex-start;
 }
 .af-image-wrapper {
     flex: 0 0 160px; /* Force fixed width like hotel */
@@ -245,6 +246,13 @@ const affiliateCss = `/* =======================================================
 .af-app-badge-link img { width: auto !important; display: block; border-radius: 0 !important; box-shadow: none !important; }
 .af-appstore-img { height: 40px !important; }
 .af-googleplay-img { height: 40px !important; }
+
+@media (max-width: 600px) {
+    .af-app-container .af-info-wrapper { text-align: center !important; }
+    .af-app-container .af-item-name, .af-app-container .af-item-address { text-align: center !important; }
+    .af-app-container .af-app-links { justify-content: center !important; }
+}
+
 .btn-single-default { background: linear-gradient(135deg, #007bff, #0056b3); }
 `;
 

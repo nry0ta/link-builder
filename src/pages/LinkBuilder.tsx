@@ -316,8 +316,9 @@ function LinkBuilder() {
                 }).join(''); 
                 const cqiVal = (95 / Math.max(1, hotelData.name.length)).toFixed(2);
                 const isAppLayout = links.some(l => l.originalSite === 'appstore' || l.originalSite === 'googleplay');
+                const containerClass = isAppLayout ? 'af-multi-container af-app-container' : 'af-multi-container';
                 const linksWrapperClass = isAppLayout ? 'af-links-wrapper af-app-links' : 'af-links-wrapper';
-                html = `<div class="af-multi-container" id="${uniqueId}">\n    ${img}\n    <div class="af-info-wrapper">\n        <div class="af-name-container" style="container-type: inline-size; width: 100%;"><div class="af-hotel-name af-item-name" style="font-size: clamp(0.65rem, ${cqiVal}cqi, 1.25rem);">${hotelData.name}</div></div>\n        ${addr}\n        <div class="${linksWrapperClass}">${btnHtml}</div>\n    </div>\n</div>`; 
+                html = `<div class="${containerClass}" id="${uniqueId}">\n    ${img}\n    <div class="af-info-wrapper">\n        <div class="af-name-container" style="container-type: inline-size; width: 100%;"><div class="af-hotel-name af-item-name" style="font-size: clamp(0.65rem, ${cqiVal}cqi, 1.25rem);">${hotelData.name}</div></div>\n        ${addr}\n        <div class="${linksWrapperClass}">${btnHtml}</div>\n    </div>\n</div>`; 
                 break;
             default: showNotification('デザインモードを選択してください。', 'error', 'generateBtnNotification'); return;
         }
