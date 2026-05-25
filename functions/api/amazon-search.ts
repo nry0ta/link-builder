@@ -1,26 +1,47 @@
 // Cloudflare Pages Function for Amazon Creators API Search Proxy
 // Supports both v2.x (Cognito) and v3.x (LwA) credentials via automatic fallback.
 
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Max-Age': '86400',
+    'Content-Type': 'application/json'
+};
+
+export async function onRequestOptions() {
+    return new Response(null, {
+        status: 200,
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Access-Control-Max-Age': '86400'
+        }
+    });
+}
+
 export async function onRequestPost(context: any) {
     try {
         const body = await context.request.json() as any;
         let { keyword, clientId, clientSecret, partnerTag } = body;
 
-        // Fallback to server-side Cloudflare Pages Environment Variables (Secrets)
-        clientId = (clientId && clientId.trim()) || (context.env.AMAZON_CLIENT_ID as string || '').trim();
-        clientSecret = (clientSecret && clientSecret.trim()) || (context.env.AMAZON_CLIENT_SECRET as string || '').trim();
-        partnerTag = (partnerTag && partnerTag.trim()) || (context.env.AMAZON_TRACKING_ID as string || '').trim() || (context.env.VITE_AMAZON_TRACKING_ID as string || '').trim();
+        // Secure helper to safely trim values without throwing errors on objects or undefined values
+        const safeTrim = (val: any): string => {
+            if (typeof val === 'string') return val.trim();
+            return '';
+        };
+
+        clientId = safeTrim(clientId) || safeTrim(context.env.AMAZON_CLIENT_ID);
+        clientSecret = safeTrim(clientSecret) || safeTrim(context.env.AMAZON_CLIENT_SECRET);
+        partnerTag = safeTrim(partnerTag) || safeTrim(context.env.AMAZON_TRACKING_ID) || safeTrim(context.env.VITE_AMAZON_TRACKING_ID);
 
         if (!keyword || !clientId || !clientSecret || !partnerTag) {
             return new Response(JSON.stringify({ error: 'Missing required parameters' }), {
                 status: 400,
-                headers: { 'Content-Type': 'application/json' }
+                headers: corsHeaders
             });
         }
-
-        clientId = clientId.trim();
-        clientSecret = clientSecret.trim();
-        partnerTag = partnerTag.trim();
 
         let accessToken = '';
         let credentialVersion = '3.3'; // User dashboard explicitly says Version 3.3
@@ -75,13 +96,13 @@ export async function onRequestPost(context: any) {
                         lwaError: lwaData 
                     }), {
                         status: 401,
-                        headers: { 'Content-Type': 'application/json' }
+                        headers: corsHeaders
                     });
                 }
             } catch (e) {
                 return new Response(JSON.stringify({ error: 'Auth pool fallback failed', details: authError }), {
                     status: 502,
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: corsHeaders
                 });
             }
         }
@@ -117,7 +138,7 @@ export async function onRequestPost(context: any) {
         } catch (e) {
             return new Response(JSON.stringify({ error: 'Search parse failed', status: searchResponse.status, rawBody: rawText }), {
                 status: 502,
-                headers: { 'Content-Type': 'application/json' }
+                headers: corsHeaders
             });
         }
 
@@ -129,19 +150,19 @@ export async function onRequestPost(context: any) {
                 rawBody: rawText
             }), {
                 status: searchResponse.status,
-                headers: { 'Content-Type': 'application/json' }
+                headers: corsHeaders
             });
         }
 
         return new Response(JSON.stringify(searchData), {
             status: 200,
-            headers: { 'Content-Type': 'application/json' }
+            headers: corsHeaders
         });
 
     } catch (e: any) {
         return new Response(JSON.stringify({ error: 'Internal Server Error', details: e.message }), {
             status: 500,
-            headers: { 'Content-Type': 'application/json' }
+            headers: corsHeaders
         });
     }
 }
