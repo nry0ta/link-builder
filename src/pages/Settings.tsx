@@ -9,6 +9,11 @@ type SettingsState = {
     vcPidYahoo: string;
     vcPidAmazon: string;
     vcPidAnker: string;
+    vcPidKlook: string;
+    vcPidKkday: string;
+    vcPidAsoview: string;
+    vcPidJalanActivity: string;
+    vcPidTripActivity: string;
     atRkihg: string;
     atRkjphotels: string;
     lsid: string;
@@ -32,6 +37,11 @@ function Settings() {
         vcPidYahoo: '',
         vcPidAmazon: '',
         vcPidAnker: '',
+        vcPidKlook: '',
+        vcPidKkday: '',
+        vcPidAsoview: '',
+        vcPidJalanActivity: '',
+        vcPidTripActivity: '',
         atRkihg: '',
         atRkjphotels: '',
         lsid: '',
@@ -73,50 +83,135 @@ function Settings() {
         setTimeout(() => setNotification(''), 3000);
     };
 
+    // Helper to render env variable status
+    const renderEnvBadge = (envValue: any) => {
+        if (envValue) {
+            return (
+                <span style={{ 
+                    fontSize: '0.75rem', 
+                    color: '#28a745', 
+                    backgroundColor: '#e8f5e9', 
+                    padding: '2px 8px', 
+                    borderRadius: '50px', 
+                    marginLeft: '10px',
+                    fontWeight: 'bold',
+                    display: 'inline-block'
+                }}>
+                    ✓ CF環境変数で設定されています
+                </span>
+            );
+        }
+        return null;
+    };
+
     return (
         <div className="container page-setting">
             <h1>設定</h1>
-            <p>APIキーやアフィリエイトIDを保存します。この情報はあなたのブラウザ内にのみ保存されます。</p>
+            <p>APIキーやアフィリエイトIDを保存します。未入力の項目はCloudflare環境変数のデフォルト値が自動適用されます。</p>
 
             <hr/> <h3>楽天アフィリエイト</h3>
             <div className="form-group">
-                <label>楽天アプリケーションID (AppID)</label>
+                <label>
+                    楽天アプリケーションID (AppID)
+                    {renderEnvBadge(import.meta.env.VITE_RAKUTEN_APP_ID)}
+                </label>
                 <input type="text" name="rakutenAppId" value={settings.rakutenAppId} onChange={handleChange} placeholder="楽天ウェブサービスから取得したID" />
             </div>
             <div className="form-group">
-                <label>楽天アフィリエイトID</label>
+                <label>
+                    楽天アフィリエイトID
+                    {renderEnvBadge(import.meta.env.VITE_RAKUTEN_AFFILIATE_ID)}
+                </label>
                 <input type="text" name="rakutenAffiliateId" value={settings.rakutenAffiliateId} onChange={handleChange} placeholder="楽天アフィリエイトのID" />
             </div>
 
             <hr/> <h3>バリューコマース (共通・旅行)</h3>
             <div className="form-group">
-                <label>SID (サイトID)</label>
+                <label>
+                    SID (サイトID)
+                    {renderEnvBadge(import.meta.env.VITE_VC_SID)}
+                </label>
                 <input type="text" name="vcSid" value={settings.vcSid} onChange={handleChange} placeholder="バリューコマースのサイトID" />
             </div>
             <div className="form-group">
-                <label>じゃらんnet PID</label>
+                <label>
+                    じゃらんnet (宿泊) PID
+                    {renderEnvBadge(import.meta.env.VITE_VC_PID_JALAN)}
+                </label>
                 <input type="text" name="vcPidJalan" value={settings.vcPidJalan} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label>一休.com PID</label>
+                <label>
+                    一休.com PID
+                    {renderEnvBadge(import.meta.env.VITE_VC_PID_IKKYU)}
+                </label>
                 <input type="text" name="vcPidIkkyu" value={settings.vcPidIkkyu} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label>Yahoo!トラベル PID</label>
+                <label>
+                    Yahoo!トラベル PID
+                    {renderEnvBadge(import.meta.env.VITE_VC_PID_YAHOO)}
+                </label>
                 <input type="text" name="vcPidYahoo" value={settings.vcPidYahoo} onChange={handleChange} />
+            </div>
+
+            <hr/> <h3>バリューコマース (アクティビティ・体験)</h3>
+            <div className="form-group">
+                <label>
+                    Klook PID
+                    {renderEnvBadge(import.meta.env.VITE_VC_PID_KLOOK)}
+                </label>
+                <input type="text" name="vcPidKlook" value={settings.vcPidKlook} onChange={handleChange} placeholder="Klookの提携PID" />
+            </div>
+            <div className="form-group">
+                <label>
+                    KKday PID
+                    {renderEnvBadge(import.meta.env.VITE_VC_PID_KKDAY)}
+                </label>
+                <input type="text" name="vcPidKkday" value={settings.vcPidKkday} onChange={handleChange} placeholder="KKdayの提携PID" />
+            </div>
+            <div className="form-group">
+                <label>
+                    アソビュー！ PID
+                    {renderEnvBadge(import.meta.env.VITE_VC_PID_ASOVIEW)}
+                </label>
+                <input type="text" name="vcPidAsoview" value={settings.vcPidAsoview} onChange={handleChange} placeholder="アソビュー！の提携PID" />
+            </div>
+            <div className="form-group">
+                <label>
+                    じゃらん 遊び・体験 PID
+                    {renderEnvBadge(import.meta.env.VITE_VC_PID_JALAN_ACTIVITY)}
+                </label>
+                <input type="text" name="vcPidJalanActivity" value={settings.vcPidJalanActivity} onChange={handleChange} placeholder="じゃらん遊び・体験の提携PID" />
+            </div>
+            <div className="form-group">
+                <label>
+                    Trip.com 体験 PID
+                    {renderEnvBadge(import.meta.env.VITE_VC_PID_TRIP_ACTIVITY)}
+                </label>
+                <input type="text" name="vcPidTripActivity" value={settings.vcPidTripActivity} onChange={handleChange} placeholder="Trip.com体験の提携PID (バリューコマース経由)" />
             </div>
 
             <hr/> <h3>バリューコマース (ショッピング・Anker)</h3>
             <div className="form-group">
-                <label>Yahoo!ショッピング PID</label>
+                <label>
+                    Yahoo!ショッピング PID
+                    {renderEnvBadge(import.meta.env.VITE_YAHOO_PID)}
+                </label>
                 <input type="text" name="yahooPid" value={settings.yahooPid} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label>Amazon PID</label>
+                <label>
+                    Amazon PID
+                    {renderEnvBadge(import.meta.env.VITE_VC_PID_AMAZON)}
+                </label>
                 <input type="text" name="vcPidAmazon" value={settings.vcPidAmazon || ''} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label>Anker PID</label>
+                <label>
+                    Anker PID
+                    {renderEnvBadge(import.meta.env.VITE_VC_PID_ANKER)}
+                </label>
                 <input type="text" name="vcPidAnker" value={settings.vcPidAnker || ''} onChange={handleChange} />
             </div>
 
@@ -136,7 +231,10 @@ function Settings() {
             </div>
 
             <div className="form-group">
-                <label>Amazon アソシエイト (トラッキングID)</label>
+                <label>
+                    Amazon アソシエイト (トラッキングID)
+                    {renderEnvBadge(import.meta.env.VITE_AMAZON_TRACKING_ID)}
+                </label>
                 <p className="edit-guide" style={{ fontSize: '0.85rem', color: '#666' }}>カンマ(,)区切りで複数登録できます。Link Builderで選択可能です。</p>
                 <input type="text" name="amazonTrackingId" value={settings.amazonTrackingId} onChange={handleChange} placeholder="your-1-22, your-2-22" />
             </div>
@@ -153,15 +251,24 @@ function Settings() {
 
             <hr/> <h3>その他アフィリエイト</h3>
             <div className="form-group">
-                <label>アクセストレード (rk)</label>
+                <label>
+                    アクセストレード (rk)
+                    {renderEnvBadge(import.meta.env.VITE_AT_RK_IHG)}
+                </label>
                 <input type="text" name="atRkihg" value={settings.atRkihg} onChange={handleChange} placeholder="IHGなど" />
             </div>
             <div className="form-group">
-                <label>リンクシェア ID</label>
+                <label>
+                    リンクシェア ID
+                    {renderEnvBadge(import.meta.env.VITE_TRIPCOM_LSID)}
+                </label>
                 <input type="text" name="lsid" value={settings.lsid} onChange={handleChange} />
             </div>
             <div className="form-group">
-                <label>A8.net (a8mat)</label>
+                <label>
+                    A8.net (a8mat)
+                    {renderEnvBadge(import.meta.env.VITE_A8MAT)}
+                </label>
                 <input type="text" name="a8mat" value={settings.a8mat} onChange={handleChange} />
             </div>
 

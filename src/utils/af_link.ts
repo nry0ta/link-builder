@@ -1,23 +1,42 @@
 // @ts-ignore
 import Encoding from 'encoding-japanese';
 
+// --------------------------------------------------------------------------
+// 楽天トラベル / 楽天トラベル観光体験
+// --------------------------------------------------------------------------
+
 /**
  * 楽天トラベルのアフィリエイトリンクを生成します。
  */
 export function createRakutenLink(affiliateId: string, destinationUrl: string): string {
-    if (!affiliateId || !destinationUrl) {
+    const activeId = affiliateId || (import.meta.env.VITE_RAKUTEN_AFFILIATE_ID as string) || '';
+    if (!activeId || !destinationUrl) {
         return destinationUrl || '';
     }
     const encodedUrl = encodeURIComponent(destinationUrl);
-    return `https://hb.afl.rakuten.co.jp/hgc/${affiliateId}/?pc=${encodedUrl}&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9`;
+    return `https://hb.afl.rakuten.co.jp/hgc/${activeId}/?pc=${encodedUrl}&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9`;
 }
+
+/**
+ * 楽天トラベル 観光体験のアフィリエイトリンクを生成します。
+ */
+export function createRakutenActivityLink(affiliateId: string, keyword: string, url?: string): string {
+    const targetUrl = url || `https://experience.travel.rakuten.co.jp/search?q=${encodeURIComponent(keyword)}`;
+    return createRakutenLink(affiliateId, targetUrl);
+}
+
+// --------------------------------------------------------------------------
+// バリューコマース (旅行・ホテル)
+// --------------------------------------------------------------------------
 
 /**
  * バリューコマース経由のじゃらん検索結果ページへのリンクを生成します。
  */
 export function createJalanLink(sid: string, pid: string, keyword: string): string {
-    if (!sid || !pid || !keyword) {
-        return '';
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_VC_PID_JALAN as string) || '';
+    if (!activeSid || !activePid || !keyword) {
+        return `https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword=${encodeURIComponent(keyword)}&distCd=01`;
     }
 
     const sjisByteArray = Encoding.convert(keyword, {
@@ -30,87 +49,196 @@ export function createJalanLink(sid: string, pid: string, keyword: string): stri
     const jalanSearchUrl = `https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword=${sjisEncodedKeyword}&distCd=01`;
     const encodedJalanUrl = encodeURIComponent(jalanSearchUrl);
     
-    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodedJalanUrl}`;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodedJalanUrl}`;
 }
 
 export function createIkkyuLink(sid: string, pid: string, keyword: string): string {
-    if (!sid || !pid || !keyword) { return ''; }
-    
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_VC_PID_IKKYU as string) || '';
     const ikkyuSearchUrl = `https://www.ikyu.com/search?kwd=${encodeURIComponent(keyword)}`;
-    const encodedUrl = encodeURIComponent(ikkyuSearchUrl);
 
-    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodedUrl}`;
+    if (!activeSid || !activePid || !keyword) {
+        return ikkyuSearchUrl;
+    }
+    const encodedUrl = encodeURIComponent(ikkyuSearchUrl);
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodedUrl}`;
 }
 
 export function createYahooLink(sid: string, pid: string, keyword: string): string {
-    if (!sid || !pid || !keyword) { return ''; }
-
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_VC_PID_YAHOO as string) || '';
     const yahooSearchUrl = `https://travel.yahoo.co.jp/search?kwd=${encodeURIComponent(keyword)}`;
+
+    if (!activeSid || !activePid || !keyword) {
+        return yahooSearchUrl;
+    }
     const encodedUrl = encodeURIComponent(yahooSearchUrl);
-    
-    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodedUrl}`;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodedUrl}`;
 }
+
+// --------------------------------------------------------------------------
+// バリューコマース (アクティビティ・体験)
+// --------------------------------------------------------------------------
+
+/**
+ * バリューコマース経由のKlookリンクを生成します。
+ */
+export function createKlookLink(sid: string, pid: string, keyword: string, url?: string): string {
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_VC_PID_KLOOK as string) || '';
+    const targetUrl = url || `https://www.klook.com/ja/search/result/?query=${encodeURIComponent(keyword)}`;
+
+    if (!activeSid || !activePid) return targetUrl;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
+}
+
+/**
+ * バリューコマース経由のKKdayリンクを生成します。
+ */
+export function createKkdayLink(sid: string, pid: string, keyword: string, url?: string): string {
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_VC_PID_KKDAY as string) || '';
+    const targetUrl = url || `https://www.kkday.com/ja/product/productlist?keyword=${encodeURIComponent(keyword)}`;
+
+    if (!activeSid || !activePid) return targetUrl;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
+}
+
+/**
+ * バリューコマース経由のアソビュー！リンクを生成します。
+ */
+export function createAsoviewLink(sid: string, pid: string, keyword: string, url?: string): string {
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_VC_PID_ASOVIEW as string) || '';
+    const targetUrl = url || `https://www.asoview.com/search/?keyword=${encodeURIComponent(keyword)}`;
+
+    if (!activeSid || !activePid) return targetUrl;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
+}
+
+/**
+ * バリューコマース経由のじゃらん遊び・体験リンクを生成します。
+ */
+export function createJalanActivityLink(sid: string, pid: string, keyword: string, url?: string): string {
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_VC_PID_JALAN_ACTIVITY as string) || '';
+    const targetUrl = url || `https://www.jalan.net/activity/g1_22/?keyword=${encodeURIComponent(keyword)}`;
+
+    if (!activeSid || !activePid) return targetUrl;
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
+}
+
+/**
+ * バリューコマースまたはリンクシェア経由のTrip.com 体験リンクを生成します。
+ */
+export function createTripcomActivityLink(sid: string, pid: string, lsid: string, keyword: string, url?: string): string {
+    const targetUrl = url || `https://jp.trip.com/things-to-do/search?keyword=${encodeURIComponent(keyword)}`;
+    
+    // バリューコマースのPID/SIDがあれば優先
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_VC_PID_TRIP_ACTIVITY as string) || '';
+    if (activeSid && activePid) {
+        return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
+    }
+
+    // 次点でリンクシェアID (lsid) をフォールバック
+    const activeLsid = lsid || (import.meta.env.VITE_TRIPCOM_LSID as string) || '';
+    if (activeLsid) {
+        return `https://click.linksynergy.com/deeplink?id=${activeLsid}&mid=1664685&murl=${encodeURIComponent(targetUrl)}`;
+    }
+
+    return targetUrl;
+}
+
+// --------------------------------------------------------------------------
+// アクセストレード / リンクシェア / A8
+// --------------------------------------------------------------------------
 
 /**
  * アクセストレード経由のIHG検索結果ページへのリンクを生成します。
  */
 export function createIHGLink(atRkihg: string, keyword: string): string {
-    if (!atRkihg || !keyword) { return ''; }
-
+    const activeRk = atRkihg || (import.meta.env.VITE_AT_RK_IHG as string) || '';
     const ihgSearchUrl = `https://www.ihg.com/hotels/jp/ja/find-hotels/hotel-search?qDest=${encodeURIComponent(keyword)}`;
+    if (!activeRk || !keyword) {
+        return ihgSearchUrl;
+    }
     const encodedUrl = encodeURIComponent(ihgSearchUrl);
-    
-    return `https://h.accesstrade.net/sp/cc?rk=${atRkihg}&url=${encodedUrl}`;
+    return `https://h.accesstrade.net/sp/cc?rk=${activeRk}&url=${encodedUrl}`;
 }
 
+/**
+ * リンクシェア経由のTrip.com宿泊リンクを生成します。
+ */
 export function createTripcomLink(lsid: string): string {
-    if (!lsid) { return 'nothing'; }
-    return `https://click.linksynergy.com/fs-bin/click?id=${lsid}&offerid=1664685.2&type=3&subid=0`;
+    const activeLsid = lsid || (import.meta.env.VITE_TRIPCOM_LSID as string) || '';
+    if (!activeLsid) {
+        return 'https://jp.trip.com/';
+    }
+    return `https://click.linksynergy.com/fs-bin/click?id=${activeLsid}&offerid=1664685.2&type=3&subid=0`;
 }
+
+// --------------------------------------------------------------------------
+// Amazon / 楽天市場 / Yahoo!ショッピング / Anker
+// --------------------------------------------------------------------------
 
 /**
  * Amazonのリンクを生成します。
  */
 export function createAmazonLink(tag: string, keyword: string, asin?: string): string {
+    const activeTag = tag || (import.meta.env.VITE_AMAZON_TRACKING_ID as string) || 'default-22';
     if (asin) {
-        return `https://www.amazon.co.jp/dp/${asin}?tag=${tag || 'default-22'}&linkCode=ll1`;
+        return `https://www.amazon.co.jp/dp/${asin}?tag=${activeTag}&linkCode=ll1`;
     }
-    return `https://www.amazon.co.jp/s?k=${encodeURIComponent(keyword)}&linkCode=ll2&tag=${tag || 'default-22'}`;
+    return `https://www.amazon.co.jp/s?k=${encodeURIComponent(keyword)}&linkCode=ll2&tag=${activeTag}`;
 }
 
 /**
  * Amazonの検索リンクを生成します（バリューコマース経由）。
  */
 export function createValueCommerceAmazonLink(sid: string, pid: string, keyword: string): string {
-    if (!sid || !pid || !keyword) return '';
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_VC_PID_AMAZON as string) || '';
     const searchUrl = `https://www.amazon.co.jp/s?k=${encodeURIComponent(keyword)}`;
-    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodeURIComponent(searchUrl)}`;
+    
+    if (!activeSid || !activePid || !keyword) {
+        return searchUrl;
+    }
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(searchUrl)}`;
 }
 
 /**
  * Ankerの検索リンクを生成します（バリューコマース経由）。
  */
 export function createAnkerLink(sid: string, pid: string, keyword: string): string {
-    if (!sid || !pid || !keyword) return '';
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_VC_PID_ANKER as string) || '';
     const searchUrl = `https://www.ankerjapan.com/search?type=product&filter.v.availability=1&q=${encodeURIComponent(keyword)}`;
-    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodeURIComponent(searchUrl)}`;
+    
+    if (!activeSid || !activePid || !keyword) {
+        return searchUrl;
+    }
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(searchUrl)}`;
 }
 
 /**
  * 楽天市場の検索リンクを生成します。
  */
 export function createRakutenSearchLink(affiliateId: string, keyword: string): string {
-    if (!affiliateId || !keyword) return '';
     const searchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(keyword)}/`;
-    const encodedUrl = encodeURIComponent(searchUrl);
-    return `https://hb.afl.rakuten.co.jp/hgc/${affiliateId}/?pc=${encodedUrl}&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9`;
+    return createRakutenLink(affiliateId, searchUrl);
 }
 
 /**
  * Yahoo!ショッピングの検索リンクを生成します（バリューコマース経由）。
  */
 export function createYahooShoppingLink(sid: string, pid: string, keyword: string): string {
-    if (!sid || !pid || !keyword) { return ''; }
+    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+    const activePid = pid || (import.meta.env.VITE_YAHOO_PID as string) || '';
     const searchUrl = `https://shopping.yahoo.co.jp/search/${encodeURIComponent(keyword)}/0/`;
-    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${sid}&pid=${pid}&vc_url=${encodeURIComponent(searchUrl)}`;
+    
+    if (!activeSid || !activePid || !keyword) {
+        return searchUrl;
+    }
+    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(searchUrl)}`;
 }

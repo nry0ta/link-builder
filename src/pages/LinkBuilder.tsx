@@ -11,21 +11,34 @@ import {
     createValueCommerceAmazonLink,
     createAnkerLink,
     createRakutenSearchLink,
-    createYahooShoppingLink
+    createYahooShoppingLink,
+    // Activity additions
+    createKlookLink,
+    createKkdayLink,
+    createAsoviewLink,
+    createJalanActivityLink,
+    createRakutenActivityLink,
+    createTripcomActivityLink
 } from '../utils/af_link';
 
 const siteLabelsBase: Record<string, string> = {
     rakuten: '楽天トラベル', jalan: 'じゃらんnet', ikkyu: '一休.com', yahoo: 'Yahoo!トラベル',
     booking: 'Booking.com', hotelscom: 'Hotels.com', ihg: 'IHG公式', tripcom: 'Trip.com', agoda: 'Agoda',
     amazon: 'Amazon', rakuten_ichiba: '楽天市場', yahoo_shopping: 'Yahoo!ショッピング', anker: 'Anker公式',
-    appstore: 'App Store', googleplay: 'Google Play'
+    appstore: 'App Store', googleplay: 'Google Play',
+    // Activity labels
+    klook: 'Klook', kkday: 'KKday', asoview: 'アソビュー！',
+    jalan_activity: 'じゃらん 遊び・体験', rakuten_activity: '楽天トラベル 観光体験', tripcom_activity: 'Trip.com 体験'
 };
 
 const siteStyleClasses: Record<string, string> = {
     rakuten: 'rakuten', jalan: 'jalan', ikkyu: 'ikkyu', yahoo: 'yahoo',
     booking: 'booking', hotelscom: 'hotelscom', ihg: 'ihg', tripcom: 'tripcom', agoda: 'agoda', custom: 'custom',
     amazon: 'amazon', rakuten_ichiba: 'rakuten', yahoo_shopping: 'yahoo', anker: 'anker',
-    appstore: 'appstore', googleplay: 'googleplay'
+    appstore: 'appstore', googleplay: 'googleplay',
+    // Activity class names
+    klook: 'klook', kkday: 'kkday', asoview: 'asoview',
+    jalan_activity: 'jalan-activity', rakuten_activity: 'rakuten-activity', tripcom_activity: 'tripcom-activity'
 };
 
 function LinkBuilder() {
@@ -44,13 +57,17 @@ function LinkBuilder() {
         rakuten: false, jalan: false, ikkyu: false, yahoo: false,
         booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false,
         amazon: false, rakuten_ichiba: false, yahoo_shopping: false, anker: false,
-        appstore: false, googleplay: false
+        appstore: false, googleplay: false,
+        klook: false, kkday: false, asoview: false,
+        jalan_activity: false, rakuten_activity: false, tripcom_activity: false
     });
     const [urls, setUrls] = useState<Record<string, string>>({
         rakuten: '', jalan: '', ikkyu: '', yahoo: '',
         booking: '', hotelscom: '', ihg: '', tripcom: '', agoda: '', custom: '',
         amazon: '', rakuten_ichiba: '', yahoo_shopping: '', anker: '',
-        appstore: '', googleplay: ''
+        appstore: '', googleplay: '',
+        klook: '', kkday: '', asoview: '',
+        jalan_activity: '', rakuten_activity: '', tripcom_activity: ''
     });
     const [siteOrder, setSiteOrder] = useState<string[]>(['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom']);
     const [customSiteName, setCustomSiteName] = useState('任意サイト');
@@ -58,7 +75,8 @@ function LinkBuilder() {
     const [emphasizeTexts, setEmphasizeTexts] = useState<Record<string, string>>({
         rakuten: '', jalan: '', ikkyu: '', yahoo: '', booking: '', hotelscom: '', ihg: '＼最安値保証&レイトチェックアウト／', tripcom: '', agoda: '', 
         amazon: '', rakuten_ichiba: '', yahoo_shopping: '', anker: '', 
-        appstore: '', googleplay: '', custom: ''
+        appstore: '', googleplay: '', custom: '',
+        klook: '', kkday: '', asoview: '', jalan_activity: '', rakuten_activity: '', tripcom_activity: ''
     });
     const [designTexts, setDesignTexts] = useState<any>({
         singleJumpText: '', modalButtonText: '', multipleBtnText: '',
@@ -86,6 +104,8 @@ function LinkBuilder() {
                     const priceBase = (parsed.price && parsed.price !== '価格情報なし') ? parsed.price : '1,000円';
                     const engineName = parsed.engine === 'rakuten' ? '楽天' : 'Amazon';
                     presetPrice = `${priceBase} (${engineName} / 記事執筆時)`;
+                } else if (parsed.type === 'activity') {
+                    presetPrice = parsed.price || '価格はプランにより異なります';
                 }
                 setDesignTexts((prev: any) => ({
                     ...prev, customImageUrl: parsed.imageUrl, customAddress: presetPrice
@@ -108,6 +128,11 @@ function LinkBuilder() {
             vcPidYahoo: storedSettings.vcPidYahoo || '',
             vcPidAmazon: storedSettings.vcPidAmazon || '',
             vcPidAnker: storedSettings.vcPidAnker || '',
+            vcPidKlook: storedSettings.vcPidKlook || '',
+            vcPidKkday: storedSettings.vcPidKkday || '',
+            vcPidAsoview: storedSettings.vcPidAsoview || '',
+            vcPidJalanActivity: storedSettings.vcPidJalanActivity || '',
+            vcPidTripActivity: storedSettings.vcPidTripActivity || '',
             amazonPriority: storedSettings.amazonPriority || 'associate',
             atIhgRk: storedSettings.atRkihg || '',
             tripcomLsid: storedSettings.lsid || '',
@@ -119,16 +144,20 @@ function LinkBuilder() {
 
         const isProduct = initialData.type === 'product';
         const isApp = initialData.type === 'app';
+        const isActivity = initialData.type === 'activity';
         
         let defaultOrder = ['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom'];
         if (isProduct) defaultOrder = ['amazon', 'rakuten_ichiba', 'yahoo_shopping', 'anker', 'custom'];
         if (isApp) defaultOrder = ['appstore', 'googleplay', 'custom'];
+        if (isActivity) defaultOrder = ['klook', 'kkday', 'asoview', 'jalan_activity', 'rakuten_activity', 'tripcom_activity', 'custom'];
 
         if (isProduct) {
             setSelectedSites({
                 rakuten: false, jalan: false, ikkyu: false, yahoo: false,
                 booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false,
-                amazon: true, rakuten_ichiba: true, yahoo_shopping: true, anker: true
+                amazon: true, rakuten_ichiba: true, yahoo_shopping: true, anker: true,
+                appstore: false, googleplay: false,
+                klook: false, kkday: false, asoview: false, jalan_activity: false, rakuten_activity: false, tripcom_activity: false
             });
             
             // Logic for product links
@@ -150,10 +179,43 @@ function LinkBuilder() {
                 rakuten: false, jalan: false, ikkyu: false, yahoo: false,
                 booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false,
                 amazon: false, rakuten_ichiba: false, yahoo_shopping: false, anker: false,
-                appstore: true, googleplay: true
+                appstore: true, googleplay: true,
+                klook: false, kkday: false, asoview: false, jalan_activity: false, rakuten_activity: false, tripcom_activity: false
             });
             setSiteOrder(defaultOrder);
             setDesignMode('multiple'); // Apps usually use multiple buttons
+        } else if (isActivity) {
+            // Enable all activity sites by default
+            setSelectedSites({
+                rakuten: false, jalan: false, ikkyu: false, yahoo: false,
+                booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false,
+                amazon: false, rakuten_ichiba: false, yahoo_shopping: false, anker: false,
+                appstore: false, googleplay: false,
+                klook: true, kkday: true, asoview: true,
+                jalan_activity: true, rakuten_activity: true, tripcom_activity: true
+            });
+
+            // Generate initial URLs for activity sites
+            const kw = initialData.keyword || initialData.name;
+            const targetUrl = initialData.url || '';
+            const klookUrl = createKlookLink(currentSettings.vcSid, currentSettings.vcPidKlook, kw, targetUrl);
+            const kkdayUrl = createKkdayLink(currentSettings.vcSid, currentSettings.vcPidKkday, kw, targetUrl);
+            const asoviewUrl = createAsoviewLink(currentSettings.vcSid, currentSettings.vcPidAsoview, kw, targetUrl);
+            const jalanActUrl = createJalanActivityLink(currentSettings.vcSid, currentSettings.vcPidJalanActivity, kw, targetUrl);
+            const rakutenActUrl = createRakutenActivityLink(currentSettings.rakutenAffiliateId, kw, targetUrl);
+            const tripActUrl = createTripcomActivityLink(currentSettings.vcSid, currentSettings.vcPidTripActivity, currentSettings.tripcomLsid, kw, targetUrl);
+
+            setUrls(prev => ({
+                ...prev,
+                klook: klookUrl,
+                kkday: kkdayUrl,
+                asoview: asoviewUrl,
+                jalan_activity: jalanActUrl,
+                rakuten_activity: rakutenActUrl,
+                tripcom_activity: tripActUrl
+            }));
+            
+            setSiteOrder(defaultOrder);
         } else {
             const storedOrder = localStorage.getItem('siteOrder');
             setUrls(prev => ({ ...prev, rakuten: initialData.url }));
@@ -203,7 +265,9 @@ function LinkBuilder() {
         else if (direction === 'down' && index < newOrder.length - 1) [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
         else return;
         setSiteOrder(newOrder);
-        localStorage.setItem('siteOrder', JSON.stringify(newOrder));
+        // Persist site order depending on category
+        const orderKey = hotelData.type === 'activity' ? 'activitySiteOrder' : (hotelData.type === 'product' ? 'productSiteOrder' : 'siteOrder');
+        localStorage.setItem(orderKey, JSON.stringify(newOrder));
     };
 
     const handleSiteToggle = (site: string) => {
@@ -217,7 +281,9 @@ function LinkBuilder() {
         if (isChecked) {
             let autoUrl = urls[site];
             const kw = hotelData.keyword || hotelData.name;
-            if (site === 'rakuten') autoUrl = createRakutenLink(settings.rakutenAffiliateId, hotelData.url);
+            const originUrl = hotelData.url || '';
+            
+            if (site === 'rakuten') autoUrl = createRakutenLink(settings.rakutenAffiliateId, originUrl);
             if (site === 'jalan') autoUrl = createJalanLink(settings.vcSid, settings.vcPidJalan, kw);
             if (site === 'ikkyu') autoUrl = createIkkyuLink(settings.vcSid, settings.vcPidIkkyu, kw);
             if (site === 'yahoo') autoUrl = createYahooLink(settings.vcSid, settings.vcPidYahoo, kw);
@@ -231,6 +297,14 @@ function LinkBuilder() {
             if (site === 'rakuten_ichiba') autoUrl = generateRakutenUrl(hotelData, settings);
             if (site === 'yahoo_shopping') autoUrl = createYahooShoppingLink(settings.vcSid, settings.yahooPid, kw);
             if (site === 'anker') autoUrl = createAnkerLink(settings.vcSid, settings.vcPidAnker, kw);
+
+            // Activity URLs
+            if (site === 'klook') autoUrl = createKlookLink(settings.vcSid, settings.vcPidKlook, kw, originUrl);
+            if (site === 'kkday') autoUrl = createKkdayLink(settings.vcSid, settings.vcPidKkday, kw, originUrl);
+            if (site === 'asoview') autoUrl = createAsoviewLink(settings.vcSid, settings.vcPidAsoview, kw, originUrl);
+            if (site === 'jalan_activity') autoUrl = createJalanActivityLink(settings.vcSid, settings.vcPidJalanActivity, kw, originUrl);
+            if (site === 'rakuten_activity') autoUrl = createRakutenActivityLink(settings.rakutenAffiliateId, kw, originUrl);
+            if (site === 'tripcom_activity') autoUrl = createTripcomActivityLink(settings.vcSid, settings.vcPidTripActivity, settings.tripcomLsid, kw, originUrl);
 
             setUrls(prev => ({ ...prev, [site]: autoUrl || prev[site] }));
         }
@@ -257,7 +331,9 @@ function LinkBuilder() {
         setDesignTexts((prev: any) => ({
             ...prev,
             singleJumpText: singleText || prev.singleJumpText,
-            modalButtonText: `「${name}」を各サイトで比較する`,
+            modalButtonText: hotelData.type === 'activity' 
+                ? `「${name}」のチケット・ツアーを探す` 
+                : `「${name}」を各サイトで比較する`,
             multipleBtnText: ''
         }));
     };
@@ -275,7 +351,7 @@ function LinkBuilder() {
                 url: urls[site].trim(), 
                 styleSite: (siteStyleClasses[site] || site),
                 originalSite: site,
-                empText: emphasizeTexts[site] || '＼期間限定セール／'
+                empText: emphasizeTexts[site] || '＼最安値保証／'
             }));
 
         if (links.length === 0 || !hotelData.name) {
@@ -300,7 +376,10 @@ function LinkBuilder() {
                 const addr = designTexts.showAddress && designTexts.customAddress ? `<p class="af-hotel-address af-item-address">${designTexts.customAddress}</p>` : ''; 
                 const btnHtml = links.map(l => {
                     const isEmp = emphasizedSites[l.originalSite];
-                    const empText = emphasizeTexts[l.originalSite] || (l.styleSite === 'ihg' ? '＼最安値保証&レイトチェックアウト／' : '＼期間限定セール／');
+                    const defaultEmp = l.styleSite === 'ihg' 
+                        ? '＼最安値保証&レイトチェックアウト／' 
+                        : (['klook', 'kkday', 'asoview'].includes(l.originalSite) ? '＼格安チケット・割引プラン／' : '＼期間限定セール／');
+                    const empText = emphasizeTexts[l.originalSite] || defaultEmp;
                     
                     let btn = '';
                     if (l.originalSite === 'appstore') {
@@ -350,7 +429,10 @@ function LinkBuilder() {
         rakuten: '楽天トラベル', jalan: 'じゃらんnet', ikkyu: '一休.com', yahoo: 'Yahoo!トラベル',
         booking: 'Booking.com', hotelscom: 'Hotels.com', ihg: 'IHG公式', tripcom: 'Trip.com', agoda: 'Agoda',
         amazon: 'Amazon', rakuten_ichiba: '楽天市場', yahoo_shopping: 'Yahoo!ショッピング', anker: 'Anker公式', 
-        appstore: 'App Store', googleplay: 'Google Play', custom: customSiteName
+        appstore: 'App Store', googleplay: 'Google Play', custom: customSiteName,
+        // Activity labels
+        klook: 'Klook', kkday: 'KKday', asoview: 'アソビュー！',
+        jalan_activity: 'じゃらん 遊び・体験', rakuten_activity: '楽天トラベル 観光体験', tripcom_activity: 'Trip.com 体験'
     };
 
     return (
@@ -358,7 +440,13 @@ function LinkBuilder() {
             <h1>リンクを作成</h1>
             
             <div className="form-group">
-                <label>名称 ({hotelData.type === 'product' ? '商品名' : (hotelData.type === 'app' ? 'アプリ名' : 'ホテル名')})</label>
+                <label>
+                    名称 ({
+                        hotelData.type === 'product' ? '商品名' : 
+                        (hotelData.type === 'app' ? 'アプリ名' : 
+                        (hotelData.type === 'activity' ? 'アクティビティ名' : 'ホテル名'))
+                    })
+                </label>
                 <input type="text" value={hotelData.name || ''} onChange={e => setHotelData({...hotelData, name: e.target.value})} />
             </div>
 

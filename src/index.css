@@ -680,6 +680,12 @@ footer a:hover {
 .btn-custom { background-color: #6c757d; }
 .btn-amazon { background-color: #FF9900; }
 .btn-anker { background-color: #00B1B0; }
+.btn-klook { background-color: #ff5b00; }
+.btn-kkday { background-color: #00b7d3; }
+.btn-asoview { background-color: #ff3333; }
+.btn-jalan-activity { background-color: #ff9900; }
+.btn-rakuten-activity { background-color: #bf0000; }
+.btn-tripcom-activity { background-color: #3273f6; }
 .af-app-container { align-items: stretch !important; }
 .af-app-container .af-info-wrapper { display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; gap: 16px !important; }
 .af-app-container .af-name-container { text-align: center !important; width: 100% !important; margin-bottom: 0 !important; }
