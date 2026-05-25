@@ -204,7 +204,7 @@ function LinkBuilder() {
             const asoviewUrl = createAsoviewLink(currentSettings.vcSid, currentSettings.vcPidAsoview, kw, targetUrl);
             const jalanActUrl = createJalanActivityLink(currentSettings.vcSid, currentSettings.vcPidJalanActivity, kw, targetUrl);
             const rakutenActUrl = createRakutenActivityLink(currentSettings.rakutenAffiliateId, kw, targetUrl);
-            const tripActUrl = createTripcomActivityLink(currentSettings.vcSid, currentSettings.vcPidTripActivity, currentSettings.tripcomLsid, kw, targetUrl);
+            const tripActUrl = createTripcomActivityLink(currentSettings.tripcomLsid, kw, targetUrl);
 
             setUrls(prev => ({
                 ...prev,
@@ -305,7 +305,7 @@ function LinkBuilder() {
             if (site === 'asoview') autoUrl = createAsoviewLink(settings.vcSid, settings.vcPidAsoview, kw, originUrl);
             if (site === 'jalan_activity') autoUrl = createJalanActivityLink(settings.vcSid, settings.vcPidJalanActivity, kw, originUrl);
             if (site === 'rakuten_activity') autoUrl = createRakutenActivityLink(settings.rakutenAffiliateId, kw, originUrl);
-            if (site === 'tripcom_activity') autoUrl = createTripcomActivityLink(settings.vcSid, settings.vcPidTripActivity, settings.tripcomLsid, kw, originUrl);
+            if (site === 'tripcom_activity') autoUrl = createTripcomActivityLink(settings.tripcomLsid, kw, originUrl);
 
             setUrls(prev => ({ ...prev, [site]: autoUrl || prev[site] }));
         }
@@ -494,7 +494,18 @@ function LinkBuilder() {
                                 <div className="url-sort-content">
                                     <label>{siteLabels[site]} URL</label>
                                     {site === 'custom' && <input type="text" value={customSiteName} onChange={e => setCustomSiteName(e.target.value)} placeholder="サイト名" style={{ marginBottom: '5px' }} />}
-                                    <input type="text" value={urls[site] || ''} onChange={e => setUrls({ ...urls, [site]: e.target.value })} />
+                                    <input 
+                                        type="text" 
+                                        value={urls[site] || ''} 
+                                        onChange={e => setUrls({ ...urls, [site]: e.target.value })} 
+                                        placeholder={
+                                            site === 'asoview' 
+                                                ? "例: アソビュー個別プランのURLを貼り付け（未入力時は公式トップページ）" 
+                                                : site === 'jalan_activity' 
+                                                    ? "例: じゃらん遊び・体験個別プランのURLを貼り付け（未入力時は公式トップページ）" 
+                                                    : ""
+                                        }
+                                    />
                                     {designMode === 'multiple' && (
                                         <div className="checkbox-control" style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
                                             <input type="checkbox" id={`emp-${site}`} checked={!!emphasizedSites[site]} onChange={e => setEmphasizedSites({ ...emphasizedSites, [site]: e.target.checked })} />

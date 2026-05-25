@@ -110,7 +110,9 @@ export function createKkdayLink(sid: string, pid: string, keyword: string, url?:
 export function createAsoviewLink(sid: string, pid: string, keyword: string, url?: string): string {
     const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
     const activePid = pid || (import.meta.env.VITE_VC_PID_ASOVIEW as string) || '';
-    const targetUrl = url || `https://www.asoview.com/search/?keyword=${encodeURIComponent(keyword)}`;
+    
+    // アソビューは自動検索が使えないため、指定がなければ公式トップページにフォールバック
+    const targetUrl = url || `https://www.asoview.com/`;
 
     if (!activeSid || !activePid) return targetUrl;
     return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
@@ -122,26 +124,20 @@ export function createAsoviewLink(sid: string, pid: string, keyword: string, url
 export function createJalanActivityLink(sid: string, pid: string, keyword: string, url?: string): string {
     const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
     const activePid = pid || (import.meta.env.VITE_VC_PID_JALAN_ACTIVITY as string) || '';
-    const targetUrl = url || `https://www.jalan.net/activity/g1_22/?keyword=${encodeURIComponent(keyword)}`;
+    
+    // じゃらん体験も自動検索が使えないため、指定がなければ体験トップページにフォールバック
+    const targetUrl = url || `https://www.jalan.net/activity/`;
 
     if (!activeSid || !activePid) return targetUrl;
     return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
 }
 
 /**
- * バリューコマースまたはリンクシェア経由のTrip.com 体験リンクを生成します。
+ * リンクシェア経由のTrip.com 体験リンクを生成します（バリューコマース枠はありません）。
  */
-export function createTripcomActivityLink(sid: string, pid: string, lsid: string, keyword: string, url?: string): string {
+export function createTripcomActivityLink(lsid: string, keyword: string, url?: string): string {
     const targetUrl = url || `https://jp.trip.com/things-to-do/search?keyword=${encodeURIComponent(keyword)}`;
 
-    // バリューコマースのPID/SIDがあれば優先
-    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
-    const activePid = pid || (import.meta.env.VITE_VC_PID_TRIP_ACTIVITY as string) || '';
-    if (activeSid && activePid) {
-        return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
-    }
-
-    // 次点でリンクシェアID (lsid) をフォールバック
     const activeLsid = lsid || (import.meta.env.VITE_TRIPCOM_LSID as string) || '';
     if (activeLsid) {
         return `https://click.linksynergy.com/deeplink?id=${activeLsid}&mid=1664685&murl=${encodeURIComponent(targetUrl)}`;

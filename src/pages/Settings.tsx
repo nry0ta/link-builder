@@ -13,7 +13,6 @@ type SettingsState = {
     vcPidKkday: string;
     vcPidAsoview: string;
     vcPidJalanActivity: string;
-    vcPidTripActivity: string;
     atRkihg: string;
     atRkjphotels: string;
     lsid: string;
@@ -41,7 +40,6 @@ function Settings() {
         vcPidKkday: '',
         vcPidAsoview: '',
         vcPidJalanActivity: '',
-        vcPidTripActivity: '',
         atRkihg: '',
         atRkjphotels: '',
         lsid: '',
@@ -183,13 +181,6 @@ function Settings() {
                     {renderEnvBadge(import.meta.env.VITE_VC_PID_JALAN_ACTIVITY)}
                 </label>
                 <input type="text" name="vcPidJalanActivity" value={settings.vcPidJalanActivity} onChange={handleChange} placeholder="じゃらん遊び・体験の提携PID" />
-            </div>
-            <div className="form-group">
-                <label>
-                    Trip.com 体験 PID
-                    {renderEnvBadge(import.meta.env.VITE_VC_PID_TRIP_ACTIVITY)}
-                </label>
-                <input type="text" name="vcPidTripActivity" value={settings.vcPidTripActivity} onChange={handleChange} placeholder="Trip.com体験の提携PID (バリューコマース経由)" />
             </div>
 
             <hr /> <h3>バリューコマース (ショッピング・Anker)</h3>
