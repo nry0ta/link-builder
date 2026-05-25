@@ -6,6 +6,11 @@ export async function onRequestPost(context: any) {
         const body = await context.request.json() as any;
         let { keyword, clientId, clientSecret, partnerTag } = body;
 
+        // Fallback to server-side Cloudflare Pages Environment Variables (Secrets)
+        clientId = (clientId && clientId.trim()) || (context.env.AMAZON_CLIENT_ID as string || '').trim();
+        clientSecret = (clientSecret && clientSecret.trim()) || (context.env.AMAZON_CLIENT_SECRET as string || '').trim();
+        partnerTag = (partnerTag && partnerTag.trim()) || (context.env.AMAZON_TRACKING_ID as string || '').trim() || (context.env.VITE_AMAZON_TRACKING_ID as string || '').trim();
+
         if (!keyword || !clientId || !clientSecret || !partnerTag) {
             return new Response(JSON.stringify({ error: 'Missing required parameters' }), {
                 status: 400,

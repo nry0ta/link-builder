@@ -114,7 +114,8 @@ function LinkBuilder() {
         }
         
         const storedSettings = JSON.parse(localStorage.getItem('linkBuilderSettings') || '{}');
-        const ids = (storedSettings.amazonTrackingId || '').split(',').map((s: string) => s.trim()).filter(Boolean);
+        const rawTrackingId = storedSettings.amazonTrackingId || (import.meta.env.VITE_AMAZON_TRACKING_ID as string) || '';
+        const ids = rawTrackingId.split(',').map((s: string) => s.trim()).filter(Boolean);
         setTrackingIds(ids);
         const initialTag = ids[0] || '';
         setSelectedTrackingId(initialTag);

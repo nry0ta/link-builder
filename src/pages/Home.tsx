@@ -80,17 +80,14 @@ function Home() {
 
             if (category === 'product') {
                 if (searchEngine === 'amazon') {
-                    if (!settings.amazonClientId || !settings.amazonClientSecret) {
-                        throw new Error('Amazon APIの設定が不足しています。');
-                    }
                     const response = await fetch('/api/amazon-search', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             keyword: query,
-                            clientId: settings.amazonClientId,
-                            clientSecret: settings.amazonClientSecret,
-                            partnerTag: settings.amazonTrackingId?.split(',')[0].trim() || 'default-22'
+                            clientId: settings.amazonClientId || '',
+                            clientSecret: settings.amazonClientSecret || '',
+                            partnerTag: settings.amazonTrackingId?.split(',')[0].trim() || ''
                         })
                     });
                     const data = await response.json() as any;

@@ -240,6 +240,9 @@ function Settings() {
             </div>
             
             <p style={{ marginTop: '20px', fontWeight: 'bold' }}>Amazon Creators API (商品検索用)</p>
+            <p className="edit-guide" style={{ fontSize: '0.85rem', color: '#666', marginBottom: '15px' }}>
+                ※Cloudflare Pagesの環境変数（Secret）に <strong>AMAZON_CLIENT_ID</strong> と <strong>AMAZON_CLIENT_SECRET</strong> が設定されている場合は、以下の入力欄は空欄のままで商品検索機能が利用できます。
+            </p>
             <div className="form-group">
                 <label>Client ID</label>
                 <input type="text" name="amazonClientId" value={settings.amazonClientId} onChange={handleChange} />
