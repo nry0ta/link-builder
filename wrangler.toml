@@ -2,3 +2,24 @@ name = "link-builder"
 pages_build_output_dir = "dist"
 compatibility_date = "2024-04-01"
 compatibility_flags = ["nodejs_compat"]
+
+[vars]
+VITE_RAKUTEN_APP_ID = "1046549695895915196"
+VITE_RAKUTEN_AFFILIATE_ID = "40dba8c4.a3a6d6ce.40dba8c5.0eaf9b42"
+VITE_VC_SID = "3733037"
+VITE_VC_PID_JALAN = "892138828"
+VITE_VC_PID_IKKYU = "892138856"
+VITE_VC_PID_YAHOO = "890957132"
+VITE_YAHOO_PID = "892597998"
+VITE_VC_PID_ANKER = "892597996"
+VITE_AMAZON_TRACKING_ID = "nrtlog-22,nrtlog-3c-22,nrtlog-gon-22"
+VITE_AT_RK_IHG = "0100mmn400o520"
+VITE_A8MAT = "3ZHPHD+247I7M+4X1W+BWGDT"
+
+# 新規追加された体験・アクティビティ案件用のPID設定欄（必要に応じてご変更ください）
+VITE_VC_PID_KLOOK = ""
+VITE_VC_PID_KKDAY = ""
+VITE_VC_PID_ASOVIEW = ""
+VITE_VC_PID_JALAN_ACTIVITY = ""
+VITE_VC_PID_TRIP_ACTIVITY = ""
+VITE_TRIPCOM_LSID = ""
