@@ -1,27 +1,31 @@
 // Cloudflare Pages Function for Amazon Creators API Search Proxy
 // Supports both v2.x (Cognito) and v3.x (LwA) credentials via automatic fallback.
 
-const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Max-Age': '86400',
-    'Content-Type': 'application/json'
-};
-
-export async function onRequestOptions() {
+export async function onRequestOptions(context: any) {
+    const origin = context.request.headers.get('Origin') || '*';
     return new Response(null, {
         status: 200,
         headers: {
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': origin,
             'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            'Access-Control-Allow-Credentials': 'true',
             'Access-Control-Max-Age': '86400'
         }
     });
 }
 
 export async function onRequestPost(context: any) {
+    const origin = context.request.headers.get('Origin') || '*';
+    const corsHeaders = {
+        'Access-Control-Allow-Origin': origin,
+        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Max-Age': '86400',
+        'Content-Type': 'application/json'
+    };
+
     try {
         const body = await context.request.json() as any;
         let { keyword, clientId, clientSecret, partnerTag } = body;
