@@ -134,6 +134,8 @@ function LinkBuilder() {
             klookAid: storedSettings.klookAid || '',
             klookAdid: storedSettings.klookAdid || '',
             vcPidKkday: storedSettings.vcPidKkday || '',
+            kkdayPriority: storedSettings.kkdayPriority || 'valuecommerce',
+            kkdayCid: storedSettings.kkdayCid || '',
             vcPidAsoview: storedSettings.vcPidAsoview || '',
             vcPidJalanActivity: storedSettings.vcPidJalanActivity || '',
             amazonPriority: storedSettings.amazonPriority || 'associate',
@@ -202,7 +204,7 @@ function LinkBuilder() {
             const kw = initialData.keyword || initialData.name;
             const targetUrl = initialData.url || '';
             const klookUrl = createKlookLink(currentSettings.klookPriority, currentSettings.vcSid, currentSettings.vcPidKlook, currentSettings.klookAid, currentSettings.klookAdid, kw, targetUrl);
-            const kkdayUrl = createKkdayLink(currentSettings.vcSid, currentSettings.vcPidKkday, kw, targetUrl);
+            const kkdayUrl = createKkdayLink(currentSettings.kkdayPriority, currentSettings.vcSid, currentSettings.vcPidKkday, currentSettings.kkdayCid, kw, targetUrl);
             const asoviewUrl = createAsoviewLink(currentSettings.vcSid, currentSettings.vcPidAsoview, kw, targetUrl);
             const jalanActUrl = createJalanActivityLink(currentSettings.vcSid, currentSettings.vcPidJalanActivity, kw, targetUrl);
             const rakutenActUrl = createRakutenActivityLink(currentSettings.rakutenAffiliateId, kw, targetUrl);
@@ -303,7 +305,7 @@ function LinkBuilder() {
 
             // Activity URLs
             if (site === 'klook') autoUrl = createKlookLink(settings.klookPriority, settings.vcSid, settings.vcPidKlook, settings.klookAid, settings.klookAdid, kw, originUrl);
-            if (site === 'kkday') autoUrl = createKkdayLink(settings.vcSid, settings.vcPidKkday, kw, originUrl);
+            if (site === 'kkday') autoUrl = createKkdayLink(settings.kkdayPriority, settings.vcSid, settings.vcPidKkday, settings.kkdayCid, kw, originUrl);
             if (site === 'asoview') autoUrl = createAsoviewLink(settings.vcSid, settings.vcPidAsoview, kw, originUrl);
             if (site === 'jalan_activity') autoUrl = createJalanActivityLink(settings.vcSid, settings.vcPidJalanActivity, kw, originUrl);
             if (site === 'rakuten_activity') autoUrl = createRakutenActivityLink(settings.rakutenAffiliateId, kw, originUrl);

@@ -14,6 +14,8 @@ type SettingsState = {
     klookAid: string;
     klookAdid: string;
     vcPidKkday: string;
+    kkdayPriority: string;
+    kkdayCid: string;
     vcPidAsoview: string;
     vcPidJalanActivity: string;
     atRkihg: string;
@@ -44,6 +46,8 @@ function Settings() {
         klookAid: '',
         klookAdid: '',
         vcPidKkday: '',
+        kkdayPriority: 'valuecommerce',
+        kkdayCid: '',
         vcPidAsoview: '',
         vcPidJalanActivity: '',
         atRkihg: '',
@@ -200,12 +204,35 @@ function Settings() {
                 </div>
             )}
             <div className="form-group">
-                <label>
-                    KKday PID
-                    {renderEnvBadge(import.meta.env.VITE_VC_PID_KKDAY)}
-                </label>
-                <input type="text" name="vcPidKkday" value={settings.vcPidKkday} onChange={handleChange} placeholder="KKdayの提携PID" />
+                <label>KKdayリンク優先度</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input type="radio" name="kkdayPriority" value="official" checked={settings.kkdayPriority === 'official'} onChange={handleChange} />
+                        KKday公式アソシエイト
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input type="radio" name="kkdayPriority" value="valuecommerce" checked={settings.kkdayPriority === 'valuecommerce'} onChange={handleChange} />
+                        バリューコマース
+                    </label>
+                </div>
             </div>
+            {settings.kkdayPriority === 'official' ? (
+                <div className="form-group">
+                    <label>
+                        KKday アソシエイト CID
+                        {renderEnvBadge(import.meta.env.VITE_KKDAY_CID)}
+                    </label>
+                    <input type="text" name="kkdayCid" value={settings.kkdayCid || ''} onChange={handleChange} />
+                </div>
+            ) : (
+                <div className="form-group">
+                    <label>
+                        KKday PID (バリューコマース)
+                        {renderEnvBadge(import.meta.env.VITE_VC_PID_KKDAY)}
+                    </label>
+                    <input type="text" name="vcPidKkday" value={settings.vcPidKkday} onChange={handleChange} placeholder="KKdayの提携PID" />
+                </div>
+            )}
             <div className="form-group">
                 <label>
                     アソビュー！ PID

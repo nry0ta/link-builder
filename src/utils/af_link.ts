@@ -101,15 +101,23 @@ export function createKlookLink(priority: string, sid: string, pid: string, aid:
 }
 
 /**
- * バリューコマース経由のKKdayリンクを生成します。
+ * KKdayアフィリエイトリンクを生成します（公式アソシエイトまたはバリューコマース）。
  */
-export function createKkdayLink(sid: string, pid: string, keyword: string, url?: string): string {
-    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
-    const activePid = pid || (import.meta.env.VITE_VC_PID_KKDAY as string) || '';
+export function createKkdayLink(priority: string, sid: string, pid: string, cid: string, keyword: string, url?: string): string {
     const targetUrl = url || `https://www.kkday.com/ja/product/productlist?keyword=${encodeURIComponent(keyword)}`;
+    const activePriority = priority || (import.meta.env.VITE_KKDAY_PRIORITY as string) || 'valuecommerce';
 
-    if (!activeSid || !activePid) return targetUrl;
-    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
+    if (activePriority === 'official') {
+        const activeCid = cid || (import.meta.env.VITE_KKDAY_CID as string) || '';
+        if (!activeCid) return targetUrl;
+        const hasQuery = targetUrl.includes('?');
+        return `${targetUrl}${hasQuery ? '&' : '?'}cid=${activeCid}`;
+    } else {
+        const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+        const activePid = pid || (import.meta.env.VITE_VC_PID_KKDAY as string) || '';
+        if (!activeSid || !activePid) return targetUrl;
+        return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
+    }
 }
 
 /**
