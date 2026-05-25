@@ -10,6 +10,9 @@ type SettingsState = {
     vcPidAmazon: string;
     vcPidAnker: string;
     vcPidKlook: string;
+    klookPriority: string;
+    klookAid: string;
+    klookAdid: string;
     vcPidKkday: string;
     vcPidAsoview: string;
     vcPidJalanActivity: string;
@@ -37,6 +40,9 @@ function Settings() {
         vcPidAmazon: '',
         vcPidAnker: '',
         vcPidKlook: '',
+        klookPriority: 'valuecommerce',
+        klookAid: '',
+        klookAdid: '',
         vcPidKkday: '',
         vcPidAsoview: '',
         vcPidJalanActivity: '',
@@ -155,12 +161,44 @@ function Settings() {
 
             <hr /> <h3>バリューコマース (アクティビティ・体験)</h3>
             <div className="form-group">
-                <label>
-                    Klook PID
-                    {renderEnvBadge(import.meta.env.VITE_VC_PID_KLOOK)}
-                </label>
-                <input type="text" name="vcPidKlook" value={settings.vcPidKlook} onChange={handleChange} placeholder="Klookの提携PID" />
+                <label>Klookリンク優先度</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input type="radio" name="klookPriority" value="official" checked={settings.klookPriority === 'official'} onChange={handleChange} />
+                        Klook公式アソシエイト
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input type="radio" name="klookPriority" value="valuecommerce" checked={settings.klookPriority === 'valuecommerce'} onChange={handleChange} />
+                        バリューコマース
+                    </label>
+                </div>
             </div>
+            {settings.klookPriority === 'official' ? (
+                <>
+                    <div className="form-group">
+                        <label>
+                            Klook アソシエイト AID
+                            {renderEnvBadge(import.meta.env.VITE_KLOOK_AID)}
+                        </label>
+                        <input type="text" name="klookAid" value={settings.klookAid || ''} onChange={handleChange} />
+                    </div>
+                    <div className="form-group">
+                        <label>
+                            Klook アソシエイト Ad ID
+                            {renderEnvBadge(import.meta.env.VITE_KLOOK_ADID)}
+                        </label>
+                        <input type="text" name="klookAdid" value={settings.klookAdid || ''} onChange={handleChange} />
+                    </div>
+                </>
+            ) : (
+                <div className="form-group">
+                    <label>
+                        Klook PID
+                        {renderEnvBadge(import.meta.env.VITE_VC_PID_KLOOK)}
+                    </label>
+                    <input type="text" name="vcPidKlook" value={settings.vcPidKlook} onChange={handleChange} placeholder="Klookの提携PID" />
+                </div>
+            )}
             <div className="form-group">
                 <label>
                     KKday PID

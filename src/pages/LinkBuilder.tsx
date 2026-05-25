@@ -130,10 +130,12 @@ function LinkBuilder() {
             vcPidAmazon: storedSettings.vcPidAmazon || '',
             vcPidAnker: storedSettings.vcPidAnker || '',
             vcPidKlook: storedSettings.vcPidKlook || '',
+            klookPriority: storedSettings.klookPriority || 'valuecommerce',
+            klookAid: storedSettings.klookAid || '',
+            klookAdid: storedSettings.klookAdid || '',
             vcPidKkday: storedSettings.vcPidKkday || '',
             vcPidAsoview: storedSettings.vcPidAsoview || '',
             vcPidJalanActivity: storedSettings.vcPidJalanActivity || '',
-            vcPidTripActivity: storedSettings.vcPidTripActivity || '',
             amazonPriority: storedSettings.amazonPriority || 'associate',
             atIhgRk: storedSettings.atRkihg || '',
             tripcomLsid: storedSettings.lsid || '',
@@ -199,7 +201,7 @@ function LinkBuilder() {
             // Generate initial URLs for activity sites
             const kw = initialData.keyword || initialData.name;
             const targetUrl = initialData.url || '';
-            const klookUrl = createKlookLink(currentSettings.vcSid, currentSettings.vcPidKlook, kw, targetUrl);
+            const klookUrl = createKlookLink(currentSettings.klookPriority, currentSettings.vcSid, currentSettings.vcPidKlook, currentSettings.klookAid, currentSettings.klookAdid, kw, targetUrl);
             const kkdayUrl = createKkdayLink(currentSettings.vcSid, currentSettings.vcPidKkday, kw, targetUrl);
             const asoviewUrl = createAsoviewLink(currentSettings.vcSid, currentSettings.vcPidAsoview, kw, targetUrl);
             const jalanActUrl = createJalanActivityLink(currentSettings.vcSid, currentSettings.vcPidJalanActivity, kw, targetUrl);
@@ -300,7 +302,7 @@ function LinkBuilder() {
             if (site === 'anker') autoUrl = createAnkerLink(settings.vcSid, settings.vcPidAnker, kw);
 
             // Activity URLs
-            if (site === 'klook') autoUrl = createKlookLink(settings.vcSid, settings.vcPidKlook, kw, originUrl);
+            if (site === 'klook') autoUrl = createKlookLink(settings.klookPriority, settings.vcSid, settings.vcPidKlook, settings.klookAid, settings.klookAdid, kw, originUrl);
             if (site === 'kkday') autoUrl = createKkdayLink(settings.vcSid, settings.vcPidKkday, kw, originUrl);
             if (site === 'asoview') autoUrl = createAsoviewLink(settings.vcSid, settings.vcPidAsoview, kw, originUrl);
             if (site === 'jalan_activity') autoUrl = createJalanActivityLink(settings.vcSid, settings.vcPidJalanActivity, kw, originUrl);

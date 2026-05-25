@@ -81,15 +81,23 @@ export function createYahooLink(sid: string, pid: string, keyword: string): stri
 // --------------------------------------------------------------------------
 
 /**
- * バリューコマース経由のKlookリンクを生成します。
+ * Klookアフィリエイトリンクを生成します（公式アソシエイトまたはバリューコマース）。
  */
-export function createKlookLink(sid: string, pid: string, keyword: string, url?: string): string {
-    const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
-    const activePid = pid || (import.meta.env.VITE_VC_PID_KLOOK as string) || '';
+export function createKlookLink(priority: string, sid: string, pid: string, aid: string, adid: string, keyword: string, url?: string): string {
     const targetUrl = url || `https://www.klook.com/ja/search/result/?query=${encodeURIComponent(keyword)}`;
+    const activePriority = priority || (import.meta.env.VITE_KLOOK_PRIORITY as string) || 'valuecommerce';
 
-    if (!activeSid || !activePid) return targetUrl;
-    return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
+    if (activePriority === 'official') {
+        const activeAid = aid || (import.meta.env.VITE_KLOOK_AID as string) || '';
+        const activeAdid = adid || (import.meta.env.VITE_KLOOK_ADID as string) || '';
+        if (!activeAid || !activeAdid) return targetUrl;
+        return `https://affiliate.klook.com/redirect?aid=${activeAid}&aff_adid=${activeAdid}&k_site=${encodeURIComponent(targetUrl)}`;
+    } else {
+        const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
+        const activePid = pid || (import.meta.env.VITE_VC_PID_KLOOK as string) || '';
+        if (!activeSid || !activePid) return targetUrl;
+        return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodeURIComponent(targetUrl)}`;
+    }
 }
 
 /**
