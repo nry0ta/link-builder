@@ -271,9 +271,9 @@ const affiliateCss = `/* =======================================================
 
 const compressCss = (css: string) => {
     const minified = css
-        .replace(/\/\*[\s\S]*?\*\//g, '') 
-        .replace(/\s+/g, ' ') 
-        .replace(/\s*([{:;,>])\s*/g, '$1') 
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/\s+/g, ' ')
+        .replace(/\s*([{:;,>])\s*/g, '$1')
         .trim();
     return `/* ========================================\n   Link Builder - Affiliate Buttons\n   https://github.com/nry0ta/link-builder\n   ======================================== */\n${minified}\n/* --- Powered by Link Builder --- */`;
 };
@@ -301,7 +301,7 @@ function Usage() {
                 {copied ? 'CSSコードをコピーしました！' : 'CSSをコピー'}
             </button>
             <div style={{ minHeight: '30px' }}></div>
-            
+
             <hr />
             <h2>2. 初期設定</h2>
             <p>当サイトは国内ホテルの情報取得において、Rakuten Web Service等のAPIを利用してホテルの情報を取得しています。</p>

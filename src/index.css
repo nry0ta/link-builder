@@ -8,10 +8,13 @@ body {
     background-color: #f4f7f9;
     color: #333;
     margin: 0;
-    padding-top: 80px; /* 固定ヘッダーの高さ分、コンテンツを下にずらす */
+    padding-top: 80px;
+    /* 固定ヘッダーの高さ分、コンテンツを下にずらす */
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     text-align: center;
     color: #1a3e5c;
 }
@@ -25,20 +28,21 @@ hr {
 /* --- 2. ヘッダー --- */
 .app-header {
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
-    justify-content: space-between; 
-    align-items: center; 
+    justify-content: space-between;
+    align-items: center;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 100;
 }
+
 .app-header .container {
-    display: block !important; 
-    padding: 10px 0; 
-    margin: 0; 
+    display: block !important;
+    padding: 10px 0;
+    margin: 0;
     box-shadow: none;
     margin-left: 20px;
 }
@@ -54,7 +58,7 @@ hr {
 .version-tag {
     position: absolute;
     bottom: 0px;
-    right: -45px; 
+    right: -45px;
     font-size: 10px;
     color: #888;
     font-weight: normal;
@@ -62,9 +66,9 @@ hr {
 }
 
 .header-controls {
-    margin-right: 30px; 
+    margin-right: 30px;
     display: flex;
-    align-items: center; 
+    align-items: center;
 }
 
 .setting-button {
@@ -77,11 +81,11 @@ hr {
 }
 
 .header-text-link {
-    color: #6c757d; 
+    color: #6c757d;
     text-decoration: none;
     font-weight: 500;
-    margin-right: 15px; 
-    padding: 8px 0; 
+    margin-right: 15px;
+    padding: 8px 0;
 }
 
 /* --- 3. メインコンテンツエリア --- */
@@ -111,10 +115,12 @@ input[type="text"] {
     align-items: center;
     margin-bottom: 20px;
 }
+
 .search-form #searchInput {
     height: 50px;
     flex-grow: 1;
 }
+
 .search-form #searchButton {
     height: 50px;
     width: auto;
@@ -127,7 +133,8 @@ input[type="text"] {
     gap: 15px;
     margin-bottom: 20px;
 }
-.page-setting .form-group > label {
+
+.page-setting .form-group>label {
     display: block;
     font-weight: bold;
     flex-basis: 260px;
@@ -138,14 +145,17 @@ input[type="text"] {
 .page-builder .form-group {
     margin-bottom: 20px;
 }
+
 .page-builder .form-group label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
 }
+
 .page-builder .form-group[hidden] {
     display: none;
 }
+
 .page-builder .form-group:not([hidden]) {
     display: block;
 }
@@ -159,11 +169,20 @@ input[type="text"] {
     background-color: #f8f9fa;
     border-radius: 8px;
 }
-.site-selection div { display: flex; align-items: center; }
-.site-selection input[type="checkbox"] { margin-right: 8px; }
+
+.site-selection div {
+    display: flex;
+    align-items: center;
+}
+
+.site-selection input[type="checkbox"] {
+    margin-right: 8px;
+}
 
 /* --- 5. ボタン類 --- */
-#searchButton, #saveButton, #generateBtn {
+#searchButton,
+#saveButton,
+#generateBtn {
     border: none;
     background: #007bff;
     color: white;
@@ -174,11 +193,23 @@ input[type="text"] {
     border-radius: 8px;
     box-sizing: border-box;
 }
-#searchButton:hover, #saveButton:hover, #generateBtn:hover {
+
+#searchButton:hover,
+#saveButton:hover,
+#generateBtn:hover {
     background: #0056b3;
 }
-#searchButton { padding: 0 25px; }
-#saveButton, #generateBtn, #copyCssButton { width: 100%; padding: 12px 25px; }
+
+#searchButton {
+    padding: 0 25px;
+}
+
+#saveButton,
+#generateBtn,
+#copyCssButton {
+    width: 100%;
+    padding: 12px 25px;
+}
 
 #copyBtn {
     width: 100%;
@@ -194,6 +225,7 @@ input[type="text"] {
     transition: background-color 0.2s ease;
     margin-top: 10px;
 }
+
 #copyBtn:hover {
     background: #138496;
 }
@@ -209,60 +241,117 @@ input[type="text"] {
 }
 
 /* --- 6. その他コンポーネント --- */
-#results { display: flex; flex-direction: column; gap: 15px; }
-.result-card { display: flex; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; background-color: #fff; transition: box-shadow 0.2s ease; }
-.result-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.result-image { width: 130px; min-height: 130px; align-self: stretch; object-fit: cover; flex-shrink: 0; }
-.result-info { padding: 15px; display: flex; flex-direction: column; justify-content: center; text-align: left; flex-grow: 1; }
-.result-info h3 { margin: 0 0 10px 0; font-size: 18px; text-align: left; }
-.result-info p { margin: 0 0 15px 0; font-size: 14px; color: #666; }
+#results {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
-#previewSection { margin-top: 30px; }
-#previewArea { border: 2px dashed #ccc; padding: 20px; border-radius: 8px; background-color: #fafafa; min-height: 100px; }
+.result-card {
+    display: flex;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    transition: box-shadow 0.2s ease;
+}
+
+.result-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.result-image {
+    width: 130px;
+    min-height: 130px;
+    align-self: stretch;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.result-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    flex-grow: 1;
+}
+
+.result-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    text-align: left;
+}
+
+.result-info p {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    color: #666;
+}
+
+#previewSection {
+    margin-top: 30px;
+}
+
+#previewArea {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fafafa;
+    min-height: 100px;
+}
 
 footer {
- text-align: center;
- color: #6c757d; 
- text-decoration: none;
- margin-top: 50px;
- padding-bottom: 30px;
-}
-footer a {
- color: #6c757d;
- text-decoration: none;
- transition: color 0.2s;
-}
-footer a:hover {
- color: #333;
+    text-align: center;
+    color: #6c757d;
+    text-decoration: none;
+    margin-top: 50px;
+    padding-bottom: 30px;
 }
 
-.load-more-link, .load-more-message {
+footer a {
+    color: #6c757d;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+footer a:hover {
+    color: #333;
+}
+
+.load-more-link,
+.load-more-message {
     text-align: center;
     color: #6c757d;
     font-size: 14px;
     padding: 10px 0;
     margin-top: 15px;
 }
+
 .load-more-link {
     cursor: pointer;
     transition: color 0.2s;
 }
+
 .load-more-link:hover {
     color: #333;
 }
 
 #outputCode {
-    width: 100%; 
+    width: 100%;
     height: 50%;
-    box-sizing: border-box; 
-    resize: none !important; 
+    box-sizing: border-box;
+    resize: none !important;
     border-radius: 8px;
     border: 1px solid #ccc;
     padding: 15px;
     font-size: 16px;
 }
 
-#design-selection, #searchButton, #saveButton, #generateBtn {
+#design-selection,
+#searchButton,
+#saveButton,
+#generateBtn {
     border: none;
     background: #007bff;
     color: white;
@@ -275,7 +364,11 @@ footer a:hover {
     padding: 12px 25px;
     width: 100%;
 }
-#design-selection, #searchButton:hover, #saveButton:hover, #generateBtn:hover {
+
+#design-selection,
+#searchButton:hover,
+#saveButton:hover,
+#generateBtn:hover {
     background: #0056b3;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
@@ -288,7 +381,7 @@ footer a:hover {
 }
 
 .design-btn {
-    font-size: 16px; 
+    font-size: 16px;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
@@ -298,16 +391,18 @@ footer a:hover {
     color: #495057;
     padding: 10px 15px;
     transition: all 0.2s ease;
-    flex-grow: 1; 
+    flex-grow: 1;
     min-width: 150px;
     text-align: center;
 }
+
 .design-btn:hover:not(.active) {
     background-color: #f1f1f1;
     border-color: #a0aec0;
 }
+
 .design-btn.active {
-    border-color: #007bff; 
+    border-color: #007bff;
     background-color: #e6f2ff;
     color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
@@ -319,12 +414,14 @@ footer a:hover {
     margin-top: 15px;
     margin-bottom: 5px;
 }
+
 .checkbox-control input[type="checkbox"] {
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
 }
+
 .checkbox-control label {
     position: relative;
     display: flex !important;
@@ -334,6 +431,7 @@ footer a:hover {
     font-weight: normal !important;
     color: #495057;
 }
+
 .checkbox-control label::before {
     content: '';
     display: inline-block;
@@ -344,6 +442,7 @@ footer a:hover {
     margin-right: 12px;
     transition: background-color 0.2s ease;
 }
+
 .checkbox-control label::after {
     content: '';
     position: absolute;
@@ -357,14 +456,17 @@ footer a:hover {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease, left 0.2s ease;
 }
-.checkbox-control input[type="checkbox"]:checked + label::before {
+
+.checkbox-control input[type="checkbox"]:checked+label::before {
     background-color: #007bff;
 }
-.checkbox-control input[type="checkbox"]:checked + label::after {
+
+.checkbox-control input[type="checkbox"]:checked+label::after {
     transform: translate(18px, -50%);
 }
-.design-edit-control > .form-group {
-    margin-top: 20px; 
+
+.design-edit-control>.form-group {
+    margin-top: 20px;
 }
 
 #hotelAddressDisplay {
@@ -414,6 +516,7 @@ footer a:hover {
     margin-top: 10px;
     transition: background-color 0.2s ease;
 }
+
 .btn-secondary:hover {
     background: #138496;
 }
@@ -429,11 +532,13 @@ footer a:hover {
     transition: opacity 0.5s ease;
     box-sizing: border-box;
 }
+
 .notification-success {
     background-color: #d4edda;
     color: #155724;
     border: 1px solid #c3e6cb;
 }
+
 .notification-error {
     background-color: #f8d7da;
     color: #721c24;
@@ -450,51 +555,83 @@ footer a:hover {
 }
 
 /* --- 単一ジャンプモード --- */
-.af-single-jump-btn { 
-    display: inline-block; 
-    padding: 12px 24px; 
-    color: white !important; 
-    text-decoration: none; 
-    border-radius: 50px; 
-    font-weight: bold; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+.af-single-jump-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
 /* --- モーダルモード --- */
-.af-hotel-button { 
-    display: block; 
-    width: 100%; 
-    max-width: 500px; 
-    margin: 20px auto; 
-    padding: 15px; 
-    background: linear-gradient(135deg, #FF6B6B, #FFC107); 
-    color: white !important; 
-    text-align: center; 
-    font-size: 18px; 
-    font-weight: bold; 
-    border-radius: 8px; 
-    cursor: pointer; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-    transition: all 0.3s ease; 
-    text-decoration:none; 
+.af-hotel-button {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 15px;
+    background: linear-gradient(135deg, #FF6B6B, #FFC107);
+    color: white !important;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    text-decoration: none;
 }
-.af-modal-backdrop { 
-    position: fixed; 
-    top: 0; left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0,0,0,0.6); 
-    z-index: 1000; 
-    display: none; 
-    justify-content: center; 
-    align-items: center; 
+
+.af-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: none;
+    justify-content: center;
+    align-items: center;
 }
-.af-modal-content { background-color: #fff; padding: 20px 30px; border-radius: 8px; width: 90%; max-width: 500px; }
-.af-modal-header { font-size: 20px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-.af-link-list { list-style: none; padding: 0; margin: 0; }
+
+.af-modal-content {
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+}
+
+.af-modal-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.af-link-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 /* テキストリンクスタイル（デフォルト） */
-.af-link-item a { display: block; padding: 12px 10px; text-decoration: none; color: #333; border-radius: 5px; transition: background-color 0.2s; margin-bottom: 8px; border: 1px solid #ddd; font-weight: bold; }
+.af-link-item a {
+    display: block;
+    padding: 12px 10px;
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    font-weight: bold;
+}
 
 /* モーダルを開くためのテキストリンク */
 .af-text-trigger {
@@ -508,52 +645,60 @@ footer a:hover {
     text-align: center;
     width: 100%;
 }
+
 .af-text-trigger:hover {
     color: #004499;
 }
 
 /* --- 複数ボタンモード --- */
 .af-multi-container {
-    border: 1px solid #e1e7ec; 
-    border-radius: 12px; 
-    max-width: 600px; 
-    margin: 20px auto; 
+    border: 1px solid #e1e7ec;
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 20px auto;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06); 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     overflow: hidden;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* 縦並びになった瞬間に画像を中央化する */
+    justify-content: center;
+    /* 縦並びになった瞬間に画像を中央化する */
     background-color: #fff;
     padding: 20px;
     gap: 20px;
     align-items: flex-start;
 }
+
 .af-image-wrapper {
-    flex: 0 0 160px; /* Force fixed width like hotel */
+    flex: 0 0 160px;
+    /* Force fixed width like hotel */
     max-width: 160px;
     height: 160px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0; 
+    margin: 0;
 }
-.af-multi-container img { 
-    max-width: 100%; 
-    max-height: 100%; 
+
+.af-multi-container img {
+    max-width: 100%;
+    max-height: 100%;
     width: auto;
-    height: auto; 
+    height: auto;
     border-radius: 8px;
     object-fit: contain;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+
 .af-info-wrapper {
     flex: 2 1 280px;
     display: block;
     min-width: 0;
 }
-.af-hotel-name, .af-item-name {
-    font-size: 1.25rem; 
+
+.af-hotel-name,
+.af-item-name {
+    font-size: 1.25rem;
     font-weight: 700;
     margin-bottom: 8px;
     color: #1e293b;
@@ -564,29 +709,35 @@ footer a:hover {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-.af-hotel-address, .af-item-address {
-    font-size: 1.0rem; 
-    color: #64748b; 
-    margin: 0 0 16px; 
+
+.af-hotel-address,
+.af-item-address {
+    font-size: 1.0rem;
+    color: #64748b;
+    margin: 0 0 16px;
     line-height: 1.4;
 }
-.af-links-wrapper { 
+
+.af-links-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
     margin-top: 16px;
 }
-.af-links-wrapper > .af-multi-btn:only-child,
-.af-links-wrapper > a:only-child {
+
+.af-links-wrapper>.af-multi-btn:only-child,
+.af-links-wrapper>a:only-child {
     grid-column: 1 / -1;
     width: 50%;
     margin: 0 auto;
 }
+
 .af-emphasize-wrapper {
     grid-column: span 2;
     display: flex;
     flex-direction: column;
 }
+
 .af-emphasize-badge {
     text-align: center;
     color: #e11d48;
@@ -594,25 +745,28 @@ footer a:hover {
     font-weight: 700;
     margin-bottom: 2px;
 }
+
 .af-emphasize-wrapper .af-multi-btn {
     width: 100%;
     margin-bottom: 0;
     box-sizing: border-box;
 }
-.af-multi-btn { 
+
+.af-multi-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 12px; 
-    color: white !important; 
-    text-decoration: none; 
-    border-radius: 6px; 
-    text-align: center; 
+    padding: 10px 12px;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 6px;
+    text-align: center;
     font-size: 0.85rem;
     font-weight: bold;
-    white-space: nowrap; /* テキストの折り返しを禁止 */
+    white-space: nowrap;
+    /* テキストの折り返しを禁止 */
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 600px) {
@@ -622,91 +776,249 @@ footer a:hover {
         padding: 20px 15px !important;
         gap: 15px !important;
     }
+
     .af-image-wrapper {
         flex: 0 0 160px !important;
         width: 160px !important;
         max-width: 160px !important;
         height: 160px !important;
         max-height: 160px !important;
-        margin: 0 auto !important; /* 画像のみセンター */
+        margin: 0 auto !important;
+        /* 画像のみセンター */
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
         overflow: hidden !important;
     }
+
     .af-info-wrapper {
         flex: none !important;
         width: 100% !important;
-        text-align: left !important; /* 商品名・価格は左寄せ */
+        text-align: left !important;
+        /* 商品名・価格は左寄せ */
         display: block !important;
     }
-    .af-hotel-name, .af-item-name {
+
+    .af-hotel-name,
+    .af-item-name {
         font-size: 1.15rem !important;
         text-align: left !important;
         display: block !important;
     }
-    .af-hotel-address, .af-item-address {
+
+    .af-hotel-address,
+    .af-item-address {
         text-align: left !important;
         width: 100% !important;
     }
+
     .af-links-wrapper {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
         gap: 8px !important;
         width: 100% !important;
     }
-    .af-links-wrapper > .af-emphasize-wrapper {
+
+    .af-links-wrapper>.af-emphasize-wrapper {
         grid-column: 1 / -1 !important;
         width: 100% !important;
     }
 }
 
 /* --- ホバーエフェクト --- */
-.af-single-jump-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
-.af-hotel-button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
-.af-link-item a:hover { background-color: #f5f5f5; }
-.af-multi-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0,0,0,0.15); filter: brightness(105%); }
-
-/* --- ブランドカラー定義 --- */
-.btn-rakuten { background-color: #28a745; }
-.btn-jalan { background-color: #ff9900; }
-.btn-ikkyu { background-color: #b38d4a; }
-.btn-yahoo { background-color: #FF0033; }
-.btn-booking { background-color: #003580; }
-.btn-hotelscom { background-color: #d32f2f; }
-.btn-ihg { background-color: #005c64; }
-.btn-tripcom { background-color: #3273f6; }
-.btn-agoda { background-color: #1A74E2; }
-.btn-custom { background-color: #6c757d; }
-.btn-amazon { background-color: #FF9900; }
-.btn-anker { background-color: #00B1B0; }
-.btn-klook { background-color: #ff5b00; }
-.btn-kkday { background-color: #00b7d3; }
-.btn-asoview { background-color: #ff3333; }
-.btn-jalan-activity { background-color: #ff9900; }
-.btn-rakuten-activity { background-color: #bf0000; }
-.btn-tripcom-activity { background-color: #3273f6; }
-.af-app-container { align-items: stretch !important; }
-.af-app-container .af-info-wrapper { display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important; gap: 16px !important; }
-.af-app-container .af-name-container { text-align: center !important; width: 100% !important; margin-bottom: 0 !important; }
-.af-app-container .af-item-name { font-size: 1.4rem !important; text-align: center !important; }
-.af-app-links { display: flex !important; flex-wrap: wrap; justify-content: center !important; align-items: center !important; gap: 12px !important; grid-template-columns: none !important; margin-top: 0 !important; padding-top: 0 !important; }
-.af-app-badge-link { display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease; flex: 0 0 auto !important; margin: 0 !important; }
-.af-app-badge-link:hover { transform: scale(1.05); }
-.af-app-badge-link img { display: block; border-radius: 0 !important; box-shadow: none !important; }
-.af-appstore-img { height: 50px !important; width: 168px !important; }
-.af-googleplay-img { height: 50px !important; width: 168px !important; }
-
-@media (max-width: 600px) {
-    .af-app-container { align-items: center !important; }
-    .af-app-container .af-info-wrapper { text-align: center !important; align-items: center !important; gap: 16px !important; }
-    .af-app-container .af-item-name, .af-app-container .af-item-address { text-align: center !important; }
-    .af-app-container .af-app-links { justify-content: center !important; margin-top: 0 !important; padding-top: 0 !important; gap: 12px !important; }
-    .af-appstore-img { height: 50px !important; width: 168px !important; }
-    .af-googleplay-img { height: 50px !important; width: 168px !important; }
+.af-single-jump-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
-.btn-single-default { background: linear-gradient(135deg, #007bff, #0056b3); }
+.af-hotel-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.af-link-item a:hover {
+    background-color: #f5f5f5;
+}
+
+.af-multi-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    filter: brightness(105%);
+}
+
+/* --- ブランドカラー定義 --- */
+.btn-rakuten {
+    background-color: #28a745;
+}
+
+.btn-jalan {
+    background-color: #ff9900;
+}
+
+.btn-ikkyu {
+    background-color: #b38d4a;
+}
+
+.btn-yahoo {
+    background-color: #FF0033;
+}
+
+.btn-booking {
+    background-color: #003580;
+}
+
+.btn-hotelscom {
+    background-color: #d32f2f;
+}
+
+.btn-ihg {
+    background-color: #005c64;
+}
+
+.btn-tripcom {
+    background-color: #3273f6;
+}
+
+.btn-agoda {
+    background-color: #1A74E2;
+}
+
+.btn-custom {
+    background-color: #6c757d;
+}
+
+.btn-amazon {
+    background-color: #FF9900;
+}
+
+.btn-anker {
+    background-color: #00B1B0;
+}
+
+.btn-klook {
+    background-color: #ff5b00;
+}
+
+.btn-kkday {
+    background-color: #00b7d3;
+}
+
+.btn-asoview {
+    background-color: #ff3333;
+}
+
+.btn-jalan-activity {
+    background-color: #ff9900;
+}
+
+.btn-rakuten-activity {
+    background-color: #bf0000;
+}
+
+.btn-tripcom-activity {
+    background-color: #3273f6;
+}
+
+.af-app-container {
+    align-items: stretch !important;
+}
+
+.af-app-container .af-info-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 16px !important;
+}
+
+.af-app-container .af-name-container {
+    text-align: center !important;
+    width: 100% !important;
+    margin-bottom: 0 !important;
+}
+
+.af-app-container .af-item-name {
+    font-size: 1.4rem !important;
+    text-align: center !important;
+}
+
+.af-app-links {
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 12px !important;
+    grid-template-columns: none !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+.af-app-badge-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+}
+
+.af-app-badge-link:hover {
+    transform: scale(1.05);
+}
+
+.af-app-badge-link img {
+    display: block;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+.af-appstore-img {
+    height: 50px !important;
+    width: 168px !important;
+}
+
+.af-googleplay-img {
+    height: 50px !important;
+    width: 168px !important;
+}
+
+@media (max-width: 600px) {
+    .af-app-container {
+        align-items: center !important;
+    }
+
+    .af-app-container .af-info-wrapper {
+        text-align: center !important;
+        align-items: center !important;
+        gap: 16px !important;
+    }
+
+    .af-app-container .af-item-name,
+    .af-app-container .af-item-address {
+        text-align: center !important;
+    }
+
+    .af-app-container .af-app-links {
+        justify-content: center !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        gap: 12px !important;
+    }
+
+    .af-appstore-img {
+        height: 50px !important;
+        width: 168px !important;
+    }
+
+    .af-googleplay-img {
+        height: 50px !important;
+        width: 168px !important;
+    }
+}
+
+.btn-single-default {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+}
 
 /* --- サイト並び替え --- */
 .url-sort-wrapper {
@@ -718,12 +1030,14 @@ footer a:hover {
     border-radius: 8px;
     border: 1px solid #e2e8f0;
 }
+
 .url-sort-controls {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 6px;
 }
+
 .sort-btn {
     padding: 4px 8px;
     font-size: 0.6rem;
@@ -735,15 +1049,22 @@ footer a:hover {
     font-weight: bold;
     min-width: 0;
 }
+
 .sort-btn:hover:not(:disabled) {
     background: #94a3b8;
     color: white;
 }
+
 .sort-btn:disabled {
     opacity: 0.3;
     cursor: not-allowed;
 }
+
 .url-sort-content {
     flex: 1;
 }
-.url-sort-content label { margin-bottom: 4px; display: block; }
+
+.url-sort-content label {
+    margin-bottom: 4px;
+    display: block;
+}

@@ -48,7 +48,7 @@ export function createJalanLink(sid: string, pid: string, keyword: string): stri
     const sjisEncodedKeyword = Encoding.urlEncode(sjisByteArray);
     const jalanSearchUrl = `https://www.jalan.net/uw/uwp2011/uww2011init.do?keyword=${sjisEncodedKeyword}&distCd=01`;
     const encodedJalanUrl = encodeURIComponent(jalanSearchUrl);
-    
+
     return `https://ck.jp.ap.valuecommerce.com/servlet/referral?sid=${activeSid}&pid=${activePid}&vc_url=${encodedJalanUrl}`;
 }
 
@@ -133,7 +133,7 @@ export function createJalanActivityLink(sid: string, pid: string, keyword: strin
  */
 export function createTripcomActivityLink(sid: string, pid: string, lsid: string, keyword: string, url?: string): string {
     const targetUrl = url || `https://jp.trip.com/things-to-do/search?keyword=${encodeURIComponent(keyword)}`;
-    
+
     // バリューコマースのPID/SIDがあれば優先
     const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
     const activePid = pid || (import.meta.env.VITE_VC_PID_TRIP_ACTIVITY as string) || '';
@@ -200,7 +200,7 @@ export function createValueCommerceAmazonLink(sid: string, pid: string, keyword:
     const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
     const activePid = pid || (import.meta.env.VITE_VC_PID_AMAZON as string) || '';
     const searchUrl = `https://www.amazon.co.jp/s?k=${encodeURIComponent(keyword)}`;
-    
+
     if (!activeSid || !activePid || !keyword) {
         return searchUrl;
     }
@@ -214,7 +214,7 @@ export function createAnkerLink(sid: string, pid: string, keyword: string): stri
     const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
     const activePid = pid || (import.meta.env.VITE_VC_PID_ANKER as string) || '';
     const searchUrl = `https://www.ankerjapan.com/search?type=product&filter.v.availability=1&q=${encodeURIComponent(keyword)}`;
-    
+
     if (!activeSid || !activePid || !keyword) {
         return searchUrl;
     }
@@ -236,7 +236,7 @@ export function createYahooShoppingLink(sid: string, pid: string, keyword: strin
     const activeSid = sid || (import.meta.env.VITE_VC_SID as string) || '';
     const activePid = pid || (import.meta.env.VITE_YAHOO_PID as string) || '';
     const searchUrl = `https://shopping.yahoo.co.jp/search/${encodeURIComponent(keyword)}/0/`;
-    
+
     if (!activeSid || !activePid || !keyword) {
         return searchUrl;
     }

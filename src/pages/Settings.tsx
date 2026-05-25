@@ -72,13 +72,13 @@ function Settings() {
     const saveSettings = () => {
         const trimmedSettings: SettingsState = { ...settings };
         for (const key in trimmedSettings) {
-             if (typeof trimmedSettings[key] === 'string') {
-                 trimmedSettings[key] = (trimmedSettings[key] as string).trim();
-             }
+            if (typeof trimmedSettings[key] === 'string') {
+                trimmedSettings[key] = (trimmedSettings[key] as string).trim();
+            }
         }
         localStorage.setItem('linkBuilderSettings', JSON.stringify(trimmedSettings));
         setSettings(trimmedSettings);
-        
+
         setNotification('設定を保存しました。');
         setTimeout(() => setNotification(''), 3000);
     };
@@ -87,12 +87,12 @@ function Settings() {
     const renderEnvBadge = (envValue: any) => {
         if (envValue) {
             return (
-                <span style={{ 
-                    fontSize: '0.75rem', 
-                    color: '#28a745', 
-                    backgroundColor: '#e8f5e9', 
-                    padding: '2px 8px', 
-                    borderRadius: '50px', 
+                <span style={{
+                    fontSize: '0.75rem',
+                    color: '#28a745',
+                    backgroundColor: '#e8f5e9',
+                    padding: '2px 8px',
+                    borderRadius: '50px',
                     marginLeft: '10px',
                     fontWeight: 'bold',
                     display: 'inline-block'
@@ -109,7 +109,7 @@ function Settings() {
             <h1>設定</h1>
             <p>APIキーやアフィリエイトIDを保存します。未入力の項目はCloudflare環境変数のデフォルト値が自動適用されます。</p>
 
-            <hr/> <h3>楽天アフィリエイト</h3>
+            <hr /> <h3>楽天アフィリエイト</h3>
             <div className="form-group">
                 <label>
                     楽天アプリケーションID (AppID)
@@ -125,7 +125,7 @@ function Settings() {
                 <input type="text" name="rakutenAffiliateId" value={settings.rakutenAffiliateId} onChange={handleChange} placeholder="楽天アフィリエイトのID" />
             </div>
 
-            <hr/> <h3>バリューコマース (共通・旅行)</h3>
+            <hr /> <h3>バリューコマース (共通・旅行)</h3>
             <div className="form-group">
                 <label>
                     SID (サイトID)
@@ -155,7 +155,7 @@ function Settings() {
                 <input type="text" name="vcPidYahoo" value={settings.vcPidYahoo} onChange={handleChange} />
             </div>
 
-            <hr/> <h3>バリューコマース (アクティビティ・体験)</h3>
+            <hr /> <h3>バリューコマース (アクティビティ・体験)</h3>
             <div className="form-group">
                 <label>
                     Klook PID
@@ -192,7 +192,7 @@ function Settings() {
                 <input type="text" name="vcPidTripActivity" value={settings.vcPidTripActivity} onChange={handleChange} placeholder="Trip.com体験の提携PID (バリューコマース経由)" />
             </div>
 
-            <hr/> <h3>バリューコマース (ショッピング・Anker)</h3>
+            <hr /> <h3>バリューコマース (ショッピング・Anker)</h3>
             <div className="form-group">
                 <label>
                     Yahoo!ショッピング PID
@@ -215,7 +215,7 @@ function Settings() {
                 <input type="text" name="vcPidAnker" value={settings.vcPidAnker || ''} onChange={handleChange} />
             </div>
 
-            <hr/> <h3>Amazon・Yahoo!ショッピング 詳細設定</h3>
+            <hr /> <h3>Amazon・Yahoo!ショッピング 詳細設定</h3>
             <div className="form-group">
                 <label>Amazonリンク優先度</label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '10px' }}>
@@ -238,7 +238,7 @@ function Settings() {
                 <p className="edit-guide" style={{ fontSize: '0.85rem', color: '#666' }}>カンマ(,)区切りで複数登録できます。Link Builderで選択可能です。</p>
                 <input type="text" name="amazonTrackingId" value={settings.amazonTrackingId} onChange={handleChange} placeholder="your-1-22, your-2-22" />
             </div>
-            
+
             <p style={{ marginTop: '20px', fontWeight: 'bold' }}>Amazon Creators API (商品検索用)</p>
             <p className="edit-guide" style={{ fontSize: '0.85rem', color: '#666', marginBottom: '15px' }}>
                 ※Cloudflare Pagesの環境変数（Secret）に <strong>AMAZON_CLIENT_ID</strong> と <strong>AMAZON_CLIENT_SECRET</strong> が設定されている場合は、以下の入力欄は空欄のままで商品検索機能が利用できます。
@@ -252,7 +252,7 @@ function Settings() {
                 <input type="text" name="amazonClientSecret" value={settings.amazonClientSecret} onChange={handleChange} />
             </div>
 
-            <hr/> <h3>その他アフィリエイト</h3>
+            <hr /> <h3>その他アフィリエイト</h3>
             <div className="form-group">
                 <label>
                     アクセストレード (rk)
@@ -275,7 +275,7 @@ function Settings() {
                 <input type="text" name="a8mat" value={settings.a8mat} onChange={handleChange} />
             </div>
 
-            <hr/>
+            <hr />
             <button id="saveButton" onClick={saveSettings}>設定を保存</button>
 
             {notification && (

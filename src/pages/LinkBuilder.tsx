@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-    createRakutenLink, 
-    createJalanLink, 
-    createIkkyuLink, 
-    createYahooLink, 
-    createIHGLink, 
+import {
+    createRakutenLink,
+    createJalanLink,
+    createIkkyuLink,
+    createYahooLink,
+    createIHGLink,
     createTripcomLink,
     createAmazonLink,
     createValueCommerceAmazonLink,
@@ -43,16 +43,16 @@ const siteStyleClasses: Record<string, string> = {
 
 function LinkBuilder() {
     const navigate = useNavigate();
-    
+
     const [hotelData, setHotelData] = useState<any>({
-        name: '', imageUrl: '', keyword: '', url: '', address: '', asin: '', 
+        name: '', imageUrl: '', keyword: '', url: '', address: '', asin: '',
         type: 'hotel', source: 'manual', engine: 'amazon'
     });
     const [settings, setSettings] = useState<any>({});
     const [trackingIds, setTrackingIds] = useState<string[]>([]);
     const [selectedTrackingId, setSelectedTrackingId] = useState('');
     const [designMode, setDesignMode] = useState<string | null>(null);
-    
+
     const [selectedSites, setSelectedSites] = useState<Record<string, boolean>>({
         rakuten: false, jalan: false, ikkyu: false, yahoo: false,
         booking: false, hotelscom: false, ihg: false, tripcom: false, agoda: false, custom: false,
@@ -73,8 +73,8 @@ function LinkBuilder() {
     const [customSiteName, setCustomSiteName] = useState('任意サイト');
     const [emphasizedSites, setEmphasizedSites] = useState<Record<string, boolean>>({});
     const [emphasizeTexts, setEmphasizeTexts] = useState<Record<string, string>>({
-        rakuten: '', jalan: '', ikkyu: '', yahoo: '', booking: '', hotelscom: '', ihg: '＼最安値保証&レイトチェックアウト／', tripcom: '', agoda: '', 
-        amazon: '', rakuten_ichiba: '', yahoo_shopping: '', anker: '', 
+        rakuten: '', jalan: '', ikkyu: '', yahoo: '', booking: '', hotelscom: '', ihg: '＼最安値保証&レイトチェックアウト／', tripcom: '', agoda: '',
+        amazon: '', rakuten_ichiba: '', yahoo_shopping: '', anker: '',
         appstore: '', googleplay: '', custom: '',
         klook: '', kkday: '', asoview: '', jalan_activity: '', rakuten_activity: '', tripcom_activity: ''
     });
@@ -86,14 +86,14 @@ function LinkBuilder() {
     const [generatedCode, setGeneratedCode] = useState('');
     const [previewHtml, setPreviewHtml] = useState('');
     const [_notification, setNotification] = useState({ message: '', type: '', id: '' });
-    
+
     const previewRef = useRef<HTMLDivElement>(null);
     const outputRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
         const stored = sessionStorage.getItem('selectedHotel');
         let initialData: any = { name: '', url: '', imageUrl: '', address: '', keyword: '', type: 'hotel', source: 'manual', engine: 'amazon' };
-        
+
         if (stored) {
             try {
                 const parsed = JSON.parse(stored);
@@ -110,9 +110,9 @@ function LinkBuilder() {
                 setDesignTexts((prev: any) => ({
                     ...prev, customImageUrl: parsed.imageUrl, customAddress: presetPrice
                 }));
-            } catch (e) {}
+            } catch (e) { }
         }
-        
+
         const storedSettings = JSON.parse(localStorage.getItem('linkBuilderSettings') || '{}');
         const rawTrackingId = storedSettings.amazonTrackingId || (import.meta.env.VITE_AMAZON_TRACKING_ID as string) || '';
         const ids = rawTrackingId.split(',').map((s: string) => s.trim()).filter(Boolean);
@@ -146,7 +146,7 @@ function LinkBuilder() {
         const isProduct = initialData.type === 'product';
         const isApp = initialData.type === 'app';
         const isActivity = initialData.type === 'activity';
-        
+
         let defaultOrder = ['rakuten', 'jalan', 'ikkyu', 'yahoo', 'booking', 'hotelscom', 'ihg', 'tripcom', 'agoda', 'custom'];
         if (isProduct) defaultOrder = ['amazon', 'rakuten_ichiba', 'yahoo_shopping', 'anker', 'custom'];
         if (isApp) defaultOrder = ['appstore', 'googleplay', 'custom'];
@@ -160,7 +160,7 @@ function LinkBuilder() {
                 appstore: false, googleplay: false,
                 klook: false, kkday: false, asoview: false, jalan_activity: false, rakuten_activity: false, tripcom_activity: false
             });
-            
+
             // Logic for product links
             const amazonUrl = generateAmazonUrl(initialData, currentSettings, initialTag);
             const rakutenUrl = generateRakutenUrl(initialData, currentSettings);
@@ -215,7 +215,7 @@ function LinkBuilder() {
                 rakuten_activity: rakutenActUrl,
                 tripcom_activity: tripActUrl
             }));
-            
+
             setSiteOrder(defaultOrder);
         } else {
             const storedOrder = localStorage.getItem('siteOrder');
@@ -240,7 +240,7 @@ function LinkBuilder() {
     const generateAmazonUrl = (data: any, sett: any, tag: string) => {
         const useVC = sett.amazonPriority === 'valuecommerce';
         if (useVC) return createValueCommerceAmazonLink(sett.vcSid, sett.vcPidAmazon, data.keyword || data.name);
-        
+
         const isDirect = data.engine === 'amazon' && data.source === 'api' && data.asin;
         return createAmazonLink(tag, data.keyword || data.name, isDirect ? data.asin : undefined);
     };
@@ -283,7 +283,7 @@ function LinkBuilder() {
             let autoUrl = urls[site];
             const kw = hotelData.keyword || hotelData.name;
             const originUrl = hotelData.url || '';
-            
+
             if (site === 'rakuten') autoUrl = createRakutenLink(settings.rakutenAffiliateId, originUrl);
             if (site === 'jalan') autoUrl = createJalanLink(settings.vcSid, settings.vcPidJalan, kw);
             if (site === 'ikkyu') autoUrl = createIkkyuLink(settings.vcSid, settings.vcPidIkkyu, kw);
@@ -332,8 +332,8 @@ function LinkBuilder() {
         setDesignTexts((prev: any) => ({
             ...prev,
             singleJumpText: singleText || prev.singleJumpText,
-            modalButtonText: hotelData.type === 'activity' 
-                ? `「${name}」のチケット・ツアーを探す` 
+            modalButtonText: hotelData.type === 'activity'
+                ? `「${name}」のチケット・ツアーを探す`
                 : `「${name}」を各サイトで比較する`,
             multipleBtnText: ''
         }));
@@ -347,9 +347,9 @@ function LinkBuilder() {
     const generateCode = () => {
         const links = siteOrder
             .filter(site => selectedSites[site] && urls[site].trim() !== '')
-            .map(site => ({ 
-                name: site === 'custom' ? customSiteName : (siteLabelsBase[site] || siteLabels[site]), 
-                url: urls[site].trim(), 
+            .map(site => ({
+                name: site === 'custom' ? customSiteName : (siteLabelsBase[site] || siteLabels[site]),
+                url: urls[site].trim(),
                 styleSite: (siteStyleClasses[site] || site),
                 originalSite: site,
                 empText: emphasizeTexts[site] || '＼最安値保証／'
@@ -362,26 +362,26 @@ function LinkBuilder() {
 
         let html = '';
         const uniqueId = 'af-item-' + Math.random().toString(36).substr(2, 9);
-        
+
         switch (designMode) {
-            case 'single': 
+            case 'single':
                 html = `<div class="af-single-wrapper"><a href="${links[0].url}" id="${uniqueId}" target="_blank" rel="nofollow sponsored noopener" class="af-single-jump-btn btn-${links[0].styleSite}">${designTexts.singleJumpText}</a></div>`;
                 break;
-            case 'modal': 
-                const linksHtml = links.map(l => `<li class="af-link-item"><a href="${l.url}" target="_blank" rel="nofollow sponsored noopener">${l.name}で見る</a></li>`).join(''); 
+            case 'modal':
+                const linksHtml = links.map(l => `<li class="af-link-item"><a href="${l.url}" target="_blank" rel="nofollow sponsored noopener">${l.name}で見る</a></li>`).join('');
                 const triggerClass = designTexts.modalLinkStyle === 'text' ? 'af-text-trigger' : 'af-hotel-button';
                 html = `<div class="af-link-builder-wrapper af-item-container" id="${uniqueId}">\n    <div class="af-item-button ${triggerClass}">${designTexts.modalButtonText}</div>\n    <div class="af-modal-backdrop"><div class="af-modal-content"><div class="af-modal-header">${hotelData.name}</div><ul class="af-link-list">${linksHtml}</ul></div></div>\n    <script>(function(){var c=document.getElementById('${uniqueId}');if(c.dataset.initialized)return;var o=c.querySelector('.af-item-button');var m=c.querySelector('.af-modal-backdrop');var l=${links.length};if(l===1){o.outerHTML=o.outerHTML.replace(/^<div/,'<a').replace(/div>$/,'a>');var btn=c.querySelector('.af-item-button');btn.href=c.querySelector('a').href;btn.target='_blank';btn.rel='nofollow sponsored noopener';}else{o.addEventListener('click',function(e){e.preventDefault();m.style.display='flex';});}m.addEventListener('click',function(e){if(e.target===m)m.style.display='none';});c.dataset.initialized='true';}())<\/script>\n</div>`;
                 break;
-            case 'multiple': 
-                const img = designTexts.showImage && designTexts.customImageUrl ? `<div class="af-image-wrapper"><img src="${designTexts.customImageUrl}" alt="${hotelData.name}"></div>` : ''; 
-                const addr = designTexts.showAddress && designTexts.customAddress ? `<p class="af-hotel-address af-item-address">${designTexts.customAddress}</p>` : ''; 
+            case 'multiple':
+                const img = designTexts.showImage && designTexts.customImageUrl ? `<div class="af-image-wrapper"><img src="${designTexts.customImageUrl}" alt="${hotelData.name}"></div>` : '';
+                const addr = designTexts.showAddress && designTexts.customAddress ? `<p class="af-hotel-address af-item-address">${designTexts.customAddress}</p>` : '';
                 const btnHtml = links.map(l => {
                     const isEmp = emphasizedSites[l.originalSite];
-                    const defaultEmp = l.styleSite === 'ihg' 
-                        ? '＼最安値保証&レイトチェックアウト／' 
+                    const defaultEmp = l.styleSite === 'ihg'
+                        ? '＼最安値保証&レイトチェックアウト／'
                         : (['klook', 'kkday', 'asoview'].includes(l.originalSite) ? '＼格安チケット・割引プラン／' : '＼期間限定セール／');
                     const empText = emphasizeTexts[l.originalSite] || defaultEmp;
-                    
+
                     let btn = '';
                     if (l.originalSite === 'appstore') {
                         btn = `<a href="${l.url}" target="_blank" rel="nofollow sponsored noopener" class="af-app-badge-link"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/f/flynrt/20260513/20260513215107.webp" alt="App Store" class="af-appstore-img"></a>`;
@@ -390,15 +390,15 @@ function LinkBuilder() {
                     } else {
                         btn = `<a href="${l.url}" target="_blank" rel="nofollow sponsored noopener" class="af-multi-btn btn-${l.styleSite}"><span class="af-btn-text">${l.name}${designTexts.multipleBtnText}</span></a>`;
                     }
-                    
+
                     if (isEmp) return `<div class="af-emphasize-wrapper"><div class="af-emphasize-badge">${empText}</div>${btn}</div>`;
                     return btn;
-                }).join(''); 
+                }).join('');
                 const cqiVal = (95 / Math.max(1, hotelData.name.length)).toFixed(2);
                 const isAppLayout = links.some(l => l.originalSite === 'appstore' || l.originalSite === 'googleplay');
                 const containerClass = isAppLayout ? 'af-multi-container af-app-container' : 'af-multi-container';
                 const linksWrapperClass = isAppLayout ? 'af-links-wrapper af-app-links' : 'af-links-wrapper';
-                html = `<div class="${containerClass}" id="${uniqueId}">\n    ${img}\n    <div class="af-info-wrapper">\n        <div class="af-name-container" style="container-type: inline-size; width: 100%;"><div class="af-hotel-name af-item-name" style="font-size: clamp(0.65rem, ${cqiVal}cqi, 1.25rem);">${hotelData.name}</div></div>\n        ${addr}\n        <div class="${linksWrapperClass}">${btnHtml}</div>\n    </div>\n</div>`; 
+                html = `<div class="${containerClass}" id="${uniqueId}">\n    ${img}\n    <div class="af-info-wrapper">\n        <div class="af-name-container" style="container-type: inline-size; width: 100%;"><div class="af-hotel-name af-item-name" style="font-size: clamp(0.65rem, ${cqiVal}cqi, 1.25rem);">${hotelData.name}</div></div>\n        ${addr}\n        <div class="${linksWrapperClass}">${btnHtml}</div>\n    </div>\n</div>`;
                 break;
             default: showNotification('デザインモードを選択してください。', 'error', 'generateBtnNotification'); return;
         }
@@ -407,7 +407,7 @@ function LinkBuilder() {
         setGeneratedCode(finalHtml);
         setPreviewHtml(finalHtml);
         showNotification('コード生成成功！', 'success', 'generateBtnNotification');
-        
+
         setTimeout(() => {
             if (outputRef.current) outputRef.current.scrollIntoView({ behavior: 'smooth' });
             if (previewRef.current) {
@@ -429,7 +429,7 @@ function LinkBuilder() {
     const siteLabels: any = {
         rakuten: '楽天トラベル', jalan: 'じゃらんnet', ikkyu: '一休.com', yahoo: 'Yahoo!トラベル',
         booking: 'Booking.com', hotelscom: 'Hotels.com', ihg: 'IHG公式', tripcom: 'Trip.com', agoda: 'Agoda',
-        amazon: 'Amazon', rakuten_ichiba: '楽天市場', yahoo_shopping: 'Yahoo!ショッピング', anker: 'Anker公式', 
+        amazon: 'Amazon', rakuten_ichiba: '楽天市場', yahoo_shopping: 'Yahoo!ショッピング', anker: 'Anker公式',
         appstore: 'App Store', googleplay: 'Google Play', custom: customSiteName,
         // Activity labels
         klook: 'Klook', kkday: 'KKday', asoview: 'アソビュー！',
@@ -439,21 +439,21 @@ function LinkBuilder() {
     return (
         <div className="container page-builder">
             <h1>リンクを作成</h1>
-            
+
             <div className="form-group">
                 <label>
                     名称 ({
-                        hotelData.type === 'product' ? '商品名' : 
-                        (hotelData.type === 'app' ? 'アプリ名' : 
-                        (hotelData.type === 'activity' ? 'アクティビティ名' : 'ホテル名'))
+                        hotelData.type === 'product' ? '商品名' :
+                            (hotelData.type === 'app' ? 'アプリ名' :
+                                (hotelData.type === 'activity' ? 'アクティビティ名' : 'ホテル名'))
                     })
                 </label>
-                <input type="text" value={hotelData.name || ''} onChange={e => setHotelData({...hotelData, name: e.target.value})} />
+                <input type="text" value={hotelData.name || ''} onChange={e => setHotelData({ ...hotelData, name: e.target.value })} />
             </div>
 
             <div className="form-group">
                 <label>キーワード (検索用)</label>
-                <input type="text" value={hotelData.keyword || ''} onChange={e => setHotelData({...hotelData, keyword: e.target.value})} />
+                <input type="text" value={hotelData.keyword || ''} onChange={e => setHotelData({ ...hotelData, keyword: e.target.value })} />
             </div>
 
             {hotelData.type === 'product' && settings.amazonPriority === 'associate' && trackingIds.length > 1 && (
@@ -494,17 +494,17 @@ function LinkBuilder() {
                                 <div className="url-sort-content">
                                     <label>{siteLabels[site]} URL</label>
                                     {site === 'custom' && <input type="text" value={customSiteName} onChange={e => setCustomSiteName(e.target.value)} placeholder="サイト名" style={{ marginBottom: '5px' }} />}
-                                    <input type="text" value={urls[site] || ''} onChange={e => setUrls({...urls, [site]: e.target.value})} />
+                                    <input type="text" value={urls[site] || ''} onChange={e => setUrls({ ...urls, [site]: e.target.value })} />
                                     {designMode === 'multiple' && (
                                         <div className="checkbox-control" style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                            <input type="checkbox" id={`emp-${site}`} checked={!!emphasizedSites[site]} onChange={e => setEmphasizedSites({...emphasizedSites, [site]: e.target.checked})} />
+                                            <input type="checkbox" id={`emp-${site}`} checked={!!emphasizedSites[site]} onChange={e => setEmphasizedSites({ ...emphasizedSites, [site]: e.target.checked })} />
                                             <label htmlFor={`emp-${site}`}>強調表示</label>
                                             {emphasizedSites[site] && (
-                                                <input 
-                                                    type="text" 
-                                                    placeholder={site === 'ihg' ? "＼最安値保証&レイトチェックアウト／" : "例: ＼期間限定セール／"} 
-                                                    value={emphasizeTexts[site] || ''} 
-                                                    onChange={e => setEmphasizeTexts({...emphasizeTexts, [site]: e.target.value})}
+                                                <input
+                                                    type="text"
+                                                    placeholder={site === 'ihg' ? "＼最安値保証&レイトチェックアウト／" : "例: ＼期間限定セール／"}
+                                                    value={emphasizeTexts[site] || ''}
+                                                    onChange={e => setEmphasizeTexts({ ...emphasizeTexts, [site]: e.target.value })}
                                                     style={{ marginLeft: '10px', flex: 1, padding: '4px 8px', fontSize: '0.85rem' }}
                                                 />
                                             )}
@@ -518,21 +518,21 @@ function LinkBuilder() {
                     <hr /> <h3>デザイン編集</h3>
                     <div className="design-edit-control">
                         <label>メインボタンテキスト</label>
-                        <input type="text" value={(designMode === 'single' ? designTexts.singleJumpText : (designMode === 'modal' ? designTexts.modalButtonText : designTexts.multipleBtnText)) || ''} 
-                               onChange={e => setDesignTexts({...designTexts, [designMode === 'single' ? 'singleJumpText' : (designMode === 'modal' ? 'modalButtonText' : 'multipleBtnText')]: e.target.value})} />
+                        <input type="text" value={(designMode === 'single' ? designTexts.singleJumpText : (designMode === 'modal' ? designTexts.modalButtonText : designTexts.multipleBtnText)) || ''}
+                            onChange={e => setDesignTexts({ ...designTexts, [designMode === 'single' ? 'singleJumpText' : (designMode === 'modal' ? 'modalButtonText' : 'multipleBtnText')]: e.target.value })} />
                         {designMode === 'multiple' && (
                             <>
-                                <div className="checkbox-control"><input type="checkbox" id="shImg" checked={designTexts.showImage} onChange={e => setDesignTexts({...designTexts, showImage: e.target.checked})} /><label htmlFor="shImg">画像表示</label></div>
-                                {designTexts.showImage && <input type="text" value={designTexts.customImageUrl} onChange={e => setDesignTexts({...designTexts, customImageUrl: e.target.value})} placeholder="画像URL" />}
-                                <div className="checkbox-control"><input type="checkbox" id="shAd" checked={designTexts.showAddress} onChange={e => setDesignTexts({...designTexts, showAddress: e.target.checked})} /><label htmlFor="shAd">価格/備考を表示</label></div>
-                                {designTexts.showAddress && <input type="text" value={designTexts.customAddress} onChange={e => setDesignTexts({...designTexts, customAddress: e.target.value})} placeholder="価格情報など" />}
+                                <div className="checkbox-control"><input type="checkbox" id="shImg" checked={designTexts.showImage} onChange={e => setDesignTexts({ ...designTexts, showImage: e.target.checked })} /><label htmlFor="shImg">画像表示</label></div>
+                                {designTexts.showImage && <input type="text" value={designTexts.customImageUrl} onChange={e => setDesignTexts({ ...designTexts, customImageUrl: e.target.value })} placeholder="画像URL" />}
+                                <div className="checkbox-control"><input type="checkbox" id="shAd" checked={designTexts.showAddress} onChange={e => setDesignTexts({ ...designTexts, showAddress: e.target.checked })} /><label htmlFor="shAd">価格/備考を表示</label></div>
+                                {designTexts.showAddress && <input type="text" value={designTexts.customAddress} onChange={e => setDesignTexts({ ...designTexts, customAddress: e.target.value })} placeholder="価格情報など" />}
                             </>
                         )}
                         {designMode === 'modal' && (
                             <div className="checkbox-control" style={{ marginTop: '12px' }}>
-                                <input type="checkbox" id="modalLinkToggle" 
-                                    checked={designTexts.modalLinkStyle === 'button'} 
-                                    onChange={e => setDesignTexts({...designTexts, modalLinkStyle: e.target.checked ? 'button' : 'text'})} 
+                                <input type="checkbox" id="modalLinkToggle"
+                                    checked={designTexts.modalLinkStyle === 'button'}
+                                    onChange={e => setDesignTexts({ ...designTexts, modalLinkStyle: e.target.checked ? 'button' : 'text' })}
                                 />
                                 <label htmlFor="modalLinkToggle">モーダルを開くリンクをボタンスタイルにする</label>
                             </div>
@@ -548,7 +548,7 @@ function LinkBuilder() {
                     {_notification.message}
                 </div>
             )}
-            
+
             {generatedCode && (
                 <div style={{ marginTop: '30px' }}>
                     <h2>ブログ用コード</h2>
