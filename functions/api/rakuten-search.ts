@@ -109,8 +109,10 @@ export async function onRequestGet(context: any) {
         });
         const data = await upstreamResponse.json() as any;
 
-        if (!upstreamResponse.ok || data.error) {
-            return new Response(JSON.stringify({ error: data.error || 'rakuten_api_error', error_description: data.error_description || '楽天APIエラー' }), {
+        if (!upstreamResponse.ok || data.error || data.errors) {
+            const code = data.error || data.errors?.errorCode || 'rakuten_api_error';
+            const description = data.error_description || data.errors?.errorMessage || `楽天APIエラー (status: ${upstreamResponse.status})`;
+            return new Response(JSON.stringify({ error: code, error_description: description }), {
                 status: upstreamResponse.status || 502,
                 headers
             });
