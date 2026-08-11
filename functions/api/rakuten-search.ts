@@ -72,22 +72,6 @@ export async function onRequestGet(context: any) {
 
     try {
         const requestUrl = new URL(context.request.url);
-
-        if (requestUrl.searchParams.get('debugHeaders') === '1') {
-            const viaHeadersObj = await fetch('https://httpbin.org/headers', { headers: { Referer: 'https://via-headers-object.example/' } as any });
-            const viaHeadersObjData = await viaHeadersObj.json();
-
-            const h = new Headers();
-            h.set('Referer', 'https://via-headers-set.example/');
-            const viaHeadersSet = await fetch('https://httpbin.org/headers', { headers: h });
-            const viaHeadersSetData = await viaHeadersSet.json();
-
-            const viaReferrerOpt = await fetch('https://httpbin.org/headers', { referrer: 'https://via-referrer-option.example/' } as RequestInit);
-            const viaReferrerOptData = await viaReferrerOpt.json();
-
-            return new Response(JSON.stringify({ viaHeadersObjData, viaHeadersSetData, viaReferrerOptData }, null, 2), { status: 200, headers });
-        }
-
         const type = requestUrl.searchParams.get('type');
         const keyword = requestUrl.searchParams.get('keyword') || '';
         const page = requestUrl.searchParams.get('page') || '1';
@@ -124,18 +108,15 @@ export async function onRequestGet(context: any) {
         });
         const upstreamUrl = `${type === 'item' ? ICHIBA_ITEM_SEARCH_URL : KEYWORD_HOTEL_SEARCH_URL}?${upstreamParams.toString()}`;
 
-        // "Referer" is a forbidden header name per the Fetch spec, so Workers' fetch()
-        // silently drops it if passed via `headers`. It must go through `referrer` instead.
         const upstreamResponse = await fetch(upstreamUrl, {
-            headers: { accessKey },
-            referrer: referer
-        } as RequestInit);
+            headers: { accessKey, Referer: referer } as any
+        });
         const data = await upstreamResponse.json() as any;
 
         if (!upstreamResponse.ok || data.error || data.errors) {
             const code = data.error || data.errors?.errorCode || 'rakuten_api_error';
             const description = data.error_description || data.errors?.errorMessage || `楽天APIエラー (status: ${upstreamResponse.status})`;
-            return new Response(JSON.stringify({ error: code, error_description: description, _debugReferer: referer }), {
+            return new Response(JSON.stringify({ error: code, error_description: description }), {
                 status: upstreamResponse.status || 502,
                 headers
             });
