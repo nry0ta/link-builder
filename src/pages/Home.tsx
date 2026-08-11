@@ -15,35 +15,65 @@ const extractImageUrl = (entry: any): string | undefined => {
     return undefined;
 };
 
+// Recursively searches an object tree for the first value at a key matching any of the
+// given names (case-insensitive). Used as a last-resort fallback when the exact nesting
+// of Rakuten's response doesn't match what's documented.
+const deepFind = (obj: any, names: string[], depth = 0): any => {
+    if (!obj || typeof obj !== 'object' || depth > 6) return undefined;
+    const lowerNames = names.map(n => n.toLowerCase());
+    for (const key of Object.keys(obj)) {
+        if (lowerNames.includes(key.toLowerCase()) && obj[key] !== null && obj[key] !== undefined && typeof obj[key] !== 'object') {
+            return obj[key];
+        }
+    }
+    for (const key of Object.keys(obj)) {
+        const val = obj[key];
+        if (val && typeof val === 'object') {
+            const found = deepFind(val, names, depth + 1);
+            if (found !== undefined) return found;
+        }
+    }
+    return undefined;
+};
+
 const normalizeRakutenItems = (data: any) => {
     const rawItems = data.items || data.Items || [];
-    return rawItems.map((raw: any) => {
+    const normalized = rawItems.map((raw: any) => {
         const item = raw.item || raw.Item || raw;
         const images = item.mediumImageUrls || item.MediumImageUrls || [];
+        const extractedImages = images.map(extractImageUrl).filter(Boolean);
         return {
-            itemCode: item.itemCode,
-            itemName: item.itemName,
-            itemUrl: item.itemUrl,
-            itemPrice: item.itemPrice,
-            mediumImageUrls: images.map(extractImageUrl).filter(Boolean)
+            itemCode: item.itemCode ?? deepFind(raw, ['itemCode']),
+            itemName: item.itemName ?? deepFind(raw, ['itemName']),
+            itemUrl: item.itemUrl ?? deepFind(raw, ['itemUrl']),
+            itemPrice: item.itemPrice ?? deepFind(raw, ['itemPrice']),
+            mediumImageUrls: extractedImages.length > 0 ? extractedImages : [deepFind(raw, ['mediumImageUrl', 'imageUrl', 'smallImageUrl'])].filter(Boolean)
         };
     });
+    if (rawItems.length > 0 && !normalized[0].itemName) {
+        console.warn('[rakuten] unexpected item search response shape:', JSON.stringify(rawItems[0]));
+    }
+    return normalized;
 };
 
 const normalizeRakutenHotels = (data: any) => {
     const rawHotels = data.hotels || data.Hotels || [];
-    return rawHotels.map((raw: any) => {
+    const normalized = rawHotels.map((raw: any) => {
         const nested = Array.isArray(raw.hotel) ? raw.hotel[0] : raw.hotel;
         const basicInfo = raw.hotelBasicInfo || nested?.hotelBasicInfo || raw;
         return {
-            hotelNo: basicInfo.hotelNo,
-            hotelName: basicInfo.hotelName,
-            hotelInformationUrl: basicInfo.hotelInformationUrl,
-            hotelImageUrl: basicInfo.hotelImageUrl,
-            address1: basicInfo.address1,
-            address2: basicInfo.address2
+            hotelNo: basicInfo.hotelNo ?? deepFind(raw, ['hotelNo']),
+            hotelName: basicInfo.hotelName ?? deepFind(raw, ['hotelName']),
+            hotelInformationUrl: basicInfo.hotelInformationUrl ?? deepFind(raw, ['hotelInformationUrl']),
+            hotelImageUrl: basicInfo.hotelImageUrl ?? deepFind(raw, ['hotelImageUrl', 'hotelThumbnailUrl']),
+            address1: basicInfo.address1 ?? deepFind(raw, ['address1']),
+            address2: basicInfo.address2 ?? deepFind(raw, ['address2'])
         };
     });
+    if (rawHotels.length > 0 && !normalized[0].hotelName) {
+        console.warn('[rakuten] unexpected hotel search response shape:', JSON.stringify(rawHotels[0]));
+    }
+    return normalized;
 };
 
 function Home() {
