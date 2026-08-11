@@ -72,6 +72,22 @@ export async function onRequestGet(context: any) {
 
     try {
         const requestUrl = new URL(context.request.url);
+
+        if (requestUrl.searchParams.get('debugHeaders') === '1') {
+            const viaHeadersObj = await fetch('https://httpbin.org/headers', { headers: { Referer: 'https://via-headers-object.example/' } as any });
+            const viaHeadersObjData = await viaHeadersObj.json();
+
+            const h = new Headers();
+            h.set('Referer', 'https://via-headers-set.example/');
+            const viaHeadersSet = await fetch('https://httpbin.org/headers', { headers: h });
+            const viaHeadersSetData = await viaHeadersSet.json();
+
+            const viaReferrerOpt = await fetch('https://httpbin.org/headers', { referrer: 'https://via-referrer-option.example/' } as RequestInit);
+            const viaReferrerOptData = await viaReferrerOpt.json();
+
+            return new Response(JSON.stringify({ viaHeadersObjData, viaHeadersSetData, viaReferrerOptData }, null, 2), { status: 200, headers });
+        }
+
         const type = requestUrl.searchParams.get('type');
         const keyword = requestUrl.searchParams.get('keyword') || '';
         const page = requestUrl.searchParams.get('page') || '1';
