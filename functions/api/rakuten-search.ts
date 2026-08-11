@@ -108,9 +108,12 @@ export async function onRequestGet(context: any) {
         });
         const upstreamUrl = `${type === 'item' ? ICHIBA_ITEM_SEARCH_URL : KEYWORD_HOTEL_SEARCH_URL}?${upstreamParams.toString()}`;
 
+        // "Referer" is a forbidden header name per the Fetch spec, so Workers' fetch()
+        // silently drops it if passed via `headers`. It must go through `referrer` instead.
         const upstreamResponse = await fetch(upstreamUrl, {
-            headers: { accessKey, Referer: referer }
-        });
+            headers: { accessKey },
+            referrer: referer
+        } as RequestInit);
         const data = await upstreamResponse.json() as any;
 
         if (!upstreamResponse.ok || data.error || data.errors) {
