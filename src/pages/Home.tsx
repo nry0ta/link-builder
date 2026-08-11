@@ -2,9 +2,49 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const MIN_LENGTH = 3;
-const MAX_HITS = 5;       
-const MAX_DISPLAY = 15;   
+const MAX_HITS = 5;
+const MAX_DISPLAY = 15;
 
+const ICHIBA_ITEM_SEARCH_URL = 'https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701';
+const KEYWORD_HOTEL_SEARCH_URL = 'https://openapi.rakuten.co.jp/engine/api/Travel/KeywordHotelSearch/20260731';
+
+// mediumImageUrls entries may be plain URL strings (current API) or legacy { imageUrl } objects
+const extractImageUrl = (entry: any): string | undefined => {
+    if (typeof entry === 'string') return entry;
+    if (entry && typeof entry === 'object') return entry.imageUrl;
+    return undefined;
+};
+
+const normalizeRakutenItems = (data: any) => {
+    const rawItems = data.items || data.Items || [];
+    return rawItems.map((raw: any) => {
+        const item = raw.item || raw.Item || raw;
+        const images = item.mediumImageUrls || item.MediumImageUrls || [];
+        return {
+            itemCode: item.itemCode,
+            itemName: item.itemName,
+            itemUrl: item.itemUrl,
+            itemPrice: item.itemPrice,
+            mediumImageUrls: images.map(extractImageUrl).filter(Boolean)
+        };
+    });
+};
+
+const normalizeRakutenHotels = (data: any) => {
+    const rawHotels = data.hotels || data.Hotels || [];
+    return rawHotels.map((raw: any) => {
+        const nested = Array.isArray(raw.hotel) ? raw.hotel[0] : raw.hotel;
+        const basicInfo = raw.hotelBasicInfo || nested?.hotelBasicInfo || raw;
+        return {
+            hotelNo: basicInfo.hotelNo,
+            hotelName: basicInfo.hotelName,
+            hotelInformationUrl: basicInfo.hotelInformationUrl,
+            hotelImageUrl: basicInfo.hotelImageUrl,
+            address1: basicInfo.address1,
+            address2: basicInfo.address2
+        };
+    });
+};
 
 function Home() {
     const [category, setCategory] = useState<'domestic' | 'overseas' | 'activity' | 'product' | 'app'>('domestic');
@@ -113,23 +153,32 @@ function Home() {
                         };
                     });
                 } else {
-                    // Rakuten Search
+                    // Rakuten Search (直接ブラウザから呼び出し。サーバー側プロキシ経由だと
+                    // 楽天側のBot対策にRefererが無視され REQUEST_CONTEXT_BODY_HTTP_REFERRER_MISSING
+                    // で弾かれるため、暫定的にクライアント側呼び出しに戻している)
+                    if (!settings.rakutenAppId) throw new Error('楽天AppIDが設定されていません。');
+                    if (!settings.rakutenAccessKey) throw new Error('楽天Access Keyが設定されていません。設定画面で入力してください。');
                     const rakutenParams = new URLSearchParams({
-                        type: 'item',
+                        format: 'json',
+                        formatVersion: '2',
                         keyword: query,
                         page: targetPage.toString(),
                         hits: MAX_HITS.toString(),
-                        ...(settings.rakutenAppId ? { applicationId: settings.rakutenAppId } : {})
+                        applicationId: settings.rakutenAppId,
+                        accessKey: settings.rakutenAccessKey
                     });
-                    const response = await fetch(`/api/rakuten-search?${rakutenParams.toString()}`);
+                    const response = await fetch(`${ICHIBA_ITEM_SEARCH_URL}?${rakutenParams.toString()}`);
                     const data = await response.json();
-                    if (!response.ok || data.error) throw new Error(data.error_description || data.error || '楽天APIエラー');
-                    if (!data.items || data.items.length === 0) {
+                    if (!response.ok || data.error || data.errors) {
+                        throw new Error(data.error_description || data.errors?.errorMessage || '楽天APIエラー');
+                    }
+                    const items = normalizeRakutenItems(data);
+                    if (items.length === 0) {
                         if (!isLoadMore) setMessage('商品が見つかりませんでした。');
                         setHasMore(false);
                         return;
                     }
-                    newResults = data.items.map((item: any) => ({
+                    newResults = items.map((item: any) => ({
                         itemCode: item.itemCode,
                         itemName: item.itemName,
                         itemUrl: item.itemUrl,
@@ -139,24 +188,31 @@ function Home() {
                     }));
                 }
             } else {
-                // Domestic Hotel / Activity
+                // Domestic Hotel / Activity (同上の理由で直接ブラウザから呼び出し)
+                if (!settings.rakutenAppId) throw new Error('楽天AppIDが設定されていません。');
+                if (!settings.rakutenAccessKey) throw new Error('楽天Access Keyが設定されていません。設定画面で入力してください。');
                 const travelParams = new URLSearchParams({
-                    type: 'hotel',
+                    format: 'json',
+                    formatVersion: '2',
                     keyword: query,
                     page: targetPage.toString(),
                     hits: MAX_HITS.toString(),
-                    ...(settings.rakutenAppId ? { applicationId: settings.rakutenAppId } : {})
+                    applicationId: settings.rakutenAppId,
+                    accessKey: settings.rakutenAccessKey
                 });
-                const response = await fetch(`/api/rakuten-search?${travelParams.toString()}`);
+                const response = await fetch(`${KEYWORD_HOTEL_SEARCH_URL}?${travelParams.toString()}`);
                 const data = await response.json();
 
-                if (!response.ok || data.error) throw new Error(data.error_description || data.error || '楽天APIエラー');
-                if (!data.hotels || data.hotels.length === 0) {
+                if (!response.ok || data.error || data.errors) {
+                    throw new Error(data.error_description || data.errors?.errorMessage || '楽天APIエラー');
+                }
+                const hotels = normalizeRakutenHotels(data);
+                if (hotels.length === 0) {
                     if (!isLoadMore) setMessage('該当するホテルが見つかりませんでした。');
                     setHasMore(false);
                     return;
                 }
-                newResults = data.hotels;
+                newResults = hotels;
             }
 
             const updatedResults = isLoadMore ? [...results, ...newResults] : newResults;
