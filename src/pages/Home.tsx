@@ -123,7 +123,7 @@ function Home() {
                     });
                     const response = await fetch(`/api/rakuten-search?${rakutenParams.toString()}`);
                     const data = await response.json();
-                    if (!response.ok || data.error) throw new Error(data.error_description || '楽天APIエラー');
+                    if (!response.ok || data.error) throw new Error(data.error_description || data.error || '楽天APIエラー');
                     if (!data.items || data.items.length === 0) {
                         if (!isLoadMore) setMessage('商品が見つかりませんでした。');
                         setHasMore(false);
@@ -150,7 +150,7 @@ function Home() {
                 const response = await fetch(`/api/rakuten-search?${travelParams.toString()}`);
                 const data = await response.json();
 
-                if (!response.ok || data.error) throw new Error(data.error_description || '楽天APIエラー');
+                if (!response.ok || data.error) throw new Error(data.error_description || data.error || '楽天APIエラー');
                 if (!data.hotels || data.hotels.length === 0) {
                     if (!isLoadMore) setMessage('該当するホテルが見つかりませんでした。');
                     setHasMore(false);

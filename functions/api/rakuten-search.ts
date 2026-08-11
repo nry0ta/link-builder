@@ -78,20 +78,20 @@ export async function onRequestGet(context: any) {
         const hits = requestUrl.searchParams.get('hits') || '5';
 
         if (type !== 'item' && type !== 'hotel') {
-            return new Response(JSON.stringify({ error: 'Invalid type parameter' }), { status: 400, headers });
+            return new Response(JSON.stringify({ error: 'invalid_type', error_description: 'Invalid type parameter' }), { status: 400, headers });
         }
         if (!keyword) {
-            return new Response(JSON.stringify({ error: 'keyword is required' }), { status: 400, headers });
+            return new Response(JSON.stringify({ error: 'missing_keyword', error_description: 'keyword is required' }), { status: 400, headers });
         }
 
         const applicationId = safeTrim(requestUrl.searchParams.get('applicationId')) || safeTrim(context.env.RAKUTEN_APP_ID) || safeTrim(context.env.VITE_RAKUTEN_APP_ID);
         const accessKey = safeTrim(context.env.RAKUTEN_ACCESS_KEY);
 
         if (!applicationId) {
-            return new Response(JSON.stringify({ error: '楽天AppIDが設定されていません。' }), { status: 400, headers });
+            return new Response(JSON.stringify({ error: 'missing_application_id', error_description: '楽天AppIDが設定されていません。' }), { status: 400, headers });
         }
         if (!accessKey) {
-            return new Response(JSON.stringify({ error: '楽天Access Keyが未設定です。Cloudflare PagesのシークレットにRAKUTEN_ACCESS_KEYを設定してください。' }), { status: 500, headers });
+            return new Response(JSON.stringify({ error: 'missing_access_key', error_description: '楽天Access Keyが未設定です。Cloudflare PagesのシークレットにRAKUTEN_ACCESS_KEYを設定してください。' }), { status: 500, headers });
         }
 
         const upstreamParams = new URLSearchParams({
