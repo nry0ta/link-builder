@@ -119,7 +119,7 @@ export async function onRequestGet(context: any) {
         if (!upstreamResponse.ok || data.error || data.errors) {
             const code = data.error || data.errors?.errorCode || 'rakuten_api_error';
             const description = data.error_description || data.errors?.errorMessage || `楽天APIエラー (status: ${upstreamResponse.status})`;
-            return new Response(JSON.stringify({ error: code, error_description: description }), {
+            return new Response(JSON.stringify({ error: code, error_description: description, _debugReferer: referer }), {
                 status: upstreamResponse.status || 502,
                 headers
             });
