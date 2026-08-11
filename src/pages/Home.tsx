@@ -114,48 +114,49 @@ function Home() {
                     });
                 } else {
                     // Rakuten Search
-                    if (!settings.rakutenAppId) throw new Error('楽天AppIDが設定されていません。');
-                    const url = `https://app.rakuten.co.jp/services/api/IchibaItem/Search/20170706?format=json&keyword=${encodeURIComponent(query)}&applicationId=${settings.rakutenAppId}&hits=${MAX_HITS}&page=${targetPage}`;
-                    const response = await fetch(url);
+                    const rakutenParams = new URLSearchParams({
+                        type: 'item',
+                        keyword: query,
+                        page: targetPage.toString(),
+                        hits: MAX_HITS.toString(),
+                        ...(settings.rakutenAppId ? { applicationId: settings.rakutenAppId } : {})
+                    });
+                    const response = await fetch(`/api/rakuten-search?${rakutenParams.toString()}`);
                     const data = await response.json();
-                    if (data.error) throw new Error(data.error_description || '楽天APIエラー');
-                    if (!data.Items || data.Items.length === 0) {
+                    if (!response.ok || data.error) throw new Error(data.error_description || '楽天APIエラー');
+                    if (!data.items || data.items.length === 0) {
                         if (!isLoadMore) setMessage('商品が見つかりませんでした。');
                         setHasMore(false);
                         return;
                     }
-                    newResults = data.Items.map((item: any) => ({
-                        itemCode: item.Item.itemCode,
-                        itemName: item.Item.itemName,
-                        itemUrl: item.Item.itemUrl,
-                        itemPrice: item.Item.itemPrice ? `${item.Item.itemPrice.toLocaleString()}円` : '価格情報なし',
-                        mediumImageUrls: [{ imageUrl: item.Item.mediumImageUrls[0]?.imageUrl }],
+                    newResults = data.items.map((item: any) => ({
+                        itemCode: item.itemCode,
+                        itemName: item.itemName,
+                        itemUrl: item.itemUrl,
+                        itemPrice: item.itemPrice ? `${item.itemPrice.toLocaleString()}円` : '価格情報なし',
+                        mediumImageUrls: [{ imageUrl: item.mediumImageUrls?.[0] }],
                         engine: 'rakuten'
                     }));
                 }
             } else {
                 // Domestic Hotel / Activity
-                const appId = settings.rakutenAppId;
-                if (!appId) throw new Error('楽天AppIDが未設定です。');
-                
                 const travelParams = new URLSearchParams({
-                    format: 'json',
+                    type: 'hotel',
                     keyword: query,
                     page: targetPage.toString(),
                     hits: MAX_HITS.toString(),
-                    applicationId: appId
+                    ...(settings.rakutenAppId ? { applicationId: settings.rakutenAppId } : {})
                 });
-                const travelUrl = `https://app.rakuten.co.jp/services/api/Travel/KeywordHotelSearch/20170426?${travelParams.toString()}`;
-                const response = await fetch(travelUrl);
+                const response = await fetch(`/api/rakuten-search?${travelParams.toString()}`);
                 const data = await response.json();
-                
+
                 if (!response.ok || data.error) throw new Error(data.error_description || '楽天APIエラー');
-                if (!data.hotels) {
+                if (!data.hotels || data.hotels.length === 0) {
                     if (!isLoadMore) setMessage('該当するホテルが見つかりませんでした。');
                     setHasMore(false);
                     return;
                 }
-                newResults = data.hotels.map((h: any) => h.hotel[0].hotelBasicInfo);
+                newResults = data.hotels;
             }
 
             const updatedResults = isLoadMore ? [...results, ...newResults] : newResults;

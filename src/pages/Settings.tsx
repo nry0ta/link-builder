@@ -118,6 +118,9 @@ function Settings() {
             <p>APIキーやアフィリエイトIDを保存します。未入力の項目はCloudflare環境変数のデフォルト値が自動適用されます。</p>
 
             <hr /> <h3>楽天アフィリエイト</h3>
+            <p className="edit-guide" style={{ fontSize: '0.85rem', color: '#666', marginBottom: '15px' }}>
+                ※楽天の検索APIはApp IDに加えて<strong>Access Key</strong>が必須です。Access KeyはCloudflare Pagesの環境変数(Secret) <strong>RAKUTEN_ACCESS_KEY</strong> に設定してください(このページに入力欄はありません)。
+            </p>
             <div className="form-group">
                 <label>
                     楽天アプリケーションID (AppID)
