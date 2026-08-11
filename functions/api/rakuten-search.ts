@@ -105,7 +105,7 @@ export async function onRequestGet(context: any) {
         const upstreamUrl = `${type === 'item' ? ICHIBA_ITEM_SEARCH_URL : KEYWORD_HOTEL_SEARCH_URL}?${upstreamParams.toString()}`;
 
         const upstreamResponse = await fetch(upstreamUrl, {
-            headers: { 'Access-Key': accessKey }
+            headers: { accessKey }
         });
         const data = await upstreamResponse.json() as any;
 
