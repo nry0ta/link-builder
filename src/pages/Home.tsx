@@ -144,6 +144,8 @@ function Home() {
 
         setLoading(true);
         const settings = JSON.parse(localStorage.getItem('linkBuilderSettings') || '{}');
+        const rakutenAppId = settings.rakutenAppId || import.meta.env.VITE_RAKUTEN_APP_ID || '';
+        const rakutenAccessKey = settings.rakutenAccessKey || import.meta.env.VITE_RAKUTEN_ACCESS_KEY || '';
 
         try {
             let newResults = [];
@@ -186,16 +188,16 @@ function Home() {
                     // Rakuten Search (直接ブラウザから呼び出し。サーバー側プロキシ経由だと
                     // 楽天側のBot対策にRefererが無視され REQUEST_CONTEXT_BODY_HTTP_REFERRER_MISSING
                     // で弾かれるため、暫定的にクライアント側呼び出しに戻している)
-                    if (!settings.rakutenAppId) throw new Error('楽天AppIDが設定されていません。');
-                    if (!settings.rakutenAccessKey) throw new Error('楽天Access Keyが設定されていません。設定画面で入力してください。');
+                    if (!rakutenAppId) throw new Error('楽天AppIDが設定されていません。');
+                    if (!rakutenAccessKey) throw new Error('楽天Access Keyが設定されていません。設定画面で入力するか、Cloudflare PagesでVITE_RAKUTEN_ACCESS_KEYを設定してください。');
                     const rakutenParams = new URLSearchParams({
                         format: 'json',
                         formatVersion: '2',
                         keyword: query,
                         page: targetPage.toString(),
                         hits: MAX_HITS.toString(),
-                        applicationId: settings.rakutenAppId,
-                        accessKey: settings.rakutenAccessKey
+                        applicationId: rakutenAppId,
+                        accessKey: rakutenAccessKey
                     });
                     const response = await fetch(`${ICHIBA_ITEM_SEARCH_URL}?${rakutenParams.toString()}`);
                     const data = await response.json();
@@ -219,16 +221,16 @@ function Home() {
                 }
             } else {
                 // Domestic Hotel / Activity (同上の理由で直接ブラウザから呼び出し)
-                if (!settings.rakutenAppId) throw new Error('楽天AppIDが設定されていません。');
-                if (!settings.rakutenAccessKey) throw new Error('楽天Access Keyが設定されていません。設定画面で入力してください。');
+                if (!rakutenAppId) throw new Error('楽天AppIDが設定されていません。');
+                if (!rakutenAccessKey) throw new Error('楽天Access Keyが設定されていません。設定画面で入力するか、Cloudflare PagesでVITE_RAKUTEN_ACCESS_KEYを設定してください。');
                 const travelParams = new URLSearchParams({
                     format: 'json',
                     formatVersion: '2',
                     keyword: query,
                     page: targetPage.toString(),
                     hits: MAX_HITS.toString(),
-                    applicationId: settings.rakutenAppId,
-                    accessKey: settings.rakutenAccessKey
+                    applicationId: rakutenAppId,
+                    accessKey: rakutenAccessKey
                 });
                 const response = await fetch(`${KEYWORD_HOTEL_SEARCH_URL}?${travelParams.toString()}`);
                 const data = await response.json();

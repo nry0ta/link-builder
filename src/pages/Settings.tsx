@@ -121,7 +121,7 @@ function Settings() {
 
             <hr /> <h3>楽天アフィリエイト</h3>
             <p className="edit-guide" style={{ fontSize: '0.85rem', color: '#666', marginBottom: '15px' }}>
-                ※楽天の検索APIはApp IDに加えて<strong>Access Key</strong>が必須です。楽天ウェブサービスのアプリ管理画面でApp IDと対になっているAccess Keyを確認し、下欄に入力してください(サーバー経由だと楽天側のBot対策で拒否されるため、暫定的にこのブラウザから直接APIを呼び出しています)。
+                ※楽天の検索APIはApp IDに加えて<strong>Access Key</strong>が必須です。楽天ウェブサービスのアプリ管理画面でApp IDと対になっているAccess Keyを確認し、下欄に入力するか、Cloudflare Pagesの環境変数に <strong>VITE_RAKUTEN_ACCESS_KEY</strong> として設定してください(サーバー経由だと楽天側のBot対策で拒否されるため、暫定的にこのブラウザから直接APIを呼び出しています)。
             </p>
             <div className="form-group">
                 <label>
@@ -131,7 +131,10 @@ function Settings() {
                 <input type="text" name="rakutenAppId" value={settings.rakutenAppId} onChange={handleChange} placeholder="楽天ウェブサービスから取得したID" />
             </div>
             <div className="form-group">
-                <label>楽天Access Key</label>
+                <label>
+                    楽天Access Key
+                    {renderEnvBadge(import.meta.env.VITE_RAKUTEN_ACCESS_KEY)}
+                </label>
                 <input type="text" name="rakutenAccessKey" value={settings.rakutenAccessKey} onChange={handleChange} placeholder="App IDと対になっているAccess Key" />
             </div>
             <div className="form-group">
