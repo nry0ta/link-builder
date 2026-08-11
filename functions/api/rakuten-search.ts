@@ -86,6 +86,10 @@ export async function onRequestGet(context: any) {
 
         const applicationId = safeTrim(requestUrl.searchParams.get('applicationId')) || safeTrim(context.env.RAKUTEN_APP_ID) || safeTrim(context.env.VITE_RAKUTEN_APP_ID);
         const accessKey = safeTrim(context.env.RAKUTEN_ACCESS_KEY);
+        // Rakuten requires an HTTP Referer matching the app's registered website.
+        // Server-side fetch() sends no Referer by default, so it must be set explicitly.
+        const incomingReferer = context.request.headers.get('Referer') || (origin !== '*' ? origin : '');
+        const referer = safeTrim(context.env.RAKUTEN_REFERER) || incomingReferer || 'https://builder.nrtlog.com/';
 
         if (!applicationId) {
             return new Response(JSON.stringify({ error: 'missing_application_id', error_description: '楽天AppIDが設定されていません。' }), { status: 400, headers });
@@ -105,7 +109,7 @@ export async function onRequestGet(context: any) {
         const upstreamUrl = `${type === 'item' ? ICHIBA_ITEM_SEARCH_URL : KEYWORD_HOTEL_SEARCH_URL}?${upstreamParams.toString()}`;
 
         const upstreamResponse = await fetch(upstreamUrl, {
-            headers: { accessKey }
+            headers: { accessKey, Referer: referer }
         });
         const data = await upstreamResponse.json() as any;
 
